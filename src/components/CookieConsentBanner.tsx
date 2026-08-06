@@ -41,7 +41,7 @@ export function CookieConsentBanner({ onOpenPrivacyPolicy }: CookieConsentBanner
             Kami menggunakan cookie lokal untuk menyimpan keranjang belanja dan preferensi pesanan Anda.{' '}
             <button
               onClick={onOpenPrivacyPolicy}
-              className="text-emerald-400 underline hover:text-emerald-300"
+              className="inline-flex min-h-11 items-center text-emerald-400 underline hover:text-emerald-300"
             >
               Kebijakan Privasi
             </button>
@@ -49,13 +49,13 @@ export function CookieConsentBanner({ onOpenPrivacyPolicy }: CookieConsentBanner
           <div className="flex items-center gap-2 pt-2">
             <button
               onClick={handleAccept}
-              className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors text-[11px]"
+              className="min-h-11 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-lg transition-colors text-[11px]"
             >
               Setuju & Lanjutkan
             </button>
             <button
               onClick={handleDecline}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors text-[11px]"
+              className="min-h-11 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors text-[11px]"
             >
               Tolak
             </button>
@@ -64,7 +64,7 @@ export function CookieConsentBanner({ onOpenPrivacyPolicy }: CookieConsentBanner
         <button
           onClick={handleDecline}
           aria-label="Tutup pemberitahuan cookie"
-          className="text-slate-500 hover:text-slate-300 transition-colors p-1"
+          className="min-w-11 min-h-11 inline-grid place-items-center text-slate-500 hover:text-slate-300 transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
