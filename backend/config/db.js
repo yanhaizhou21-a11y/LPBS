@@ -25,6 +25,7 @@ export async function connectDB() {
     });
     await client.connect();
     db = client.db(dbName);
+    await db.collection('orders').createIndex({ orderNumber: 1 }, { unique: true });
     isConnected = true;
     console.log(`[MongoDB] Connected successfully to database: "${dbName}"`);
     return db;

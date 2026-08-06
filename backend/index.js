@@ -1,45 +1,56 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { connectDB, checkDBConnection } from './config/db.js';
 import orderRoutes from './routes/orderRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 
-dotenv.config();
-
 const app = express();
 const PORT = process.env.PORT || 5001;
+const allowedOrigins = new Set(
+  (process.env.WEB_ORIGINS || 'http://localhost:3000,http://localhost:5173')
+    .split(',').map((origin) => origin.trim()).filter(Boolean)
+);
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+app.disable('x-powered-by');
+app.use((_, res, next) => {
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  if (process.env.NODE_ENV === 'production') {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  }
+  next();
+});
+app.use(cors({
+  credentials: true,
+  origin(origin, callback) {
+    callback(origin && !allowedOrigins.has(origin) ? new Error('Origin tidak diizinkan.') : null, true);
+  },
+}));
+app.use(express.json({ limit: '32kb' }));
 
-// API Routes
 app.use('/api/orders', orderRoutes);
 app.use('/api/auth', authRoutes);
 
-// Health Check Endpoint
-app.get('/api/health', async (req, res) => {
+app.get('/api/health', (_req, res) => {
   const isConnected = checkDBConnection();
-  return res.json({
+  res.json({
     status: isConnected ? 'ok' : 'degraded',
-    service: 'Paket Benih Sayur Botani Backend API',
+    service: 'Botani Seed Backend API',
     database: isConnected ? 'connected' : 'disconnected',
+    adminAuthConfigured: Boolean(
+      process.env.ADMIN_USER && process.env.ADMIN_PASSWORD_HASH && (process.env.ADMIN_SESSION_SECRET || '').length >= 32
+    ),
     timestamp: new Date().toISOString(),
   });
 });
 
-// Start Server
 async function startServer() {
   console.log('[Server] Initializing Express backend server...');
   await connectDB();
-
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Express server running on http://localhost:${PORT}`);
-    console.log(`📍 Health Check: http://localhost:${PORT}/api/health`);
-    console.log(`📦 Orders API:  http://localhost:${PORT}/api/orders`);
-    console.log(`🔑 Auth API:    http://localhost:${PORT}/api/auth/login`);
-  });
+  app.listen(PORT, '0.0.0.0', () => console.log(`Express server running on http://localhost:${PORT}`));
 }
 
 startServer();

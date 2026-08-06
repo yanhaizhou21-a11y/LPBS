@@ -8,6 +8,7 @@
     "server": "node backend/index.js",
     "dev:all": "concurrently \"npm run dev\" \"npm run server\"",
     "build": "tsc && vite build",
+    "test:auth": "node --test backend/auth.test.js",
     "preview": "vite preview"
   },
   "dependencies": {
