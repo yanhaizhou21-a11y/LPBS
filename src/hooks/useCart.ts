@@ -5,25 +5,27 @@ const CART_STORAGE_KEY = 'botani_seed_cart';
 const UNIT_PRICE = 20000;
 const DISCOUNT_MIN_QTY = 5;
 const DISCOUNT_RATE = 0.2; // 20%
+const MAIN_PRODUCT: CartItem = {
+  id: 'paket-benih-sayur', name: 'Paket Benih Sayur Botani Seed', price: UNIT_PRICE, qty: 0
+};
 
 export function useCart() {
   const [items, setItems] = useState<CartItem[]>(() => {
     try {
       const saved = localStorage.getItem(CART_STORAGE_KEY);
       if (saved) {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed.filter((item): item is CartItem =>
+            typeof item?.id === 'string' && typeof item?.name === 'string' &&
+            Number.isFinite(item?.price) && Number.isInteger(item?.qty) && item.qty > 0
+          );
+        }
       }
     } catch (e) {
       console.error('Failed to load cart from localStorage', e);
     }
-    return [
-      {
-        id: 'paket-benih-sayur',
-        name: 'Paket Benih Sayur Botani Seed',
-        price: UNIT_PRICE,
-        qty: 1
-      }
-    ];
+    return [];
   });
 
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -37,12 +39,11 @@ export function useCart() {
     }
   }, [items]);
 
-  const mainItem = items[0] || { id: 'paket-benih-sayur', name: 'Paket Benih Sayur Botani Seed', price: UNIT_PRICE, qty: 0 };
+  const mainItem = items.find((item) => item.id === MAIN_PRODUCT.id) || MAIN_PRODUCT;
   const totalQty = items.reduce((acc, item) => acc + item.qty, 0);
-
-  const isPromoEligible = totalQty >= DISCOUNT_MIN_QTY;
-  const normalTotal = totalQty * UNIT_PRICE;
-  const discountTotal = isPromoEligible ? Math.round(normalTotal * DISCOUNT_RATE) : 0;
+  const normalTotal = items.reduce((total, item) => total + item.price * item.qty, 0);
+  const isPromoEligible = mainItem.qty >= DISCOUNT_MIN_QTY;
+  const discountTotal = isPromoEligible ? Math.round(mainItem.price * mainItem.qty * DISCOUNT_RATE) : 0;
   const subtotal = normalTotal - discountTotal;
 
   const showToast = (msg: string) => {
@@ -54,19 +55,27 @@ export function useCart() {
 
   const addToCart = (qtyToAdd: number = 1) => {
     setItems(prev => {
-      if (prev.length === 0) {
-        return [{ id: 'paket-benih-sayur', name: 'Paket Benih Sayur Botani Seed', price: UNIT_PRICE, qty: qtyToAdd }];
-      }
-      return prev.map(item =>
-        item.id === 'paket-benih-sayur' ? { ...item, qty: item.qty + qtyToAdd } : item
-      );
+      const exists = prev.some((item) => item.id === MAIN_PRODUCT.id);
+      return exists
+        ? prev.map((item) => item.id === MAIN_PRODUCT.id ? { ...item, qty: item.qty + qtyToAdd } : item)
+        : [{ ...MAIN_PRODUCT, qty: qtyToAdd }, ...prev];
     });
     showToast(`${qtyToAdd} Paket Benih Sayuran berhasil ditambahkan ke keranjang.`);
   };
 
+  const addProductToCart = (product: { slug: string; name: string; price: number }) => {
+    setItems((previous) => {
+      const existing = previous.find((item) => item.id === product.slug);
+      return existing
+        ? previous.map((item) => item.id === product.slug ? { ...item, qty: item.qty + 1 } : item)
+        : [...previous, { id: product.slug, name: product.name, price: product.price, qty: 1 }];
+    });
+    showToast(`${product.name} ditambahkan ke keranjang.`);
+  };
+
   const updateQty = (id: string, newQty: number) => {
     if (newQty <= 0) {
-      clearCart();
+      setItems((previous) => previous.filter((item) => item.id !== id));
       return;
     }
     setItems(prev => prev.map(item => (item.id === id ? { ...item, qty: newQty } : item)));
@@ -74,12 +83,15 @@ export function useCart() {
 
   const setQtyDirectly = (qty: number) => {
     if (qty <= 0) return;
-    setItems([{ id: 'paket-benih-sayur', name: 'Paket Benih Sayur Botani Seed', price: UNIT_PRICE, qty }]);
+    setItems((previous) => {
+      const exists = previous.some((item) => item.id === MAIN_PRODUCT.id);
+      return exists
+        ? previous.map((item) => item.id === MAIN_PRODUCT.id ? { ...item, qty } : item)
+        : [{ ...MAIN_PRODUCT, qty }, ...previous];
+    });
   };
 
-  const clearCart = () => {
-    setItems([{ id: 'paket-benih-sayur', name: 'Paket Benih Sayur Botani Seed', price: UNIT_PRICE, qty: 0 }]);
-  };
+  const clearCart = () => setItems([]);
 
   return {
     items,
@@ -96,6 +108,7 @@ export function useCart() {
     toastMessage,
     showToast,
     addToCart,
+    addProductToCart,
     updateQty,
     setQtyDirectly,
     clearCart

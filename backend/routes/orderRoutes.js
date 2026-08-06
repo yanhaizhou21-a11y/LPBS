@@ -1,20 +1,21 @@
 import { Router } from 'express';
 import { getDB } from '../config/db.js';
 import { requireAdmin } from './authRoutes.js';
+import { DEFAULT_PRODUCTS, MAIN_PROMO_PRODUCT } from '../data/defaultProducts.js';
 
 const router = Router();
 const ORDER_STATUSES = new Set(['PENDING_PAYMENT', 'PAID', 'PROCESSED', 'SHIPPED', 'COMPLETED']);
 const PAYMENT_METHODS = new Set(['QRIS', 'BSI', 'BNI', 'BRI']);
 const text = (value, max = 160) => typeof value === 'string' ? value.trim().slice(0, max) : '';
 
-export function buildOrder(body) {
-  const totalQty = Number(body?.cart?.totalQty);
+export function buildOrder(body, catalogProducts = []) {
+  const rawItems = body?.cart?.items;
   const buyer = body?.buyer || {};
   const shippingFee = Number(body?.shippingService?.totalFee || 0);
   const requiredBuyerFields = ['name', 'whatsapp', 'address', 'city', 'village', 'district', 'province', 'postal'];
 
   if (!/^BTS-\d{8}-[A-Z0-9]{6}$/.test(text(body?.orderNumber, 32))) throw new Error('Nomor pesanan tidak valid.');
-  if (!Number.isInteger(totalQty) || totalQty < 1 || totalQty > 1000) throw new Error('Jumlah paket tidak valid.');
+  if (!Array.isArray(rawItems) || rawItems.length < 1 || rawItems.length > 50) throw new Error('Isi keranjang tidak valid.');
   if (!requiredBuyerFields.every((field) => text(buyer[field]))) throw new Error('Data pembeli belum lengkap.');
   if (!/^\+?\d{9,15}$/.test(text(buyer.whatsapp).replace(/[\s-]/g, ''))) throw new Error('Nomor WhatsApp tidak valid.');
   if (!/^\d{5}$/.test(text(buyer.postal))) throw new Error('Kode pos tidak valid.');
@@ -22,8 +23,25 @@ export function buildOrder(body) {
   if (!PAYMENT_METHODS.has(body?.paymentMethod)) throw new Error('Metode pembayaran tidak valid.');
   if (!Number.isFinite(shippingFee) || shippingFee < 0 || shippingFee > 5_000_000) throw new Error('Ongkos kirim tidak valid.');
 
-  const normalTotal = totalQty * 20_000;
-  const productTotal = totalQty >= 5 ? normalTotal * 0.8 : normalTotal;
+  const catalog = new Map([...DEFAULT_PRODUCTS, MAIN_PROMO_PRODUCT, ...catalogProducts].map((product) => [product.slug, product]));
+  const requestedIds = new Set();
+  const items = rawItems.map((rawItem) => {
+    const id = text(rawItem?.id, 80);
+    const qty = Number(rawItem?.qty);
+    if (!/^[a-z0-9-]+$/.test(id) || !Number.isInteger(qty) || qty < 1 || qty > 1000) throw new Error('Item keranjang tidak valid.');
+    if (requestedIds.has(id)) throw new Error('Item keranjang duplikat tidak valid.');
+    requestedIds.add(id);
+    const product = catalog.get(id);
+    if (!product || product.active === false) throw new Error(`Produk ${id} tidak tersedia.`);
+    if (Number.isFinite(product.stock) && qty > product.stock) throw new Error(`Stok ${product.name} tidak mencukupi.`);
+    return { id, name: text(product.name, 120), price: Number(product.price), qty, lineTotal: Number(product.price) * qty };
+  });
+  const totalQty = items.reduce((total, item) => total + item.qty, 0);
+  if (totalQty > 1000) throw new Error('Jumlah produk tidak valid.');
+  const normalTotal = items.reduce((total, item) => total + item.lineTotal, 0);
+  const promoItem = items.find((item) => item.id === MAIN_PROMO_PRODUCT.slug);
+  const discountTotal = promoItem && promoItem.qty >= 5 ? Math.round(promoItem.lineTotal * 0.2) : 0;
+  const productTotal = normalTotal - discountTotal;
   // ponytail: tariff comes from the bundled JNE dataset; replace with a server-side JNE quote API when credentials exist.
   const shippingTotal = shippingFee;
 
@@ -34,25 +52,30 @@ export function buildOrder(body) {
       address: text(buyer.address, 300), city: text(buyer.city, 100), village: text(buyer.village, 100),
       district: text(buyer.district, 100), province: text(buyer.province, 100), postal: text(buyer.postal, 5), note: text(buyer.note, 300),
     },
-    cart: { totalQty },
+    cart: { items, totalQty },
     shippingService: body.shippingService ? {
       code: text(body.shippingService.code, 8), name: text(body.shippingService.name, 80),
       totalFee: shippingTotal, eta: text(body.shippingService.eta, 40),
     } : null,
     paymentMethod: body.paymentMethod,
-    pricing: { productTotal, shippingTotal, grandTotal: productTotal + shippingTotal },
+    pricing: { normalTotal, discountTotal, productTotal, shippingTotal, grandTotal: productTotal + shippingTotal },
     status: 'PENDING_PAYMENT', createdAt: new Date(), updatedAt: new Date(),
   };
 }
 
 router.post('/', async (req, res) => {
   try {
-    const order = buildOrder(req.body);
-    const result = await getDB().collection('orders').insertOne(order);
+    const database = getDB();
+    const requestedIds = Array.isArray(req.body?.cart?.items) ? req.body.cart.items.map((item) => text(item?.id, 80)) : [];
+    const catalogProducts = requestedIds.length
+      ? await database.collection('products').find({ slug: { $in: requestedIds }, active: true }).toArray()
+      : [];
+    const order = buildOrder(req.body, catalogProducts);
+    const result = await database.collection('orders').insertOne(order);
     return res.status(201).json({ success: true, message: 'Pesanan berhasil dibuat.', orderId: result.insertedId, orderNumber: order.orderNumber });
   } catch (error) {
     if (error?.code === 11000) return res.status(409).json({ success: false, message: 'Nomor pesanan sudah digunakan. Silakan ulangi.' });
-    if (error instanceof Error && (error.message.endsWith('valid.') || error.message.includes('lengkap'))) return res.status(400).json({ success: false, message: error.message });
+    if (error instanceof Error && /valid|lengkap|tersedia|stok/i.test(error.message)) return res.status(400).json({ success: false, message: error.message });
     console.error('Error creating order:', error instanceof Error ? error.message : error);
     return res.status(500).json({ success: false, message: 'Pesanan belum dapat disimpan.' });
   }

@@ -58,10 +58,23 @@ test('server recalculates product pricing instead of trusting client totals', ()
       name: 'Pembeli', whatsapp: '081234567890', email: '', address: 'Jalan Mawar 1',
       city: 'Bogor', village: 'Babakan', district: 'Dramaga', province: 'Jawa Barat', postal: '16680', note: '',
     },
-    cart: { totalQty: 5 },
+    cart: { items: [{ id: 'paket-benih-sayur', qty: 5 }] },
     shippingService: { code: 'REG', name: 'JNE REG', totalFee: 20_000, eta: '2–3 hari' },
     paymentMethod: 'QRIS',
     pricing: { grandTotal: 1 },
   });
-  assert.deepEqual(order.pricing, { productTotal: 80_000, shippingTotal: 20_000, grandTotal: 100_000 });
+  assert.deepEqual(order.pricing, { normalTotal: 100_000, discountTotal: 20_000, productTotal: 80_000, shippingTotal: 20_000, grandTotal: 100_000 });
+});
+
+test('server prices a mixed cart from its trusted catalog', () => {
+  const order = buildOrder({
+    orderNumber: 'BTS-20260806-DEF456',
+    buyer: { name: 'Pembeli', whatsapp: '081234567890', email: '', address: 'Jalan Mawar 1', city: 'Bogor', village: 'Babakan', district: 'Dramaga', province: 'Jawa Barat', postal: '16680', note: '' },
+    cart: { items: [{ id: 'benih-bayam-rosa', qty: 2 }, { id: 'padi-ipb-9g', qty: 1 }] },
+    shippingService: null,
+    paymentMethod: 'BRI',
+  });
+  assert.equal(order.cart.totalQty, 3);
+  assert.equal(order.pricing.grandTotal, 125_000);
+  assert.deepEqual(order.cart.items.map(({ id, qty }) => ({ id, qty })), [{ id: 'benih-bayam-rosa', qty: 2 }, { id: 'padi-ipb-9g', qty: 1 }]);
 });

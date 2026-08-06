@@ -33,7 +33,7 @@ export function Footer({ onOpenPrivacyPolicy }: FooterProps) {
             <p><Building2 size={16} /> PT Botani Seed Indonesia</p>
             <p><MapPin size={16} /> Bogor, Jawa Barat, Indonesia</p>
             <p><Mail size={16} /> info@botaniseed.co.id</p>
-            <p><MessageCircle size={16} /> +62 812-3456-7890</p>
+            <p><MessageCircle size={16} /> +62 812-9945-0708</p>
             <p><Truck size={16} /> Pengiriman dari Bogor via JNE</p>
           </address>
         </div>

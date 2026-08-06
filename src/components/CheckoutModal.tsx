@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { ASSETS } from '../data/assets';
 import { useCheckout } from '../hooks/useCheckout';
+import { CartItem } from '../types';
 
 interface CheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
+  items: CartItem[];
   totalQty: number;
   subtotalProduct: number;
   normalTotalProduct: number;
@@ -15,13 +17,14 @@ interface CheckoutModalProps {
 export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   isOpen,
   onClose,
+  items,
   totalQty,
   subtotalProduct,
   normalTotalProduct,
   discountTotalProduct,
   onCartOpen
 }) => {
-  const checkout = useCheckout(totalQty, subtotalProduct);
+  const checkout = useCheckout(items, totalQty, subtotalProduct);
 
   const [copySuccess, setCopySuccess] = useState(false);
 
@@ -769,12 +772,16 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             {/* SIDEBAR SUMMARY PANEL */}
             <aside className="checkout-summary-panel">
               <span className="summary-kicker">RINGKASAN PESANAN</span>
-              <div className="summary-product-row">
-                <div className="summary-product-icon">🌱</div>
-                <div>
-                  <strong>Paket Benih Sayur Botani Seed</strong>
-                  <span>{totalQty} paket</span>
-                </div>
+              <div className="summary-product-list">
+                {items.map((item) => (
+                  <div className="summary-product-row" key={item.id}>
+                    <div className="summary-product-icon">🌱</div>
+                    <div>
+                      <strong>{item.name}</strong>
+                      <span>{item.qty} × Rp {item.price.toLocaleString('id-ID')}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
 
               <div className="summary-lines">

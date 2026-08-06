@@ -105,7 +105,7 @@ export function App() {
   return (
     <div className="app-root">
       <Navbar cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
-      {view === 'products' ? <ProductsPage onGoHome={() => navigate('landing', '/')} /> : (
+      {view === 'products' ? <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCart={cart.openCart} /> : (
         <main>
           <HeroSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
           <PeluangSection /><StorySection /><CompanyProfile />
@@ -118,7 +118,7 @@ export function App() {
       <CartDrawer isOpen={cart.isCartOpen} onClose={cart.closeCart} items={cart.items} totalQty={cart.totalQty} normalTotal={cart.normalTotal} discountTotal={cart.discountTotal} subtotal={cart.subtotal} isPromoEligible={cart.isPromoEligible} onUpdateQty={cart.updateQty} onClearCart={cart.clearCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
       {isCheckoutOpen && (
         <Suspense fallback={<div className="checkout-loading" role="status">Menyiapkan checkout dan tarif pengiriman…</div>}>
-          <CheckoutModal isOpen onClose={() => setIsCheckoutOpen(false)} totalQty={cart.totalQty} subtotalProduct={cart.subtotal} normalTotalProduct={cart.normalTotal} discountTotalProduct={cart.discountTotal} onCartOpen={cart.openCart} />
+          <CheckoutModal isOpen onClose={() => setIsCheckoutOpen(false)} items={cart.items} totalQty={cart.totalQty} subtotalProduct={cart.subtotal} normalTotalProduct={cart.normalTotal} discountTotalProduct={cart.discountTotal} onCartOpen={cart.openCart} />
         </Suspense>
       )}
       <PrivacyPolicyModal isOpen={isPrivacyModalOpen} onClose={closePrivacy} />

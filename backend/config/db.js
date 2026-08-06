@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
+import { DEFAULT_PRODUCTS } from '../data/defaultProducts.js';
 
 dotenv.config();
 
@@ -27,6 +28,14 @@ export async function connectDB() {
     db = client.db(dbName);
     await db.collection('orders').createIndex({ orderNumber: 1 }, { unique: true });
     await db.collection('products').createIndex({ slug: 1 }, { unique: true });
+    const seededAt = new Date();
+    await db.collection('products').bulkWrite(DEFAULT_PRODUCTS.map((product) => ({
+      updateOne: {
+        filter: { slug: product.slug },
+        update: { $setOnInsert: { ...product, imageUrl: '', active: true, createdAt: seededAt, updatedAt: seededAt } },
+        upsert: true,
+      },
+    })));
     isConnected = true;
     console.log(`[MongoDB] Connected successfully to database: "${dbName}"`);
     return db;

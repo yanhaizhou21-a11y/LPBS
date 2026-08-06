@@ -5,16 +5,17 @@ import {
   JNEDestination,
   ShippingServiceOption,
   PaymentMethodType,
-  PaymentSession
+  PaymentSession,
+  CartItem
 } from '../types';
 
-const ADMIN_WHATSAPP_NUMBER = '6281234567890'; // PT. Botani Seed Indonesia Admin
+const ADMIN_WHATSAPP_NUMBER = '6281299450708';
 const BUYER_STORAGE_KEY = 'botani_buyer_session';
 const EMPTY_BUYER: BuyerForm = {
   name: '', whatsapp: '', email: '', address: '', city: '', village: '', district: '', province: '', postal: '', note: ''
 };
 
-export function useCheckout(totalQty: number, subtotalProduct: number) {
+export function useCheckout(items: CartItem[], totalQty: number, subtotalProduct: number) {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState<number>(1);
 
@@ -269,7 +270,13 @@ export function useCheckout(totalQty: number, subtotalProduct: number) {
       const response = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderNumber: orderNum, buyer: buyerForm, cart: { totalQty }, shippingService: selectedService, paymentMethod })
+        body: JSON.stringify({
+          orderNumber: orderNum,
+          buyer: buyerForm,
+          cart: { items: items.map(({ id, qty }) => ({ id, qty })) },
+          shippingService: shippingType === 'JNE' ? selectedService : null,
+          paymentMethod
+        })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Pesanan belum dapat disimpan.');
@@ -298,21 +305,33 @@ export function useCheckout(totalQty: number, subtotalProduct: number) {
         ? `Dikirim via JNE ${selectedService.code} (${selectedDestination.village}, ${selectedDestination.district}, ${selectedDestination.regencyName})`
         : 'Ambil di Kantor Botani Seed';
 
+    const productLines = items
+      .map((item, index) => `${index + 1}. ${item.name} — ${item.qty} × Rp${item.price.toLocaleString('id-ID')} = Rp${(item.price * item.qty).toLocaleString('id-ID')}`)
+      .join('\n');
+
     const msg = `Halo Admin PT Botani Seed Indonesia,
 
-Saya ingin mengonfirmasi pembayaran pesanan benih sayuran:
+Saya ingin mengonfirmasi pembayaran pesanan:
 
 *DETAIL PESANAN*
-• Nomor Pesanan: ${paymentSession.orderNumber}
-• Nama Pemesan: ${buyerForm.name}
-• No. WhatsApp: ${buyerForm.whatsapp}
-• Alamat: ${buyerForm.address}, Kel. ${buyerForm.village}, Kec. ${buyerForm.district}, ${buyerForm.city}, ${buyerForm.province} (${buyerForm.postal})
+• Nomor pesanan: ${paymentSession.orderNumber}
+• Nama: ${buyerForm.name}
+• WhatsApp: ${buyerForm.whatsapp}
+${buyerForm.email ? `• Email: ${buyerForm.email}\n` : ''}• Alamat: ${buyerForm.address}
+• Kelurahan/Desa: ${buyerForm.village}
+• Kecamatan: ${buyerForm.district}
+• Kota/Kabupaten: ${buyerForm.city}
+• Provinsi: ${buyerForm.province}
+• Kode pos: ${buyerForm.postal}
 ${buyerForm.note ? `• Catatan: ${buyerForm.note}\n` : ''}
+*PRODUK*
+${productLines}
+
 *RINCIAN BIAYA*
-• Produk: ${totalQty} paket (Rp${subtotalProduct.toLocaleString('id-ID')})
+• Subtotal produk: Rp${subtotalProduct.toLocaleString('id-ID')}
 • Pengiriman: ${shippingInfo} (Rp${shippingCostTotal.toLocaleString('id-ID')})
-• *Total Dibayar*: *Rp${paymentSession.grandTotal.toLocaleString('id-ID')}*
-• Metode Pembayaran: ${paymentSession.paymentMethod}
+• *Total dibayar: Rp${paymentSession.grandTotal.toLocaleString('id-ID')}*
+• Metode pembayaran: ${paymentSession.paymentMethod}
 
 Bukti transfer telah saya siapkan. Mohon pesanan saya segera diproses. Terima kasih!`;
 

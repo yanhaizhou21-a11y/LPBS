@@ -99,11 +99,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <div className="cart-promo-banner success">
                   🎉 Diskon 20% aktif! Hemat Rp {discountTotal.toLocaleString('id-ID')}
                 </div>
-              ) : (
+              ) : items.some((item) => item.id === 'paket-benih-sayur') ? (
                 <div className="cart-promo-banner info">
-                  💡 Tambah {5 - totalQty} paket lagi untuk klaim diskon 20%!
+                  💡 Tambah {5 - (items.find((item) => item.id === 'paket-benih-sayur')?.qty || 0)} paket promo lagi untuk klaim diskon 20%!
                 </div>
-              )}
+              ) : null}
 
               <div className="cart-summary-box">
                 <div className="summary-row">
