@@ -1,7 +1,12 @@
 import React from 'react';
 import { ASSETS } from '../data/assets';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onOpenPrivacyPolicy?: () => void;
+  onOpenSecretAdmin?: () => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onOpenPrivacyPolicy, onOpenSecretAdmin }) => {
   return (
     <footer className="footer-section">
       <div className="container footer-grid">
@@ -31,6 +36,13 @@ export const Footer: React.FC = () => {
             <li><a href="#promo">Promo 5 Paket</a></li>
             <li><a href="#pesan-sekarang">Pesan Langsung</a></li>
             <li><a href="#faq">FAQ</a></li>
+            {onOpenPrivacyPolicy && (
+              <li>
+                <button onClick={onOpenPrivacyPolicy} className="text-left hover:text-emerald-400">
+                  Kebijakan Privasi
+                </button>
+              </li>
+            )}
           </ul>
         </div>
 
@@ -48,7 +60,18 @@ export const Footer: React.FC = () => {
 
       <div className="footer-bottom">
         <div className="container bottom-flex">
-          <p>© 2026 PT. Botani Seed Indonesia. Seluruh hak cipta dilindungi undang-undang.</p>
+          <p>
+            © 2026 PT. Botani Seed Indonesia. Seluruh hak cipta dilindungi.
+            {onOpenSecretAdmin && (
+              <button
+                onClick={onOpenSecretAdmin}
+                className="ml-2 text-slate-600 hover:text-slate-400 transition-colors text-[10px]"
+                title="Akses Internal Portal Admin"
+              >
+                🔒 Portal Internal
+              </button>
+            )}
+          </p>
           <div className="payment-badges">
             <span>QRIS</span>
             <span>BSI</span>

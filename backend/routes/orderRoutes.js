@@ -55,7 +55,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get all orders (recent 50)
+// Get all orders (recent 100)
 router.get('/', async (req, res) => {
   try {
     const db = getDB();
@@ -63,7 +63,7 @@ router.get('/', async (req, res) => {
       .collection('orders')
       .find({})
       .sort({ createdAt: -1 })
-      .limit(50)
+      .limit(100)
       .toArray();
 
     return res.json({
@@ -81,15 +81,59 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Analytics summary
+router.get('/analytics/summary', async (req, res) => {
+  try {
+    const db = getDB();
+    const orders = await db.collection('orders').find({}).toArray();
+
+    const totalOrders = orders.length;
+    let totalRevenue = 0;
+    let pendingCount = 0;
+    let paidCount = 0;
+    let totalPackages = 0;
+
+    orders.forEach((o) => {
+      if (o.pricing && o.pricing.grandTotal) {
+        totalRevenue += o.pricing.grandTotal;
+      }
+      if (o.cart && o.cart.totalQty) {
+        totalPackages += o.cart.totalQty;
+      }
+      if (o.status === 'PAID' || o.status === 'COMPLETED') {
+        paidCount++;
+      } else {
+        pendingCount++;
+      }
+    });
+
+    return res.json({
+      success: true,
+      summary: {
+        totalOrders,
+        totalRevenue,
+        totalPackages,
+        pendingCount,
+        paidCount,
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching analytics:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch analytics',
+      error: error.message,
+    });
+  }
+});
+
 // Get single order by order number
 router.get('/:orderNumber', async (req, res) => {
   try {
     const db = getDB();
     const { orderNumber } = req.params;
 
-    const order = await db
-      .collection('orders')
-      .findOne({ orderNumber });
+    const order = await db.collection('orders').findOne({ orderNumber });
 
     if (!order) {
       return res.status(404).json({
@@ -112,18 +156,22 @@ router.get('/:orderNumber', async (req, res) => {
   }
 });
 
-// Confirm payment status for order
-router.patch('/:orderNumber/confirm', async (req, res) => {
+// Update status for order
+router.patch('/:orderNumber/status', async (req, res) => {
   try {
     const db = getDB();
     const { orderNumber } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ success: false, message: 'Status is required' });
+    }
 
     const result = await db.collection('orders').updateOne(
       { orderNumber },
       {
         $set: {
-          status: 'PAID',
-          paidAt: new Date(),
+          status,
           updatedAt: new Date(),
         },
       }
@@ -138,13 +186,13 @@ router.patch('/:orderNumber/confirm', async (req, res) => {
 
     return res.json({
       success: true,
-      message: 'Payment confirmed for order ' + orderNumber,
+      message: `Order ${orderNumber} status updated to ${status}`,
     });
   } catch (error) {
-    console.error('Error confirming payment:', error);
+    console.error('Error updating status:', error);
     return res.status(500).json({
       success: false,
-      message: 'Failed to confirm payment',
+      message: 'Failed to update order status',
       error: error.message,
     });
   }
