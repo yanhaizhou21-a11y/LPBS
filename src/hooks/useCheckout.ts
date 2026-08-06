@@ -240,6 +240,20 @@ export function useCheckout(totalQty: number, subtotalProduct: number) {
     setTimeLeft(3600);
     setIsPaymentConfirmedChecked(false);
     setCurrentStep(4);
+
+    // Save order to MongoDB database backend
+    fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderNumber: orderNum,
+        buyer: buyerForm,
+        cart: { totalQty },
+        shippingService: selectedService,
+        paymentMethod,
+        pricing: { productTotal: subtotalProduct, shippingTotal: shippingCostTotal, grandTotal }
+      })
+    }).catch(err => console.warn('[API] Could not persist order to DB:', err));
   };
 
   const restartPayment = () => {
