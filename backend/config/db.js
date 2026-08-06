@@ -3,9 +3,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const uri = process.env.MONGODB_URI;
-const dbName = process.env.DB_NAME || 'botani_seed';
-
 let client;
 let db;
 let isConnected = false;
@@ -13,8 +10,11 @@ let isConnected = false;
 export async function connectDB() {
   if (db && isConnected) return db;
 
+  const uri = process.env.MONGODB_URI;
+  const dbName = process.env.DB_NAME || 'botani_seed';
+
   if (!uri) {
-    console.warn('[MongoDB] MONGODB_URI missing in .env');
+    console.warn('[MongoDB] MONGODB_URI missing in environment');
     return null;
   }
 

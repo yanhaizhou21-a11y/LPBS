@@ -22,7 +22,7 @@ app.get('/api/health', async (req, res) => {
   return res.json({
     status: isConnected ? 'ok' : 'degraded',
     service: 'Paket Benih Sayur Botani Backend API',
-    database: isConnected ? 'connected' : 'disconnected (Check MONGODB_URI credentials in .env)',
+    database: isConnected ? 'connected' : 'disconnected',
     timestamp: new Date().toISOString(),
   });
 });
@@ -31,8 +31,8 @@ app.get('/api/health', async (req, res) => {
 async function startServer() {
   console.log('[Server] Initializing Express backend server...');
   await connectDB();
-  
-  app.listen(PORT, () => {
+
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Express server running on http://localhost:${PORT}`);
     console.log(`📍 Health Check: http://localhost:${PORT}/api/health`);
     console.log(`📦 Orders API:  http://localhost:${PORT}/api/orders`);
