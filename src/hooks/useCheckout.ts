@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { JNE_DATA, JNERow } from '../data/jneData';
+import type { JNERow } from '../data/jneData';
 import {
   BuyerForm,
   JNEDestination,
@@ -9,29 +9,34 @@ import {
 } from '../types';
 
 const ADMIN_WHATSAPP_NUMBER = '6281234567890'; // PT. Botani Seed Indonesia Admin
+const BUYER_STORAGE_KEY = 'botani_buyer_session';
+const EMPTY_BUYER: BuyerForm = {
+  name: '', whatsapp: '', email: '', address: '', city: '', village: '', district: '', province: '', postal: '', note: ''
+};
 
 export function useCheckout(totalQty: number, subtotalProduct: number) {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   // Step 1: Buyer Data
-  const [buyerForm, setBuyerForm] = useState<BuyerForm>({
-    name: '',
-    whatsapp: '',
-    email: '',
-    address: '',
-    city: '',
-    village: '',
-    district: '',
-    province: '',
-    postal: '',
-    note: ''
+  const [buyerForm, setBuyerForm] = useState<BuyerForm>(() => {
+    try {
+      return { ...EMPTY_BUYER, ...JSON.parse(sessionStorage.getItem(BUYER_STORAGE_KEY) || '{}') };
+    } catch {
+      return EMPTY_BUYER;
+    }
   });
   const [buyerFormError, setBuyerFormError] = useState<string | null>(null);
+
+  useEffect(() => {
+    sessionStorage.setItem(BUYER_STORAGE_KEY, JSON.stringify(buyerForm));
+  }, [buyerForm]);
 
   // Step 2: Shipping
   const [shippingType, setShippingType] = useState<'JNE' | 'Ambil di kantor'>('JNE');
   const [destinationSearch, setDestinationSearch] = useState('');
+  const [jneData, setJneData] = useState<JNERow[] | null>(null);
+  const [isDestinationDataLoading, setIsDestinationDataLoading] = useState(false);
   const [selectedDestination, setSelectedDestination] = useState<JNEDestination | null>(null);
   const [selectedService, setSelectedService] = useState<ShippingServiceOption | null>(null);
   const [shippingValidationError, setShippingValidationError] = useState<string | null>(null);
@@ -47,14 +52,22 @@ export function useCheckout(totalQty: number, subtotalProduct: number) {
     return (totalQty * 0.1).toFixed(1);
   }, [totalQty]);
 
+  useEffect(() => {
+    if (destinationSearch.trim().length < 3 || jneData || isDestinationDataLoading) return;
+    setIsDestinationDataLoading(true);
+    import('../data/jneData')
+      .then(({ JNE_DATA }) => setJneData(JNE_DATA))
+      .finally(() => setIsDestinationDataLoading(false));
+  }, [destinationSearch, jneData, isDestinationDataLoading]);
+
   // JNE Destination Results matching search query (min 3 chars)
   const destinationResults = useMemo(() => {
     const query = destinationSearch.trim().toLowerCase();
-    if (query.length < 3) return [];
+    if (query.length < 3 || !jneData) return [];
     
     const matches: JNEDestination[] = [];
-    for (let i = 0; i < JNE_DATA.length && matches.length < 30; i++) {
-      const row = JNE_DATA[i];
+    for (let i = 0; i < jneData.length && matches.length < 30; i++) {
+      const row = jneData[i];
       const searchKey = row[13] || '';
       if (searchKey.includes(query)) {
         matches.push({
@@ -76,7 +89,7 @@ export function useCheckout(totalQty: number, subtotalProduct: number) {
       }
     }
     return matches;
-  }, [destinationSearch]);
+  }, [destinationSearch, jneData]);
 
   // Available Shipping Services for selected destination
   const availableServices = useMemo<ShippingServiceOption[]>(() => {
@@ -138,6 +151,8 @@ export function useCheckout(totalQty: number, subtotalProduct: number) {
   const [paymentSession, setPaymentSession] = useState<PaymentSession | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(3600); // 60 minutes
   const [isPaymentConfirmedChecked, setIsPaymentConfirmedChecked] = useState(false);
+  const [isSavingOrder, setIsSavingOrder] = useState(false);
+  const [orderSaveError, setOrderSaveError] = useState<string | null>(null);
 
   // Countdown timer effect
   useEffect(() => {
@@ -193,6 +208,18 @@ export function useCheckout(totalQty: number, subtotalProduct: number) {
       setBuyerFormError('Lengkapi seluruh data yang wajib diisi (*).');
       return false;
     }
+    if (!/^\+?\d{9,15}$/.test(buyerForm.whatsapp.replace(/[\s-]/g, ''))) {
+      setBuyerFormError('Masukkan nomor WhatsApp aktif, 9–15 digit.');
+      return false;
+    }
+    if (!/^\d{5}$/.test(buyerForm.postal)) {
+      setBuyerFormError('Kode pos harus terdiri dari 5 digit.');
+      return false;
+    }
+    if (buyerForm.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyerForm.email)) {
+      setBuyerFormError('Format email belum benar.');
+      return false;
+    }
     return true;
   };
 
@@ -219,10 +246,10 @@ export function useCheckout(totalQty: number, subtotalProduct: number) {
     }
   };
 
-  const startPaymentSession = () => {
-    const randomDigits = Math.floor(1000 + Math.random() * 9000);
+  const startPaymentSession = async () => {
+    const randomCode = crypto.randomUUID().replace(/-/g, '').slice(0, 6).toUpperCase();
     const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const orderNum = `BTS-${dateStr}-${randomDigits}`;
+    const orderNum = `BTS-${dateStr}-${randomCode}`;
 
     const newSession: PaymentSession = {
       orderNumber: orderNum,
@@ -236,24 +263,25 @@ export function useCheckout(totalQty: number, subtotalProduct: number) {
       isConfirmed: false
     };
 
-    setPaymentSession(newSession);
-    setTimeLeft(3600);
-    setIsPaymentConfirmedChecked(false);
-    setCurrentStep(4);
-
-    // Save order to MongoDB database backend
-    fetch('/api/orders', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        orderNumber: orderNum,
-        buyer: buyerForm,
-        cart: { totalQty },
-        shippingService: selectedService,
-        paymentMethod,
-        pricing: { productTotal: subtotalProduct, shippingTotal: shippingCostTotal, grandTotal }
-      })
-    }).catch(err => console.warn('[API] Could not persist order to DB:', err));
+    setIsSavingOrder(true);
+    setOrderSaveError(null);
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderNumber: orderNum, buyer: buyerForm, cart: { totalQty }, shippingService: selectedService, paymentMethod })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Pesanan belum dapat disimpan.');
+      setPaymentSession(newSession);
+      setTimeLeft(3600);
+      setIsPaymentConfirmedChecked(false);
+      setCurrentStep(4);
+    } catch (error) {
+      setOrderSaveError(error instanceof Error ? error.message : 'Pesanan belum dapat disimpan.');
+    } finally {
+      setIsSavingOrder(false);
+    }
   };
 
   const restartPayment = () => {
@@ -317,6 +345,7 @@ Bukti transfer telah saya siapkan. Mohon pesanan saya segera diproses. Terima ka
     destinationSearch,
     setDestinationSearch,
     destinationResults,
+    isDestinationDataLoading,
     selectedDestination,
     setSelectedDestination,
     selectedService,
@@ -337,6 +366,8 @@ Bukti transfer telah saya siapkan. Mohon pesanan saya segera diproses. Terima ka
     setIsPaymentConfirmedChecked,
     confirmPaidAndOpenWhatsapp,
     restartPayment,
+    isSavingOrder,
+    orderSaveError,
     grandTotal,
     generateWhatsappMessage,
     adminWhatsappNumber: ADMIN_WHATSAPP_NUMBER

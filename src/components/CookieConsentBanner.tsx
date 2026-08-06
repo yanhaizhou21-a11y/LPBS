@@ -63,6 +63,7 @@ export function CookieConsentBanner({ onOpenPrivacyPolicy }: CookieConsentBanner
         </div>
         <button
           onClick={handleDecline}
+          aria-label="Tutup pemberitahuan cookie"
           className="text-slate-500 hover:text-slate-300 transition-colors p-1"
         >
           <X className="w-4 h-4" />

@@ -3,14 +3,15 @@ import { Lock, KeyRound, ShieldAlert, ArrowLeft, CheckCircle2 } from 'lucide-rea
 import { ASSETS } from '../data/assets';
 
 interface SecretAdminLoginProps {
-  onLoginSuccess: (token: string, adminName: string) => void;
+  accessDenied?: boolean;
+  onLoginSuccess: (adminName: string) => void;
   onBackToHome: () => void;
 }
 
-export function SecretAdminLogin({ onLoginSuccess, onBackToHome }: SecretAdminLoginProps) {
+export function SecretAdminLogin({ accessDenied = false, onLoginSuccess, onBackToHome }: SecretAdminLoginProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(accessDenied ? 'Error: Unauthorized Access. Masuk dengan akun admin untuk melanjutkan.' : null);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,9 +34,7 @@ export function SecretAdminLogin({ onLoginSuccess, onBackToHome }: SecretAdminLo
       const data = await response.json();
 
       if (response.ok && data.success) {
-        localStorage.setItem('botani_admin_token', data.token);
-        localStorage.setItem('botani_admin_name', data.admin.name);
-        onLoginSuccess(data.token, data.admin.name);
+        onLoginSuccess(data.admin.name);
       } else {
         setError(data.message || 'Kombinasi kredensial admin salah.');
       }

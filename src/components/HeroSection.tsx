@@ -1,100 +1,81 @@
-import React from 'react';
+import { motion, useReducedMotion } from 'motion/react';
+import { BadgeCheck, LockKeyhole, PackagePlus, ShoppingBag, Sprout, Truck } from 'lucide-react';
+import { ASSETS } from '../data/assets';
 
 interface HeroSectionProps {
   onAddToCart: (qty: number) => void;
   onOpenCheckout: () => void;
 }
 
-export const HeroSection: React.FC<HeroSectionProps> = ({ onAddToCart, onOpenCheckout }) => {
+const benefits = [
+  { icon: BadgeCheck, text: 'Benih bersertifikat dan siap tanam' },
+  { icon: Sprout, text: '10+ varietas sayur pilihan' },
+  { icon: Truck, text: 'Tarif JNE otomatis ke seluruh Indonesia' },
+];
+
+export function HeroSection({ onAddToCart, onOpenCheckout }: HeroSectionProps) {
+  const reduceMotion = useReducedMotion();
+  const enter = (delay: number) => ({
+    initial: reduceMotion ? false : { opacity: 0, y: 24 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.7, delay: reduceMotion ? 0 : delay, ease: [0.22, 1, 0.36, 1] as const },
+  });
+
   return (
-    <section className="hero-section">
-      <div className="hero-bg-overlay"></div>
+    <section className="hero-section" id="top">
+      <div className="hero-seed-grid" aria-hidden="true" />
       <div className="container hero-container">
         <div className="hero-content">
-          <div className="hero-eyebrow">
-            <span className="eyebrow-badge">🌱 BENIH SAYURAN UNGGUL BERSERTIFIKAT</span>
-            <span className="eyebrow-sub">Pilihan Petani & Pengusaha Muda Indonesia</span>
-          </div>
+          <motion.div className="hero-eyebrow" {...enter(0.05)}>
+            <span className="eyebrow-badge"><BadgeCheck size={15} /> Benih unggul bersertifikat</span>
+            <span className="eyebrow-sub">Dikembangkan oleh PT Botani Seed Indonesia · IPB University</span>
+          </motion.div>
 
-          <h1 className="hero-title">
-            Mulailah Usaha Benih Sayuran <span className="text-gradient">Menguntungkan</span> Dari Rumah!
-          </h1>
+          <motion.h1 className="hero-title" {...enter(0.12)}>
+            Mulai kebun produktif dari <span className="text-gradient">satu paket benih.</span>
+          </motion.h1>
 
-          <p className="hero-lead">
-            Dapatkan Paket Benih Sayuran Unggul dari <strong>PT. Botani Seed Indonesia</strong>. 
-            Solusi praktis untuk kebutuhan pangan harian, hobi berkebun, hingga peluang usaha pertanian modern bernilai tinggi.
-          </p>
+          <motion.p className="hero-lead" {...enter(0.2)}>
+            Pilih benih sayuran untuk kebutuhan rumah, kebun komunitas, atau langkah pertama usaha tani Anda. Pesan tanpa membuat akun.
+          </motion.p>
 
-          <div className="hero-pills">
-            <div className="hero-pill">
-              <span className="pill-icon">✓</span>
-              <span>Day Tumbuh Tinggi & Sertifikasi Resmi</span>
-            </div>
-            <div className="hero-pill">
-              <span className="pill-icon">✓</span>
-              <span>10+ Jenis Benih Pilihan Terfavorit</span>
-            </div>
-            <div className="hero-pill">
-              <span className="pill-icon">✓</span>
-              <span>Pengiriman Otomatis Tarif JNE Se-Indonesia</span>
-            </div>
-          </div>
+          <motion.ul className="hero-pills" {...enter(0.28)}>
+            {benefits.map(({ icon: Icon, text }) => (
+              <li className="hero-pill" key={text}><span className="pill-icon"><Icon size={14} /></span>{text}</li>
+            ))}
+          </motion.ul>
 
-          <div className="hero-actions">
-            <button className="hero-primary-btn" onClick={onOpenCheckout}>
-              <span>⚡ Pesan Sekarang</span>
-            </button>
-            <button className="hero-secondary-btn" onClick={() => onAddToCart(5)}>
-              <span>🛒 Beli 5 Paket (Hemat 20%)</span>
-            </button>
-          </div>
+          <motion.div className="hero-actions" {...enter(0.36)}>
+            <motion.button className="hero-primary-btn" onClick={onOpenCheckout} whileTap={reduceMotion ? undefined : { scale: 0.98 }}>
+              <ShoppingBag size={19} /> Pesan sekarang
+            </motion.button>
+            <motion.button className="hero-secondary-btn" onClick={() => onAddToCart(5)} whileTap={reduceMotion ? undefined : { scale: 0.98 }}>
+              <PackagePlus size={19} /> Ambil promo 5 paket
+            </motion.button>
+          </motion.div>
 
-          <div className="hero-guarantee-note">
-            <small>🔒 Pembayaran Aman QRIS & Transfer Bank Resmi PT. Botani Seed Indonesia</small>
-          </div>
+          <motion.p className="hero-guarantee-note" {...enter(0.42)}><LockKeyhole size={14} /> Checkout tamu · data hanya untuk proses pesanan</motion.p>
         </div>
 
-        <div className="hero-visual">
+        <motion.div className="hero-visual" {...enter(0.28)}>
           <div className="hero-card-product">
-            <div className="product-badge-discount">Diskon 20% Beli 5+</div>
+            <div className="product-badge-discount">Hemat 20% untuk 5+</div>
             <div className="hero-image-wrapper">
-              <img 
-                src="https://images.unsplash.com/photo-1592417817098-8f3d6eb231fc?q=80&w=1000&auto=format&fit=crop" 
-                alt="Paket Benih Sayur Botani Seed" 
-                className="hero-product-img" 
-              />
+              <img src={ASSETS.productBanner} alt="Paket benih sayuran Botani Seed" className="hero-product-img" width="900" height="620" fetchPriority="high" />
             </div>
-
             <div className="product-card-body">
               <span className="product-category">PAKET LENGKAP SIAP TANAM</span>
-              <h3 className="product-card-title">Paket Benih Sayur Unggul Botani Seed</h3>
-              <div className="product-rating">
-                <span className="stars">★★★★★</span>
-                <span className="rating-score">4.9 / 5.0</span>
-                <span className="rating-count">(1,240+ Ulasan Petani)</span>
-              </div>
-
+              <h2 className="product-card-title">Paket Benih Sayur Unggul</h2>
+              <div className="product-rating"><span className="stars" aria-label="Rating 4,9 dari 5">★★★★★</span><span className="rating-score">4,9/5</span><span className="rating-count">1.240+ pembeli</span></div>
               <div className="price-tag-wrap">
-                <div className="price-single">
-                  <span className="price-label">Harga Satuan:</span>
-                  <span className="price-val">Rp 20.000</span>
-                </div>
-                <div className="price-promo">
-                  <span className="promo-label">Promo 5 Paket:</span>
-                  <span className="promo-val">Rp 80.000</span>
-                  <span className="normal-cross">Rp 100.000</span>
-                </div>
+                <div className="price-single"><span className="price-label">Satuan</span><span className="price-val">Rp20.000</span></div>
+                <div className="price-promo"><span className="promo-label">5 paket</span><span className="promo-val">Rp80.000</span><span className="normal-cross">Rp100.000</span></div>
               </div>
-
-              <div className="product-card-footer">
-                <button className="card-add-btn" onClick={() => onAddToCart(1)}>
-                  + Tambah ke Keranjang
-                </button>
-              </div>
+              <button className="card-add-btn" onClick={() => onAddToCart(1)}><PackagePlus size={17} /> Tambah ke keranjang</button>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
-};
+}

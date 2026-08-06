@@ -48,9 +48,10 @@ interface AdminDashboardProps {
   adminName: string;
   onLogout: () => void;
   onGoHome: () => void;
+  onUnauthorized: () => void;
 }
 
-export function AdminDashboard({ adminName, onLogout, onGoHome }: AdminDashboardProps) {
+export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }: AdminDashboardProps) {
   const [orders, setOrders] = useState<OrderItem[]>([]);
   const [summary, setSummary] = useState({
     totalOrders: 0,
@@ -63,14 +64,21 @@ export function AdminDashboard({ adminName, onLogout, onGoHome }: AdminDashboard
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatusFilter, setSelectedStatusFilter] = useState('ALL');
   const [updatingOrderNum, setUpdatingOrderNum] = useState<string | null>(null);
+  const [dataError, setDataError] = useState<string | null>(null);
 
   const fetchData = async () => {
     setIsLoading(true);
+    setDataError(null);
     try {
       const [ordersRes, summaryRes] = await Promise.all([
         fetch('/api/orders'),
         fetch('/api/orders/analytics/summary')
       ]);
+
+      if (ordersRes.status === 401 || summaryRes.status === 401) {
+        onUnauthorized();
+        return;
+      }
 
       const ordersData = await ordersRes.json();
       const summaryData = await summaryRes.json();
@@ -83,6 +91,7 @@ export function AdminDashboard({ adminName, onLogout, onGoHome }: AdminDashboard
       }
     } catch (err) {
       console.error('Failed to fetch admin data:', err);
+      setDataError('Data admin belum dapat dimuat. Periksa koneksi server lalu coba lagi.');
     } finally {
       setIsLoading(false);
     }
@@ -101,6 +110,10 @@ export function AdminDashboard({ adminName, onLogout, onGoHome }: AdminDashboard
         body: JSON.stringify({ status: newStatus })
       });
       const data = await res.json();
+      if (res.status === 401) {
+        onUnauthorized();
+        return;
+      }
       if (data.success) {
         setOrders(prev =>
           prev.map(o => (o.orderNumber === orderNumber ? { ...o, status: newStatus } : o))
@@ -108,6 +121,7 @@ export function AdminDashboard({ adminName, onLogout, onGoHome }: AdminDashboard
       }
     } catch (err) {
       console.error('Error updating status:', err);
+      setDataError('Status pesanan belum dapat diperbarui.');
     } finally {
       setUpdatingOrderNum(null);
     }
@@ -163,6 +177,11 @@ export function AdminDashboard({ adminName, onLogout, onGoHome }: AdminDashboard
       </header>
 
       <main className="max-w-7xl mx-auto p-6 space-y-6">
+        {dataError && (
+          <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-300" role="alert">
+            {dataError}
+          </div>
+        )}
         {/* Metrics Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">

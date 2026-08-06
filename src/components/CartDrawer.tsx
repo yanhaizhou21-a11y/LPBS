@@ -28,6 +28,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   onClearCart,
   onOpenCheckout
 }) => {
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => event.key === 'Escape' && onClose();
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleCheckoutClick = () => {
@@ -37,11 +44,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
   return (
     <div className="cart-drawer-backdrop" onClick={onClose}>
-      <aside className="cart-drawer" onClick={e => e.stopPropagation()}>
+      <aside className="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title" onClick={e => e.stopPropagation()}>
         <header className="cart-drawer-header">
           <div className="header-title">
             <span className="drawer-icon">🛒</span>
-            <h3>Keranjang Belanja</h3>
+            <h3 id="cart-title">Keranjang Belanja</h3>
           </div>
           <button className="cart-close-btn" onClick={onClose} aria-label="Tutup keranjang">
             ×

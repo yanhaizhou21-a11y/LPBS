@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ASSETS } from '../data/assets';
 import { useCheckout } from '../hooks/useCheckout';
 
@@ -25,6 +25,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
   const [copySuccess, setCopySuccess] = useState(false);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => event.key === 'Escape' && onClose();
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const bankAccountDetails: Record<string, { bankName: string; number: string }> = {
@@ -43,13 +50,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
   return (
     <div className="checkout-modal-backdrop">
-      <section className="checkout-page" id="checkoutPage">
+      <section className="checkout-page" id="checkoutPage" role="dialog" aria-modal="true" aria-labelledby="checkout-title">
         <div className="checkout-shell">
           <header className="checkout-header">
             <div className="checkout-brand">
               <span className="checkout-brand-mark">🌱</span>
               <div>
-                <strong>PT. Botani Seed Indonesia</strong>
+                <strong id="checkout-title">PT. Botani Seed Indonesia</strong>
                 <small>Pemesanan Paket Benih Sayuran</small>
               </div>
             </div>
@@ -303,9 +310,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                             />
                           </div>
 
-                          <div className="jne-search-status">
+                          <div className="jne-search-status" aria-live="polite">
                             {checkout.destinationSearch.trim().length < 3
                               ? 'Ketik minimal 3 karakter untuk mencari tujuan.'
+                              : checkout.isDestinationDataLoading
+                              ? 'Memuat data wilayah JNE…'
                               : checkout.destinationResults.length === 0
                               ? 'Tujuan tidak ditemukan. Coba periksa ejaan kelurahan atau kode pos.'
                               : `Ditemukan ${checkout.destinationResults.length} lokasi tujuan:`}
@@ -314,7 +323,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                           {checkout.destinationResults.length > 0 && (
                             <div className="jne-destination-results">
                               {checkout.destinationResults.map((dest, idx) => (
-                                <div
+                                <button
+                                  type="button"
                                   className="result-item-row"
                                   key={idx}
                                   onClick={() => {
@@ -328,7 +338,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                                   <small>
                                     {dest.regencyType} {dest.regencyName}, {dest.province} — Kodepos: {dest.postalCode}
                                   </small>
-                                </div>
+                                </button>
                               ))}
                             </div>
                           )}
@@ -544,10 +554,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                       type="button"
                       className="start-payment-btn"
                       onClick={checkout.startPaymentSession}
+                      disabled={checkout.isSavingOrder}
                     >
-                      Lanjut ke Detail Pembayaran
+                      {checkout.isSavingOrder ? 'Menyimpan pesanan…' : 'Lanjut ke Detail Pembayaran'}
                     </button>
                   </div>
+                  {checkout.orderSaveError && <p className="form-error" role="alert">{checkout.orderSaveError}</p>}
 
                   <div className="checkout-nav">
                     <button
