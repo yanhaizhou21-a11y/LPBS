@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 
 interface QuickOrderSectionProps {
   onSetQtyDirectly: (qty: number) => void;
-  onAddToCart: (qty: number) => void;
   onOpenCheckout: () => void;
 }
 
 export const QuickOrderSection: React.FC<QuickOrderSectionProps> = ({
   onSetQtyDirectly,
-  onAddToCart,
   onOpenCheckout
 }) => {
   const [selectedQty, setSelectedQty] = useState<number>(5);

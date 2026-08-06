@@ -7,10 +7,7 @@ import {
   LogOut,
   RefreshCw,
   Search,
-  CheckCircle2,
-  AlertCircle,
   Truck,
-  ExternalLink,
   ShieldCheck
 } from 'lucide-react';
 
@@ -168,6 +165,7 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
           </div>
           <button
             onClick={onLogout}
+            aria-label="Keluar dari portal admin"
             className="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors"
             title="Keluar Admin"
           >
@@ -240,6 +238,7 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
                 <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-500" />
                 <input
                   type="text"
+                  aria-label="Cari pesanan"
                   placeholder="Cari ID, Nama, Kota, WA..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
@@ -248,6 +247,7 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
               </div>
 
               <select
+                aria-label="Filter status pesanan"
                 value={selectedStatusFilter}
                 onChange={e => setSelectedStatusFilter(e.target.value)}
                 className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-emerald-500"
@@ -262,6 +262,7 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
 
               <button
                 onClick={fetchData}
+                aria-label="Muat ulang data pesanan"
                 className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition-colors"
                 title="Refresh Data"
               >
@@ -330,6 +331,7 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
                       </td>
                       <td className="py-3.5 px-4 text-right">
                         <select
+                          aria-label={`Ubah status pesanan ${order.orderNumber}`}
                           value={order.status}
                           disabled={updatingOrderNum === order.orderNumber}
                           onChange={e => handleStatusChange(order.orderNumber, e.target.value)}

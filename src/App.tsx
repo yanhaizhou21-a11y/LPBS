@@ -51,6 +51,7 @@ export function App() {
   useEffect(() => {
     if (view === 'landing') return;
     let active = true;
+    const requestedDashboard = window.location.pathname === '/admin/dashboard';
     fetch('/api/auth/session')
       .then(async (response) => ({ response, data: await response.json() }))
       .then(({ response, data }) => {
@@ -60,11 +61,15 @@ export function App() {
           setAccessDenied(false);
           navigate('admin-dashboard', '/admin/dashboard', true);
         } else {
-          setAccessDenied(window.location.pathname === '/admin/dashboard');
+          setAccessDenied(requestedDashboard);
           navigate('admin-login', '/secret-admin-login', true);
         }
       })
-      .catch(() => active && setAccessDenied(true))
+      .catch(() => {
+        if (!active) return;
+        setAccessDenied(requestedDashboard);
+        navigate('admin-login', '/secret-admin-login', true);
+      })
       .finally(() => active && setAuthChecked(true));
     return () => { active = false; };
   }, []);
@@ -102,7 +107,7 @@ export function App() {
         <HeroSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
         <PeluangSection /><StorySection /><CompanyProfile />
         <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-        <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+        <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => setIsCheckoutOpen(true)} />
         <FAQSection />
       </main>
       <Footer onOpenPrivacyPolicy={openPrivacy} />

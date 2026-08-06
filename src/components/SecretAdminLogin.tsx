@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Lock, KeyRound, ShieldAlert, ArrowLeft, CheckCircle2 } from 'lucide-react';
-import { ASSETS } from '../data/assets';
+import { Lock, KeyRound, ShieldAlert, ArrowLeft } from 'lucide-react';
 
 interface SecretAdminLoginProps {
   accessDenied?: boolean;
@@ -52,19 +51,19 @@ export function SecretAdminLogin({ accessDenied = false, onLoginSuccess, onBackT
           onClick={onBackToHome}
           className="absolute top-6 left-6 flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors"
         >
-          <ArrowLeft className="w-4 h-4" /> Kembalilah ke Utama
+          <ArrowLeft className="w-4 h-4" /> Kembali ke beranda
         </button>
 
         <div className="text-center mt-6 mb-8">
           <div className="inline-flex p-3 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 mb-3">
             <Lock className="w-8 h-8" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight">Secret Admin Portal</h1>
-          <p className="text-xs text-slate-400 mt-1">PT Botani Seed Indonesia (Internal Access Only)</p>
+          <h1 className="text-2xl font-bold tracking-tight text-white">Portal Admin Internal</h1>
+          <p className="text-xs text-slate-400 mt-1">Khusus operasional PT Botani Seed Indonesia</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-400 text-xs flex items-start gap-2">
+          <div className="mb-6 p-3.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-400 text-xs flex items-start gap-2" role="alert">
             <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
@@ -72,10 +71,12 @@ export function SecretAdminLogin({ accessDenied = false, onLoginSuccess, onBackT
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Username Admin</label>
+            <label htmlFor="admin-username" className="block text-xs font-medium text-slate-300 mb-1">Username Admin</label>
             <div className="relative">
               <input
                 type="text"
+                id="admin-username"
+                autoComplete="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Masukkan username"
@@ -85,10 +86,12 @@ export function SecretAdminLogin({ accessDenied = false, onLoginSuccess, onBackT
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Password Rahasia</label>
+            <label htmlFor="admin-password" className="block text-xs font-medium text-slate-300 mb-1">Password Rahasia</label>
             <div className="relative">
               <input
                 type="password"
+                id="admin-password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"

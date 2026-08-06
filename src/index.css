@@ -6,6 +6,7 @@
   --font-sans: 'Nunito', ui-sans-serif, system-ui, sans-serif;
 }
 
+@layer components {
 /* Root Design System & Color Tokens */
 :root {
   --font-main: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -2555,7 +2556,7 @@ button, a {
 .mobile-nav-actions .mobile-order { grid-column: 1 / -1; justify-content: center; background: var(--color-primary-hover); color: var(--color-bg-card); }
 
 /* Botanical hero polish */
-.hero-section { min-height: calc(100vh - 44px); padding: 80px 0 96px; background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-bg-card) 82%); }
+.hero-section { min-height: calc(100svh - 74px); padding: 80px 0 96px; background: linear-gradient(180deg, var(--color-primary-light) 0%, var(--color-bg-card) 82%); }
 .hero-seed-grid { position: absolute; inset: 0; opacity: 0.25; background-image: radial-gradient(circle, color-mix(in srgb, var(--color-primary) 32%, transparent) 1px, transparent 1px); background-size: 24px 24px; mask-image: linear-gradient(to bottom, #000, rgba(0, 0, 0, 0)); pointer-events: none; }
 .hero-content { position: relative; z-index: 1; }
 .eyebrow-badge { display: inline-flex; align-items: center; gap: 7px; }
@@ -2600,6 +2601,8 @@ button, a {
 .checkout-loading { position: fixed; inset: 0; z-index: 1050; background: rgba(7, 17, 11, 0.75); color: #fff; }
 .start-payment-btn:disabled { opacity: 0.55; cursor: wait; }
 .jne-destination-results .result-item-row { width: 100%; border: 0; border-bottom: 1px solid var(--color-border); background: var(--color-bg-card); color: var(--color-text-body); text-align: left; }
+.checkout-brand > div { display: flex; flex-direction: column; line-height: 1.35; }
+.checkout-brand small { display: block; color: var(--color-text-muted); }
 
 @media (max-width: 1040px) {
   .notch-links { gap: 12px; }
@@ -2621,11 +2624,27 @@ button, a {
   .hero-section { min-height: auto; padding: 64px 0 72px; }
   .hero-container { gap: 48px; }
   .hero-title { font-size: clamp(2.55rem, 12vw, 4rem); }
-  .hero-actions { align-items: stretch; }
+  .hero-actions { flex-direction: column; align-items: stretch; }
   .hero-primary-btn, .hero-secondary-btn { width: 100%; }
+  .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+  .bottom-flex { align-items: flex-start; gap: 20px; }
+  .payment-badges { flex-wrap: wrap; }
+  .checkout-header { align-items: flex-start; gap: 12px; }
+  .checkout-brand { align-items: flex-start; gap: 10px; min-width: 0; }
+  .checkout-brand-mark { font-size: 1.5rem; }
+  .checkout-brand strong { font-size: 0.95rem; }
+  .checkout-brand small { font-size: 0.75rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+}
+
+/* Shared marketing container intentionally overrides Tailwind's width-only utility. */
+.container {
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: 24px;
 }

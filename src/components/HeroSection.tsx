@@ -61,7 +61,7 @@ export function HeroSection({ onAddToCart, onOpenCheckout }: HeroSectionProps) {
           <div className="hero-card-product">
             <div className="product-badge-discount">Hemat 20% untuk 5+</div>
             <div className="hero-image-wrapper">
-              <img src={ASSETS.productBanner} alt="Paket benih sayuran Botani Seed" className="hero-product-img" width="900" height="620" fetchPriority="high" />
+              <img src={ASSETS.productBanner} alt="Paket benih sayuran Botani Seed" className="hero-product-img" width="900" height="620" />
             </div>
             <div className="product-card-body">
               <span className="product-category">PAKET LENGKAP SIAP TANAM</span>

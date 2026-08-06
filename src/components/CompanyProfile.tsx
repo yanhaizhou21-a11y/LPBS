@@ -83,7 +83,7 @@ export const CompanyProfile: React.FC = () => {
           <div className="gallery-grid">
             {galleryImages.map((img, idx) => (
               <div className="gallery-card" key={idx}>
-                <img src={img.src} alt={img.caption} className="gallery-img" />
+                <img src={img.src} alt={img.caption} className="gallery-img" loading="lazy" />
                 <div className="gallery-caption">{img.caption}</div>
               </div>
             ))}

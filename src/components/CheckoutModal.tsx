@@ -215,7 +215,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     </div>
 
                     {checkout.buyerFormError && (
-                      <p className="form-error">{checkout.buyerFormError}</p>
+                      <p className="form-error" role="alert">{checkout.buyerFormError}</p>
                     )}
                   </form>
 
@@ -445,7 +445,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   )}
 
                   {checkout.shippingValidationError && (
-                    <div className="shipping-validation-message">{checkout.shippingValidationError}</div>
+                    <div className="shipping-validation-message" role="alert">{checkout.shippingValidationError}</div>
                   )}
 
                   <div className="checkout-nav">
