@@ -10,6 +10,8 @@ import {
   Truck,
   ShieldCheck
 } from 'lucide-react';
+import { AdminProductsPanel } from './AdminProductsPanel';
+import { ThemeToggleButton } from './ThemeToggleButton';
 
 interface OrderItem {
   orderNumber: string;
@@ -138,10 +140,11 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
   });
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans">
+    <div className="admin-dashboard min-h-screen font-sans">
       {/* Top Navbar */}
-      <header className="bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
+      <header className="admin-header px-4 md:px-6 py-4 flex items-center justify-between sticky top-0 z-30">
         <div className="flex items-center gap-3">
+          <ThemeToggleButton />
           <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
             <LayoutDashboard className="w-5 h-5" />
           </div>
@@ -224,6 +227,8 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
             </div>
           </div>
         </div>
+
+        <AdminProductsPanel onUnauthorized={onUnauthorized} />
 
         {/* Orders Table Section */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">

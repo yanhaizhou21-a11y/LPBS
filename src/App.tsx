@@ -15,13 +15,15 @@ import { SecretAdminLogin } from './components/SecretAdminLogin';
 import { AdminDashboard } from './components/AdminDashboard';
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { CookieConsentBanner } from './components/CookieConsentBanner';
+import { ProductsPage } from './components/ProductsPage';
 
 const CheckoutModal = lazy(() => import('./components/CheckoutModal').then((module) => ({ default: module.CheckoutModal })));
-type View = 'landing' | 'admin-login' | 'admin-dashboard';
+type View = 'landing' | 'products' | 'admin-login' | 'admin-dashboard';
 
 function viewFromPath(): View {
   if (window.location.pathname === '/admin/dashboard') return 'admin-dashboard';
   if (window.location.pathname === '/secret-admin-login') return 'admin-login';
+  if (window.location.pathname === '/products') return 'products';
   return 'landing';
 }
 
@@ -31,7 +33,7 @@ export function App() {
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(window.location.pathname === '/kebijakan-privasi');
   const [view, setView] = useState<View>(viewFromPath);
   const [adminName, setAdminName] = useState('Admin PT Botani Seed');
-  const [authChecked, setAuthChecked] = useState(viewFromPath() === 'landing');
+  const [authChecked, setAuthChecked] = useState(['landing', 'products'].includes(viewFromPath()));
   const [accessDenied, setAccessDenied] = useState(window.location.pathname === '/admin/dashboard');
 
   const navigate = (nextView: View, path: string, replace = false) => {
@@ -49,7 +51,7 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    if (view === 'landing') return;
+    if (view === 'landing' || view === 'products') return;
     let active = true;
     const requestedDashboard = window.location.pathname === '/admin/dashboard';
     fetch('/api/auth/session')
@@ -103,13 +105,15 @@ export function App() {
   return (
     <div className="app-root">
       <Navbar cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
-      <main>
-        <HeroSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-        <PeluangSection /><StorySection /><CompanyProfile />
-        <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-        <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-        <FAQSection />
-      </main>
+      {view === 'products' ? <ProductsPage onGoHome={() => navigate('landing', '/')} /> : (
+        <main>
+          <HeroSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          <PeluangSection /><StorySection /><CompanyProfile />
+          <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          <FAQSection />
+        </main>
+      )}
       <Footer onOpenPrivacyPolicy={openPrivacy} />
       <CartDrawer isOpen={cart.isCartOpen} onClose={cart.closeCart} items={cart.items} totalQty={cart.totalQty} normalTotal={cart.normalTotal} discountTotal={cart.discountTotal} subtotal={cart.subtotal} isPromoEligible={cart.isPromoEligible} onUpdateQty={cart.updateQty} onClearCart={cart.clearCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
       {isCheckoutOpen && (

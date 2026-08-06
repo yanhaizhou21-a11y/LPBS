@@ -21,7 +21,7 @@ export function Footer({ onOpenPrivacyPolicy }: FooterProps) {
         <div className="footer-links-col">
           <h2 className="footer-col-title">Jelajahi</h2>
           <nav className="footer-nav-list" aria-label="Navigasi footer">
-            <a href="#top">Beranda</a><a href="#peluang">Peluang usaha</a><a href="#kisah">Cerita petani</a>
+            <a href="/">Beranda</a><a href="/products">Produk</a><a href="/#peluang">Peluang usaha</a><a href="/#kisah">Cerita petani</a>
             <a href="#profil">Tentang perusahaan</a><a href="#promo">Promo 5 paket</a><a href="#faq">Pertanyaan umum</a>
             {onOpenPrivacyPolicy && <button onClick={onOpenPrivacyPolicy}>Kebijakan privasi</button>}
           </nav>

@@ -4,6 +4,7 @@ import cors from 'cors';
 import { connectDB, checkDBConnection } from './config/db.js';
 import orderRoutes from './routes/orderRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import productRoutes from './routes/productRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -33,6 +34,7 @@ app.use(express.json({ limit: '32kb' }));
 
 app.use('/api/orders', orderRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
 
 app.get('/api/health', (_req, res) => {
   const isConnected = checkDBConnection();
