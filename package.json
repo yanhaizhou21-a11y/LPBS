@@ -11,13 +11,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "lucide-react": "^0.344.0",
     "mongodb": "^7.5.0",
+    "motion": "^13.0.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
