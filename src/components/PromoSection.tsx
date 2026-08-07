@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, ArrowRight, CircleCheck, ShoppingCart, Video, Zap } from 'lucide-react';
+import { AlertTriangle, ArrowRight, CheckCircle2, ShoppingCart, Video, Zap } from 'lucide-react';
 
 interface PromoSectionProps {
   onAddToCart: (qty: number) => void;
@@ -63,10 +63,10 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
             </div>
 
             <ul className="promo-feature-list">
-              <li><CircleCheck size={18} aria-hidden="true" /> Isian 10 jenis benih sayur pilihan unggul bersertifikat</li>
-              <li><CircleCheck size={18} aria-hidden="true" /> Daya kecambah & pertumbuhan tinggi (di atas 85%)</li>
-              <li><CircleCheck size={18} aria-hidden="true" /> Dilengkapi panduan cara penyemaian & perawatan</li>
-              <li><CircleCheck size={18} aria-hidden="true" /> Ongkir JNE dihitung otomatis dan akurat sesuai tujuan</li>
+              <li><CheckCircle2 size={18} aria-hidden="true" /> Isian 10 jenis benih sayur pilihan unggul bersertifikat</li>
+              <li><CheckCircle2 size={18} aria-hidden="true" /> Daya kecambah & pertumbuhan tinggi (di atas 85%)</li>
+              <li><CheckCircle2 size={18} aria-hidden="true" /> Dilengkapi panduan cara penyemaian & perawatan</li>
+              <li><CheckCircle2 size={18} aria-hidden="true" /> Ongkir JNE dihitung otomatis dan akurat sesuai tujuan</li>
             </ul>
 
             <div className="promo-card-actions">

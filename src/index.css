@@ -487,6 +487,8 @@
 
   .stars {
     color: #f59e0b;
+    display: inline-flex;
+    gap: 2px;
   }
 
   .rating-score {
@@ -584,7 +586,7 @@
   }
 
   .card-icon-wrap {
-    font-size: 2.5rem;
+    color: var(--color-primary);
     margin-bottom: 1.25rem;
   }
 
@@ -651,7 +653,9 @@
   }
 
   .story-source-link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-size: 0.875rem;
     font-weight: 700;
     color: var(--color-primary);
@@ -778,7 +782,8 @@
   }
 
   .highlight-icon {
-    font-size: 2rem;
+    color: var(--color-primary);
+    flex-shrink: 0;
   }
 
   .highlight-item-card h4 {
@@ -848,7 +853,8 @@
   }
 
   .notice-icon {
-    font-size: 2rem;
+    color: #a16207;
+    flex-shrink: 0;
   }
 
   .notice-content strong {
@@ -899,6 +905,10 @@
     font-size: 0.875rem;
     color: var(--color-text-muted);
     text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
   }
 
   .promo-details-card {
@@ -962,8 +972,8 @@
   }
 
   .price-arrow {
-    font-size: 1.5rem;
     color: var(--color-text-muted);
+    display: inline-flex;
   }
 
   .promo-feature-list {
@@ -973,6 +983,18 @@
     gap: 0.75rem;
     margin-bottom: 2rem;
     font-size: 0.95rem;
+  }
+
+  .promo-feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .promo-feature-list svg {
+    color: var(--color-primary);
+    flex-shrink: 0;
+    margin-top: 2px;
   }
 
   .promo-card-actions {
@@ -991,6 +1013,10 @@
     font-size: 1rem;
     cursor: pointer;
     transition: var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
 
   .promo-add-btn:hover {
@@ -1008,6 +1034,10 @@
     font-size: 1rem;
     cursor: pointer;
     transition: var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
 
   .promo-checkout-btn:hover {
@@ -1119,7 +1149,10 @@
     border-radius: var(--radius-md);
     font-size: 0.925rem;
     margin-bottom: 1.75rem;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
 
   .promo-status-msg.success {
@@ -1181,6 +1214,10 @@
     font-size: 0.95rem;
     cursor: pointer;
     transition: var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
 
   .calc-cart-btn:hover {
@@ -1199,6 +1236,10 @@
     font-size: 0.95rem;
     cursor: pointer;
     transition: var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
 
   .calc-checkout-btn:hover {
@@ -1488,8 +1529,8 @@
   }
 
   .empty-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    color: var(--color-primary);
+    margin: 0 auto 1rem;
     display: block;
   }
 
@@ -1521,7 +1562,8 @@
   }
 
   .item-icon {
-    font-size: 2rem;
+    color: var(--color-primary);
+    flex-shrink: 0;
   }
 
   .item-details {
@@ -1571,7 +1613,10 @@
     font-size: 0.875rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
   }
 
   .cart-promo-banner.success {
@@ -1691,7 +1736,8 @@
   }
 
   .checkout-brand-mark {
-    font-size: 2rem;
+    color: var(--color-primary);
+    flex-shrink: 0;
   }
 
   .checkout-close-btn {
@@ -2229,6 +2275,10 @@
     font-size: 0.85rem;
     cursor: pointer;
     margin-top: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
   }
 
   .active-payment-total {
@@ -2368,7 +2418,8 @@
   }
 
   .summary-product-icon {
-    font-size: 2rem;
+    color: var(--color-primary);
+    flex-shrink: 0;
   }
 
   .summary-product-list {
