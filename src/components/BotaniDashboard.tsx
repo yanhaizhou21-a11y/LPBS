@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import {
   LayoutDashboard,
   Package,
@@ -12,6 +13,7 @@ import {
   Moon,
   Sun,
   Bell,
+  Globe,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -34,6 +36,7 @@ import {
   Eye,
   ShieldCheck,
   Building2,
+  Download,
 } from 'lucide-react';
 
 interface Customer {
@@ -70,7 +73,8 @@ interface OrderItem {
 const topCustomers: { name: string; avatar: string; spent: string }[] = [];
 
 export function BotaniDashboard() {
-  const [activeNav, setActiveNav] = useState('Customers');
+  const { language, toggleLanguage, t } = useLanguage();
+  const [activeNav, setActiveNav] = useState('Dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [productCatFilter, setProductCatFilter] = useState('All Categories');
@@ -89,77 +93,77 @@ export function BotaniDashboard() {
 
   // Dynamic Data States pre-seeded with multi-page sample datasets
   const [customers, setCustomers] = useState<Customer[]>([
-    { id: 'c1', name: 'Jenny Wilson', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', joiningDate: '24/10/2025', email: 'michael.mitc@example.com', totalSpent: '$3,215', status: 'VIP' },
-    { id: 'c2', name: 'Cameron Williamson', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', joiningDate: '22/10/2025', email: 'bill.sanders@example.com', totalSpent: '$5,425', status: 'Returning' },
-    { id: 'c3', name: 'Guy Hawkins', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', joiningDate: '22/10/2025', email: 'debra.holt@example.com', totalSpent: '$5,445', status: 'New' },
-    { id: 'c4', name: 'Kathryn Murphy', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', joiningDate: '21/10/2025', email: 'felicia.reid@example.com', totalSpent: '$1,458', status: 'VIP' },
-    { id: 'c5', name: 'Leslie Alexander', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80', joiningDate: '19/10/2025', email: 'tim.jennings@example.com', totalSpent: '$1,457', status: 'VIP' },
-    { id: 'c6', name: 'Dianne Russell', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80', joiningDate: '18/10/2025', email: 'willie.jennings@example.com', totalSpent: '$5,445', status: 'Returning' },
-    { id: 'c7', name: 'Devane Courtney', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80', joiningDate: '16/10/2025', email: 'devane.c@example.com', totalSpent: '$2,890', status: 'VIP' },
-    { id: 'c8', name: 'Jerome Bell', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80', joiningDate: '15/10/2025', email: 'jerome.bell@example.com', totalSpent: '$3,100', status: 'Returning' },
-    { id: 'c9', name: 'Eleanor Pena', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80', joiningDate: '12/10/2025', email: 'eleanor.p@example.com', totalSpent: '$4,200', status: 'New' },
-    { id: 'c10', name: 'Wade Warren', avatar: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=150&auto=format&fit=crop&q=80', joiningDate: '10/10/2025', email: 'wade.w@example.com', totalSpent: '$2,150', status: 'Returning' },
-    { id: 'c11', name: 'Jane Cooper', avatar: 'https://images.unsplash.com/photo-1548142813-c348350df52b?w=150&auto=format&fit=crop&q=80', joiningDate: '08/10/2025', email: 'jane.cooper@example.com', totalSpent: '$6,800', status: 'VIP' },
-    { id: 'c12', name: 'Robert Fox', avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&auto=format&fit=crop&q=80', joiningDate: '05/10/2025', email: 'robert.fox@example.com', totalSpent: '$920', status: 'New' },
-    { id: 'c13', name: 'Jacob Jones', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', joiningDate: '01/10/2025', email: 'jacob.jones@example.com', totalSpent: '$3,400', status: 'Returning' },
-    { id: 'c14', name: 'Kristin Watson', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80', joiningDate: '28/09/2025', email: 'kristin.w@example.com', totalSpent: '$7,250', status: 'VIP' },
-    { id: 'c15', name: 'Cody Fisher', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', joiningDate: '25/09/2025', email: 'cody.fisher@example.com', totalSpent: '$890', status: 'New' },
-    { id: 'c16', name: 'Esther Howard', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', joiningDate: '20/09/2025', email: 'esther.h@example.com', totalSpent: '$4,120', status: 'Returning' },
-    { id: 'c17', name: 'Ronald Richards', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', joiningDate: '15/09/2025', email: 'ronald.r@example.com', totalSpent: '$5,900', status: 'VIP' },
-    { id: 'c18', name: 'Albert Flores', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80', joiningDate: '10/09/2025', email: 'albert.f@example.com', totalSpent: '$1,100', status: 'New' },
-    { id: 'c19', name: 'Savannah Nguyen', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80', joiningDate: '05/09/2025', email: 'savannah.n@example.com', totalSpent: '$8,400', status: 'VIP' },
-    { id: 'c20', name: 'Floyd Miles', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80', joiningDate: '01/09/2025', email: 'floyd.m@example.com', totalSpent: '$3,800', status: 'Returning' },
-    { id: 'c21', name: 'Courtney Henry', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80', joiningDate: '28/08/2025', email: 'courtney.h@example.com', totalSpent: '$750', status: 'New' },
-    { id: 'c22', name: 'Theresa Webb', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', joiningDate: '22/08/2025', email: 'theresa.w@example.com', totalSpent: '$4,950', status: 'VIP' },
-    { id: 'c23', name: 'Darrell Steward', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', joiningDate: '18/08/2025', email: 'darrell.s@example.com', totalSpent: '$2,300', status: 'Returning' },
-    { id: 'c24', name: 'Ralph Edwards', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', joiningDate: '12/08/2025', email: 'ralph.e@example.com', totalSpent: '$1,350', status: 'New' },
-    { id: 'c25', name: 'Arlene McCoy', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', joiningDate: '05/08/2025', email: 'arlene.m@example.com', totalSpent: '$6,100', status: 'VIP' },
+    { id: 'c1', name: 'Jenny Wilson', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', joiningDate: '24/10/2025', email: 'michael.mitc@example.com', totalSpent: 'Rp 3.215.000', status: 'VIP' },
+    { id: 'c2', name: 'Cameron Williamson', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', joiningDate: '22/10/2025', email: 'bill.sanders@example.com', totalSpent: 'Rp 5.425.000', status: 'Returning' },
+    { id: 'c3', name: 'Guy Hawkins', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', joiningDate: '22/10/2025', email: 'debra.holt@example.com', totalSpent: 'Rp 5.445.000', status: 'New' },
+    { id: 'c4', name: 'Kathryn Murphy', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', joiningDate: '21/10/2025', email: 'felicia.reid@example.com', totalSpent: 'Rp 1.458.000', status: 'VIP' },
+    { id: 'c5', name: 'Leslie Alexander', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80', joiningDate: '19/10/2025', email: 'tim.jennings@example.com', totalSpent: 'Rp 1.457.000', status: 'VIP' },
+    { id: 'c6', name: 'Dianne Russell', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80', joiningDate: '18/10/2025', email: 'willie.jennings@example.com', totalSpent: 'Rp 5.445.000', status: 'Returning' },
+    { id: 'c7', name: 'Devane Courtney', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80', joiningDate: '16/10/2025', email: 'devane.c@example.com', totalSpent: 'Rp 2.890.000', status: 'VIP' },
+    { id: 'c8', name: 'Jerome Bell', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80', joiningDate: '15/10/2025', email: 'jerome.bell@example.com', totalSpent: 'Rp 3.100.000', status: 'Returning' },
+    { id: 'c9', name: 'Eleanor Pena', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80', joiningDate: '12/10/2025', email: 'eleanor.p@example.com', totalSpent: 'Rp 4.200.000', status: 'New' },
+    { id: 'c10', name: 'Wade Warren', avatar: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=150&auto=format&fit=crop&q=80', joiningDate: '10/10/2025', email: 'wade.w@example.com', totalSpent: 'Rp 2.150.000', status: 'Returning' },
+    { id: 'c11', name: 'Jane Cooper', avatar: 'https://images.unsplash.com/photo-1548142813-c348350df52b?w=150&auto=format&fit=crop&q=80', joiningDate: '08/10/2025', email: 'jane.cooper@example.com', totalSpent: 'Rp 6.800.000', status: 'VIP' },
+    { id: 'c12', name: 'Robert Fox', avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&auto=format&fit=crop&q=80', joiningDate: '05/10/2025', email: 'robert.fox@example.com', totalSpent: 'Rp 920.000', status: 'New' },
+    { id: 'c13', name: 'Jacob Jones', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', joiningDate: '01/10/2025', email: 'jacob.jones@example.com', totalSpent: 'Rp 3.400.000', status: 'Returning' },
+    { id: 'c14', name: 'Kristin Watson', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80', joiningDate: '28/09/2025', email: 'kristin.w@example.com', totalSpent: 'Rp 7.250.000', status: 'VIP' },
+    { id: 'c15', name: 'Cody Fisher', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', joiningDate: '25/09/2025', email: 'cody.fisher@example.com', totalSpent: 'Rp 890.000', status: 'New' },
+    { id: 'c16', name: 'Esther Howard', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', joiningDate: '20/09/2025', email: 'esther.h@example.com', totalSpent: 'Rp 4.120.000', status: 'Returning' },
+    { id: 'c17', name: 'Ronald Richards', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', joiningDate: '15/09/2025', email: 'ronald.r@example.com', totalSpent: 'Rp 5.900.000', status: 'VIP' },
+    { id: 'c18', name: 'Albert Flores', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80', joiningDate: '10/09/2025', email: 'albert.f@example.com', totalSpent: 'Rp 1.100.000', status: 'New' },
+    { id: 'c19', name: 'Savannah Nguyen', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80', joiningDate: '05/09/2025', email: 'savannah.n@example.com', totalSpent: 'Rp 8.400.000', status: 'VIP' },
+    { id: 'c20', name: 'Floyd Miles', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80', joiningDate: '01/09/2025', email: 'floyd.m@example.com', totalSpent: 'Rp 3.800.000', status: 'Returning' },
+    { id: 'c21', name: 'Courtney Henry', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80', joiningDate: '28/08/2025', email: 'courtney.h@example.com', totalSpent: 'Rp 750.000', status: 'New' },
+    { id: 'c22', name: 'Theresa Webb', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', joiningDate: '22/08/2025', email: 'theresa.w@example.com', totalSpent: 'Rp 4.950.000', status: 'VIP' },
+    { id: 'c23', name: 'Darrell Steward', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', joiningDate: '18/08/2025', email: 'darrell.s@example.com', totalSpent: 'Rp 2.300.000', status: 'Returning' },
+    { id: 'c24', name: 'Ralph Edwards', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', joiningDate: '12/08/2025', email: 'ralph.e@example.com', totalSpent: 'Rp 1.350.000', status: 'New' },
+    { id: 'c25', name: 'Arlene McCoy', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', joiningDate: '05/08/2025', email: 'arlene.m@example.com', totalSpent: 'Rp 6.100.000', status: 'VIP' },
   ]);
 
   const [products, setProducts] = useState<Product[]>([
-    { id: 'p1', name: 'Benih Bayam Hijau Super', sku: 'SEED-001', cat: 'Seeds', price: '$12.00', stock: 150, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p2', name: 'Benih Tomat Cherry Red', sku: 'SEED-002', cat: 'Seeds', price: '$18.50', stock: 85, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p3', name: 'Pupuk Organik Cair Premium', sku: 'FERT-104', cat: 'Fertilizers', price: '$24.00', stock: 12, status: 'Low Stock', badge: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: 'p4', name: 'Sekop Taman Mini Ergonomis', sku: 'TOOL-088', cat: 'Tools', price: '$15.00', stock: 0, status: 'Out of Stock', badge: 'bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-300 border border-rose-200/50 dark:border-rose-800/60' },
-    { id: 'p5', name: 'Benih Cabai Rawit Merah', sku: 'SEED-003', cat: 'Seeds', price: '$14.00', stock: 120, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p6', name: 'Benih Terong Ungu Hibrida', sku: 'SEED-004', cat: 'Seeds', price: '$16.00', stock: 95, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p7', name: 'Sprayer Tanaman 2 Litur Pro', sku: 'TOOL-090', cat: 'Tools', price: '$22.50', stock: 8, status: 'Low Stock', badge: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: 'p8', name: 'Media Tanam Cocopeat 5kg', sku: 'SOIL-012', cat: 'Fertilizers', price: '$9.50', stock: 200, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p9', name: 'Pot Tanaman Hitam 30cm', sku: 'POT-005', cat: 'Tools', price: '$5.00', stock: 0, status: 'Out of Stock', badge: 'bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-300 border border-rose-200/50 dark:border-rose-800/60' },
-    { id: 'p10', name: 'Hydroponic Starter Kit 12 Holes', sku: 'HYD-001', cat: 'Tools', price: '$45.00', stock: 40, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p11', name: 'Benih Sawi Caisim Manis', sku: 'SEED-005', cat: 'Seeds', price: '$10.00', stock: 180, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p12', name: 'Benih Selada Keriting Hijau', sku: 'SEED-006', cat: 'Seeds', price: '$11.50', stock: 110, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p13', name: 'Pupuk NPK Mutiara 16-16-16', sku: 'FERT-105', cat: 'Fertilizers', price: '$28.00', stock: 15, status: 'Low Stock', badge: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: 'p14', name: 'Gunting Dahan Stenum Steel', sku: 'TOOL-092', cat: 'Tools', price: '$19.00', stock: 60, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p15', name: 'Benih Wortel Manis Bio', sku: 'SEED-007', cat: 'Seeds', price: '$13.00', stock: 75, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p16', name: 'Benih Semangka Tanpa Biji', sku: 'SEED-008', cat: 'Seeds', price: '$21.00', stock: 0, status: 'Out of Stock', badge: 'bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-300 border border-rose-200/50 dark:border-rose-800/60' },
-    { id: 'p17', name: 'ZPT Pengatur Tumbuh 500ml', sku: 'FERT-108', cat: 'Fertilizers', price: '$17.50', stock: 45, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p18', name: 'Mulsa Plastik Hitam Perak 100m', sku: 'TOOL-095', cat: 'Tools', price: '$35.00', stock: 18, status: 'Low Stock', badge: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: 'p19', name: 'Irigasi Tetes Drip Kit 50m', sku: 'HYD-005', cat: 'Tools', price: '$52.00', stock: 30, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p20', name: 'Benih Timun Suri Segar', sku: 'SEED-009', cat: 'Seeds', price: '$14.50', stock: 80, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: 'p1', name: 'Benih Bayam Hijau Super', sku: 'SEED-001', cat: 'Seeds', price: 'Rp 12.000', stock: 150, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: 'p2', name: 'Benih Tomat Cherry Red', sku: 'SEED-002', cat: 'Seeds', price: 'Rp 18.500', stock: 85, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: 'p3', name: 'Pupuk Organik Cair Premium', sku: 'FERT-104', cat: 'Fertilizers', price: 'Rp 24.000', stock: 12, status: 'Low Stock', badge: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
+    { id: 'p4', name: 'Sekop Taman Mini Ergonomis', sku: 'TOOL-088', cat: 'Tools', price: 'Rp 15.000', stock: 0, status: 'Out of Stock', badge: 'bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-300 border border-rose-200/50 dark:border-rose-800/60' },
+    { id: 'p5', name: 'Benih Cabai Rawit Merah', sku: 'SEED-003', cat: 'Seeds', price: 'Rp 14.000', stock: 120, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: 'p6', name: 'Benih Terong Ungu Hibrida', sku: 'SEED-004', cat: 'Seeds', price: 'Rp 16.000', stock: 95, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: 'p7', name: 'Sprayer Tanaman 2 Litur Pro', sku: 'TOOL-090', cat: 'Tools', price: 'Rp 22.500', stock: 8, status: 'Low Stock', badge: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
+    { id: 'p8', name: 'Media Tanam Cocopeat 5kg', sku: 'SOIL-012', cat: 'Fertilizers', price: 'Rp 9.500', stock: 200, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: 'p9', name: 'Pot Tanaman Hitam 30cm', sku: 'POT-005', cat: 'Tools', price: 'Rp 5.000', stock: 0, status: 'Out of Stock', badge: 'bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-300 border border-rose-200/50 dark:border-rose-800/60' },
+    { id: 'p10', name: 'Hydroponic Starter Kit 12 Holes', sku: 'HYD-001', cat: 'Tools', price: 'Rp 45.000', stock: 40, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: 'p11', name: 'Benih Sawi Caisim Manis', sku: 'SEED-005', cat: 'Seeds', price: 'Rp 10.000', stock: 180, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: 'p12', name: 'Benih Selada Keriting Hijau', sku: 'SEED-006', cat: 'Seeds', price: 'Rp 11.500', stock: 110, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: 'p13', name: 'Pupuk NPK Mutiara 16-16-16', sku: 'FERT-105', cat: 'Fertilizers', price: 'Rp 28.000', stock: 15, status: 'Low Stock', badge: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
+    { id: 'p14', name: 'Gunting Dahan Stenum Steel', sku: 'TOOL-092', cat: 'Tools', price: 'Rp 19.000', stock: 60, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: 'p15', name: 'Benih Wortel Manis Bio', sku: 'SEED-007', cat: 'Seeds', price: 'Rp 13.000', stock: 75, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: 'p16', name: 'Benih Semangka Tanpa Biji', sku: 'SEED-008', cat: 'Seeds', price: 'Rp 21.000', stock: 0, status: 'Out of Stock', badge: 'bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-300 border border-rose-200/50 dark:border-rose-800/60' },
+    { id: 'p17', name: 'ZPT Pengatur Tumbuh 500ml', sku: 'FERT-108', cat: 'Fertilizers', price: 'Rp 17.500', stock: 45, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: 'p18', name: 'Mulsa Plastik Hitam Perak 100m', sku: 'TOOL-095', cat: 'Tools', price: 'Rp 35.000', stock: 18, status: 'Low Stock', badge: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
+    { id: 'p19', name: 'Irigasi Tetes Drip Kit 50m', sku: 'HYD-005', cat: 'Tools', price: 'Rp 52.000', stock: 30, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: 'p20', name: 'Benih Timun Suri Segar', sku: 'SEED-009', cat: 'Seeds', price: 'Rp 14.500', stock: 80, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
   ]);
 
   const [orders, setOrders] = useState<OrderItem[]>([
-    { id: '#ORD-8825', name: 'Jenny Wilson', date: '06/08/2026', items: 3, total: '$145.00', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: '#ORD-8824', name: 'Cameron Williamson', date: '06/08/2026', items: 1, total: '$32.50', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
-    { id: '#ORD-8823', name: 'Guy Hawkins', date: '05/08/2026', items: 5, total: '$210.00', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
-    { id: '#ORD-8822', name: 'Kathryn Murphy', date: '04/08/2026', items: 2, total: '$84.00', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: '#ORD-8821', name: 'Leslie Alexander', date: '03/08/2026', items: 4, total: '$190.00', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: '#ORD-8820', name: 'Dianne Russell', date: '02/08/2026', items: 2, total: '$95.00', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
-    { id: '#ORD-8819', name: 'Devane Courtney', date: '01/08/2026', items: 6, total: '$310.00', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
-    { id: '#ORD-8818', name: 'Jerome Bell', date: '30/07/2026', items: 1, total: '$45.00', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: '#ORD-8817', name: 'Eleanor Pena', date: '29/07/2026', items: 3, total: '$128.00', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: '#ORD-8816', name: 'Wade Warren', date: '28/07/2026', items: 2, total: '$76.00', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
-    { id: '#ORD-8815', name: 'Jane Cooper', date: '26/07/2026', items: 5, total: '$240.00', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
-    { id: '#ORD-8814', name: 'Robert Fox', date: '25/07/2026', items: 1, total: '$22.00', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: '#ORD-8813', name: 'Jacob Jones', date: '24/07/2026', items: 4, total: '$165.00', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: '#ORD-8812', name: 'Kristin Watson', date: '22/07/2026', items: 7, total: '$410.00', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
-    { id: '#ORD-8811', name: 'Cody Fisher', date: '20/07/2026', items: 2, total: '$58.00', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
-    { id: '#ORD-8810', name: 'Esther Howard', date: '19/07/2026', items: 3, total: '$135.00', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: '#ORD-8809', name: 'Ronald Richards', date: '18/07/2026', items: 2, total: '$92.00', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: '#ORD-8808', name: 'Albert Flores', date: '15/07/2026', items: 1, total: '$34.00', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
-    { id: '#ORD-8807', name: 'Savannah Nguyen', date: '12/07/2026', items: 5, total: '$285.00', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
-    { id: '#ORD-8806', name: 'Floyd Miles', date: '10/07/2026', items: 3, total: '$140.00', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: '#ORD-8825', name: 'Jenny Wilson', date: '06/08/2026', items: 3, total: 'Rp 145.000', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
+    { id: '#ORD-8824', name: 'Cameron Williamson', date: '06/08/2026', items: 1, total: 'Rp 32.500', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
+    { id: '#ORD-8823', name: 'Guy Hawkins', date: '05/08/2026', items: 5, total: 'Rp 210.000', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
+    { id: '#ORD-8822', name: 'Kathryn Murphy', date: '04/08/2026', items: 2, total: 'Rp 84.000', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: '#ORD-8821', name: 'Leslie Alexander', date: '03/08/2026', items: 4, total: 'Rp 190.000', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
+    { id: '#ORD-8820', name: 'Dianne Russell', date: '02/08/2026', items: 2, total: 'Rp 95.000', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
+    { id: '#ORD-8819', name: 'Devane Courtney', date: '01/08/2026', items: 6, total: 'Rp 310.000', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
+    { id: '#ORD-8818', name: 'Jerome Bell', date: '30/07/2026', items: 1, total: 'Rp 45.000', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: '#ORD-8817', name: 'Eleanor Pena', date: '29/07/2026', items: 3, total: 'Rp 128.000', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
+    { id: '#ORD-8816', name: 'Wade Warren', date: '28/07/2026', items: 2, total: 'Rp 76.000', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
+    { id: '#ORD-8815', name: 'Jane Cooper', date: '26/07/2026', items: 5, total: 'Rp 240.000', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
+    { id: '#ORD-8814', name: 'Robert Fox', date: '25/07/2026', items: 1, total: 'Rp 22.000', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: '#ORD-8813', name: 'Jacob Jones', date: '24/07/2026', items: 4, total: 'Rp 165.000', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
+    { id: '#ORD-8812', name: 'Kristin Watson', date: '22/07/2026', items: 7, total: 'Rp 410.000', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
+    { id: '#ORD-8811', name: 'Cody Fisher', date: '20/07/2026', items: 2, total: 'Rp 58.000', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
+    { id: '#ORD-8810', name: 'Esther Howard', date: '19/07/2026', items: 3, total: 'Rp 135.000', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
+    { id: '#ORD-8809', name: 'Ronald Richards', date: '18/07/2026', items: 2, total: 'Rp 92.000', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
+    { id: '#ORD-8808', name: 'Albert Flores', date: '15/07/2026', items: 1, total: 'Rp 34.000', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
+    { id: '#ORD-8807', name: 'Savannah Nguyen', date: '12/07/2026', items: 5, total: 'Rp 285.000', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
+    { id: '#ORD-8806', name: 'Floyd Miles', date: '10/07/2026', items: 3, total: 'Rp 140.000', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
   ]);
 
   // Modal States
@@ -185,9 +189,124 @@ export function BotaniDashboard() {
   const [settingsForm, setSettingsForm] = useState({
     storeName: 'Botani Store',
     contactEmail: 'admin@botani.com',
-    currency: 'USD ($)',
+    currency: 'IDR (Rp)',
   });
   const [settingsSaved, setSettingsSaved] = useState(false);
+
+  const [isReportMenuOpen, setIsReportMenuOpen] = useState(false);
+
+  const handleDownloadPDF = () => {
+    setIsReportMenuOpen(false);
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Laporan Dashboard - PT. Botani Seed Indonesia</title>
+        <style>
+          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 30px; color: #1e293b; line-height: 1.5; }
+          .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #6366f1; padding-bottom: 15px; margin-bottom: 20px; }
+          .brand { font-size: 24px; font-weight: bold; color: #4f46e5; }
+          .meta { font-size: 12px; color: #64748b; }
+          .title { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #0f172a; }
+          .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
+          .kpi-card { border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; background: #f8fafc; }
+          .kpi-label { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; }
+          .kpi-value { font-size: 18px; font-weight: bold; color: #0f172a; margin-top: 5px; }
+          table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; }
+          th, td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; }
+          th { background-color: #f1f5f9; font-weight: 600; color: #334155; }
+          tr:nth-child(even) { background-color: #f8fafc; }
+          .section { margin-bottom: 30px; }
+          .footer { margin-top: 40px; font-size: 11px; color: #94a3b8; text-align: center; border-top: 1px solid #e2e8f0; padding-top: 15px; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="brand">🌱 PT. Botani Seed Indonesia</div>
+          <div class="meta">Tanggal: ${new Date().toLocaleDateString('id-ID', { dateStyle: 'full' })}</div>
+        </div>
+
+        <div class="title">Ringkasan Laporan Eksekutif</div>
+        
+        <div class="kpi-grid">
+          <div class="kpi-card"><div class="kpi-label">Total Pendapatan</div><div class="kpi-value">Rp 45.280.000</div></div>
+          <div class="kpi-card"><div class="kpi-label">Total Pesanan</div><div class="kpi-value">1.240</div></div>
+          <div class="kpi-card"><div class="kpi-label">Rata-rata Pesanan</div><div class="kpi-value">Rp 36.500</div></div>
+          <div class="kpi-card"><div class="kpi-label">Tingkat Konversi</div><div class="kpi-value">3,4%</div></div>
+        </div>
+
+        <div class="section">
+          <h3>Daftar Produk</h3>
+          <table>
+            <thead>
+              <tr><th>Nama Produk</th><th>SKU</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              ${products.map(p => `<tr><td>${p.name}</td><td>${p.sku}</td><td>${p.cat}</td><td>${p.price}</td><td>${p.stock} units</td><td>${p.status}</td></tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section">
+          <h3>Daftar Pesanan Terbaru</h3>
+          <table>
+            <thead>
+              <tr><th>ID Pesanan</th><th>Nama Pelanggan</th><th>Tanggal</th><th>Jumlah Item</th><th>Total Pembayaran</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              ${orders.map(o => `<tr><td>${o.id}</td><td>${o.name}</td><td>${o.date}</td><td>${o.items} items</td><td>${o.total}</td><td>${o.status}</td></tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="footer">Laporan dibuat secara otomatis dari Sistem Botani Store Dashboard - PT. Botani Seed Indonesia</div>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => {
+      printWindow.print();
+    }, 300);
+  };
+
+  const handleDownloadExcel = () => {
+    setIsReportMenuOpen(false);
+    const rows = [
+      ['🌱 LAPORAN KINERJA PT. BOTANI SEED INDONESIA'],
+      ['Tanggal Ekspor', new Date().toLocaleDateString('id-ID')],
+      [''],
+      ['RINGKASAN METRIK EKSKUTIF'],
+      ['Total Pendapatan', 'Rp 45.280.000'],
+      ['Total Pesanan', '1240'],
+      ['Rata-rata Nilai Pesanan', 'Rp 36.500'],
+      ['Tingkat Konversi', '3.4%'],
+      [''],
+      ['DAFTAR KATALOG PRODUK'],
+      ['Nama Produk', 'SKU', 'Kategori', 'Harga', 'Stok', 'Status'],
+      ...products.map((p) => [p.name, p.sku, p.cat, p.price, `${p.stock} units`, p.status]),
+      [''],
+      ['DAFTAR PESANAN PELANGGAN'],
+      ['ID Pesanan', 'Nama Pelanggan', 'Tanggal', 'Jumlah Item', 'Total Pembayaran', 'Status'],
+      ...orders.map((o) => [o.id, o.name, o.date, `${o.items} items`, o.total, o.status]),
+    ];
+
+    const csvString = rows
+      .map((row) => row.map((field) => `"${String(field).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+
+    const blob = new Blob(['\uFEFF' + csvString], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Laporan_Botani_Seed_${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
 
   const toggleDarkMode = () => {
     setIsDarkMode((prev) => !prev);
@@ -211,7 +330,7 @@ export function BotaniDashboard() {
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
       joiningDate: new Date().toLocaleDateString('en-GB'),
       email: newCustomer.email,
-      totalSpent: newCustomer.totalSpent ? `$${newCustomer.totalSpent.replace('$', '')}` : '$0',
+      totalSpent: newCustomer.totalSpent ? `Rp ${newCustomer.totalSpent.replace('Rp', '').replace('$', '').trim()}` : 'Rp 0',
       status: newCustomer.status,
     };
 
@@ -241,7 +360,7 @@ export function BotaniDashboard() {
       name: newProduct.name,
       sku: newProduct.sku || `PROD-${Math.floor(100 + Math.random() * 900)}`,
       cat: newProduct.cat,
-      price: newProduct.price.startsWith('$') ? newProduct.price : `$${newProduct.price}`,
+      price: newProduct.price.startsWith('Rp') ? newProduct.price : `Rp ${newProduct.price}`,
       stock: stockNum,
       status,
       badge,
@@ -398,13 +517,13 @@ export function BotaniDashboard() {
   };
 
   const barData = [
-    { month: 'Jan', h: '60%', amount: '$27,160' },
-    { month: 'Feb', h: '45%', amount: '$20,370' },
-    { month: 'Mar', h: '75%', amount: '$33,960' },
-    { month: 'Apr', h: '50%', amount: '$22,640' },
-    { month: 'May', h: '85%', amount: '$38,480' },
-    { month: 'Jun', h: '95%', amount: '$43,000' },
-    { month: 'Jul', h: '70%', amount: '$31,690' },
+    { month: 'Jan', h: '60%', amount: 'Rp 27.160.000' },
+    { month: 'Feb', h: '45%', amount: 'Rp 20.370.000' },
+    { month: 'Mar', h: '75%', amount: 'Rp 33.960.000' },
+    { month: 'Apr', h: '50%', amount: 'Rp 22.640.000' },
+    { month: 'May', h: '85%', amount: 'Rp 38.480.000' },
+    { month: 'Jun', h: '95%', amount: 'Rp 43.000.000' },
+    { month: 'Jul', h: '70%', amount: 'Rp 31.690.000' },
   ];
 
   return (
@@ -438,18 +557,17 @@ export function BotaniDashboard() {
           {/* Navigation Links */}
           <nav className="space-y-1.5">
             {[
-              { label: 'Dashboard', icon: LayoutDashboard },
-              { label: 'Products', icon: Package },
-              { label: 'Order', icon: FileText },
-              { label: 'Inventory', icon: Boxes },
-              { label: 'Customers', icon: Users },
+              { label: t('dashboard'), key: 'Dashboard', icon: LayoutDashboard },
+              { label: t('products'), key: 'Products', icon: Package },
+              { label: t('order'), key: 'Order', icon: FileText },
+              { label: t('inventory'), key: 'Inventory', icon: Boxes },
             ].map((item) => {
               const Icon = item.icon;
-              const isActive = activeNav === item.label;
+              const isActive = activeNav === item.key;
               return (
                 <button
-                  key={item.label}
-                  onClick={() => setActiveNav(item.label)}
+                  key={item.key}
+                  onClick={() => setActiveNav(item.key)}
                   title={isSidebarMinimized ? item.label : undefined}
                   className={`w-full flex items-center py-3 rounded-2xl text-sm font-medium transition-all duration-200 ${
                     isSidebarMinimized ? 'justify-center px-0' : 'gap-3 px-4'
@@ -472,7 +590,7 @@ export function BotaniDashboard() {
           <div className="my-2 border-t border-gray-200 dark:border-slate-700/80" />
           <button
             onClick={() => setActiveNav('Settings')}
-            title={isSidebarMinimized ? 'Settings' : undefined}
+            title={isSidebarMinimized ? t('settings') : undefined}
             className={`w-full flex items-center py-3 rounded-2xl text-sm font-medium transition-all duration-200 ${
               isSidebarMinimized ? 'justify-center px-0' : 'gap-3 px-4'
             } ${
@@ -482,16 +600,16 @@ export function BotaniDashboard() {
             }`}
           >
             <Settings className={`w-5 h-5 flex-shrink-0 ${activeNav === 'Settings' ? 'text-[#5b46e8] dark:text-indigo-400' : 'text-gray-400 dark:text-slate-500'}`} />
-            {!isSidebarMinimized && <span>Settings</span>}
+            {!isSidebarMinimized && <span>{t('settings')}</span>}
           </button>
           <button
-            title={isSidebarMinimized ? 'Log Out' : undefined}
+            title={isSidebarMinimized ? t('logout') : undefined}
             className={`w-full flex items-center py-3 rounded-2xl text-sm font-medium text-gray-500 dark:text-slate-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-600 dark:hover:text-rose-400 transition-colors ${
               isSidebarMinimized ? 'justify-center px-0' : 'gap-3 px-4'
             }`}
           >
             <LogOut className="w-5 h-5 flex-shrink-0 text-gray-400 dark:text-slate-500" />
-            {!isSidebarMinimized && <span>Log Out</span>}
+            {!isSidebarMinimized && <span>{t('logout')}</span>}
           </button>
         </div>
       </aside>
@@ -500,13 +618,20 @@ export function BotaniDashboard() {
       <div className={`flex-1 flex flex-col min-w-0 bg-[#f4f5f8] dark:bg-[#0f172a] transition-all duration-300 ${isSidebarMinimized ? 'ml-20' : 'ml-64'}`}>
         {/* TOP NAVIGATION */}
         <header className="h-20 bg-white/90 dark:bg-[#1e293b]/90 backdrop-blur-md border-b border-gray-100 dark:border-slate-800 px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs transition-colors duration-200">
-          <div>
-            <span className="block text-xs font-normal text-gray-400 dark:text-slate-400 leading-tight">Welcome Back!</span>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight leading-none mt-0.5">Botani.</h1>
-          </div>
+          <div></div>
 
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3">
+              {/* Language Switcher Button */}
+              <button
+                onClick={toggleLanguage}
+                title={language === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia'}
+                className="h-9 px-3 rounded-full bg-indigo-50 dark:bg-indigo-950/70 border border-indigo-100 dark:border-indigo-800/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-300 transition-all active:scale-95 shadow-xs cursor-pointer"
+              >
+                <Globe className="w-4 h-4" />
+                <span>{language === 'id' ? 'ID' : 'EN'}</span>
+              </button>
+
               {/* Search Icon */}
               <div className="relative">
                 <button className="w-10 h-10 rounded-full bg-gray-100/80 dark:bg-slate-800 hover:bg-gray-200/80 dark:hover:bg-slate-700 flex items-center justify-center text-gray-600 dark:text-slate-300 transition-colors">
@@ -575,65 +700,107 @@ export function BotaniDashboard() {
             <div className="space-y-8">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Executive Summary</h2>
-                  <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">Overview of sales performance and store metrics</p>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('executiveSummary')}</h2>
+                  <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">{t('executiveSubtitle')}</p>
                 </div>
-                <button className="bg-[#4f46e5] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#4338ca] transition-all shadow-sm active:scale-95">
-                  Download Report
-                </button>
+                
+                <div className="relative">
+                  <button
+                    onClick={() => setIsReportMenuOpen(!isReportMenuOpen)}
+                    className="bg-[#4f46e5] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#4338ca] transition-all shadow-sm active:scale-95 flex items-center gap-2 cursor-pointer"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>{t('downloadReport')}</span>
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isReportMenuOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {isReportMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 py-2.5 z-50 animate-in fade-in zoom-in-95">
+                      <div className="px-4 py-1.5 border-b border-gray-100 dark:border-slate-700/80 text-[10px] font-bold text-gray-400 dark:text-slate-400 uppercase tracking-wider">
+                        {t('selectFormat')}
+                      </div>
+
+                      <button
+                        onClick={handleDownloadPDF}
+                        className="w-full px-4 py-3 text-left text-xs font-semibold text-gray-800 dark:text-slate-100 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-3 transition-colors border-b border-gray-50 dark:border-slate-700/50 cursor-pointer"
+                      >
+                        <div className="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 flex items-center justify-center font-bold text-xs flex-shrink-0 border border-rose-200/50 dark:border-rose-800/50">
+                          PDF
+                        </div>
+                        <div>
+                          <p className="font-bold">{t('formatPdf')}</p>
+                          <p className="text-[10px] text-gray-400 dark:text-slate-400 font-normal">Document PDF</p>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={handleDownloadExcel}
+                        className="w-full px-4 py-3 text-left text-xs font-semibold text-gray-800 dark:text-slate-100 hover:bg-emerald-50 dark:hover:bg-emerald-950/60 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center gap-3 transition-colors cursor-pointer"
+                      >
+                        <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-xs flex-shrink-0 border border-emerald-200/50 dark:border-emerald-800/50">
+                          XLS
+                        </div>
+                        <div>
+                          <p className="font-bold">{t('formatExcel')}</p>
+                          <p className="text-[10px] text-gray-400 dark:text-slate-400 font-normal">Spreadsheet Excel (.csv)</p>
+                        </div>
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* KPI Cards */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-200">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs text-gray-500 dark:text-slate-300 font-medium">Total Revenue</span>
+                    <span className="text-xs text-gray-500 dark:text-slate-300 font-medium">{t('totalRevenue')}</span>
                     <div className="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-900/40 flex items-center justify-center text-[#5b46e8] dark:text-indigo-300">
                       <DollarSign className="w-5 h-5" />
                     </div>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">$45,280.00</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Rp 45.280.000</h3>
                   <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium inline-flex items-center gap-1 mt-2">
-                    <TrendingUp className="w-3.5 h-3.5" /> +12.5% this month
+                    <TrendingUp className="w-3.5 h-3.5" /> +12.5% {t('thisMonth')}
                   </span>
                 </div>
 
                 <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-200">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs text-gray-500 dark:text-slate-300 font-medium">Total Orders</span>
+                    <span className="text-xs text-gray-500 dark:text-slate-300 font-medium">{t('totalOrders')}</span>
                     <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-300">
                       <ShoppingCart className="w-5 h-5" />
                     </div>
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white">1,240</h3>
                   <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium inline-flex items-center gap-1 mt-2">
-                    <TrendingUp className="w-3.5 h-3.5" /> +8.2% this month
+                    <TrendingUp className="w-3.5 h-3.5" /> +8.2% {t('thisMonth')}
                   </span>
                 </div>
 
                 <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-200">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs text-gray-500 dark:text-slate-300 font-medium">Avg Order Value</span>
+                    <span className="text-xs text-gray-500 dark:text-slate-300 font-medium">{t('avgOrderValue')}</span>
                     <div className="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-900/40 flex items-center justify-center text-amber-600 dark:text-amber-300">
                       <Sliders className="w-5 h-5" />
                     </div>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">$36.50</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Rp 36.500</h3>
                   <span className="text-xs text-rose-500 dark:text-rose-400 font-medium inline-flex items-center gap-1 mt-2">
-                    <TrendingDown className="w-3.5 h-3.5" /> -1.4% vs last week
+                    <TrendingDown className="w-3.5 h-3.5" /> -1.4% {t('vsLastWeek')}
                   </span>
                 </div>
 
                 <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-200">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs text-gray-500 dark:text-slate-300 font-medium">Conversion Rate</span>
+                    <span className="text-xs text-gray-500 dark:text-slate-300 font-medium">{t('conversionRate')}</span>
                     <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-300">
                       <TrendingUp className="w-5 h-5" />
                     </div>
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white">3.4%</h3>
                   <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium inline-flex items-center gap-1 mt-2">
-                    <TrendingUp className="w-3.5 h-3.5" /> +0.6% improvement
+                    <TrendingUp className="w-3.5 h-3.5" /> +0.6% {t('improvement')}
                   </span>
                 </div>
               </div>
@@ -709,14 +876,14 @@ export function BotaniDashboard() {
             <div className="space-y-8">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Products Catalog</h2>
-                  <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">Manage product inventory, pricing, and categories</p>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('productsCatalog')}</h2>
+                  <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">{t('productsSubtitle')}</p>
                 </div>
                 <button
                   onClick={() => setIsAddProductOpen(true)}
                   className="bg-[#4f46e5] text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-[#4338ca] flex items-center gap-2 shadow-sm transition-all active:scale-95"
                 >
-                  <Plus className="w-4 h-4" /> Add Product
+                  <Plus className="w-4 h-4" /> {t('addProduct')}
                 </button>
               </div>
 
@@ -753,13 +920,13 @@ export function BotaniDashboard() {
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="border-b border-gray-100 dark:border-slate-700 text-xs font-semibold text-gray-500 dark:text-slate-300 bg-gray-50/50 dark:bg-slate-700/50">
-                        <th className="py-3 px-4">Product Name</th>
-                        <th className="py-3 px-4">SKU</th>
-                        <th className="py-3 px-4">Category</th>
-                        <th className="py-3 px-4">Price</th>
-                        <th className="py-3 px-4">Stock</th>
-                        <th className="py-3 px-4">Status</th>
-                        <th className="py-3 px-4 text-center">Action</th>
+                        <th className="py-3 px-4">{t('productName')}</th>
+                        <th className="py-3 px-4">{t('sku')}</th>
+                        <th className="py-3 px-4">{t('category')}</th>
+                        <th className="py-3 px-4">{t('price')}</th>
+                        <th className="py-3 px-4">{t('stock')}</th>
+                        <th className="py-3 px-4">{t('status')}</th>
+                        <th className="py-3 px-4 text-center">{t('action')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100 dark:divide-slate-700 text-sm">
@@ -815,8 +982,8 @@ export function BotaniDashboard() {
             <div className="space-y-8">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Order Management</h2>
-                  <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">Track, process, and fulfill customer orders</p>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('orderManagement')}</h2>
+                  <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">{t('orderSubtitle')}</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-1.5">
@@ -842,13 +1009,13 @@ export function BotaniDashboard() {
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="border-b border-gray-100 dark:border-slate-700 text-xs font-semibold text-gray-500 dark:text-slate-300 bg-gray-50/50 dark:bg-slate-700/50">
-                        <th className="py-3 px-4">Order ID</th>
-                        <th className="py-3 px-4">Customer</th>
-                        <th className="py-3 px-4">Date</th>
-                        <th className="py-3 px-4">Items</th>
-                        <th className="py-3 px-4">Total Amount</th>
+                        <th className="py-3 px-4">{t('orderId')}</th>
+                        <th className="py-3 px-4">{t('customer')}</th>
+                        <th className="py-3 px-4">{t('date')}</th>
+                        <th className="py-3 px-4">{t('items')}</th>
+                        <th className="py-3 px-4">{t('totalAmount')}</th>
                         <th className="py-3 px-4">Status Action</th>
-                        <th className="py-3 px-4 text-center">Action</th>
+                        <th className="py-3 px-4 text-center">{t('action')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100 dark:divide-slate-700 text-sm">
@@ -914,8 +1081,8 @@ export function BotaniDashboard() {
           {activeNav === 'Inventory' && (
             <div className="space-y-8">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Inventory Status</h2>
-                <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">Real-time stock monitoring & reorder thresholds</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('inventoryStatus')}</h2>
+                <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">{t('inventorySubtitle')}</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1214,31 +1381,36 @@ export function BotaniDashboard() {
           {activeNav === 'Settings' && (
             <div className="space-y-8 max-w-4xl">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Store Settings</h2>
-                <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">Configure business preferences and account security</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('storeSettings')}</h2>
+                <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">{t('settingsSubtitle')}</p>
               </div>
 
               {settingsSaved && (
                 <div className="bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 px-4 py-3 rounded-2xl flex items-center gap-2 text-xs font-medium animate-fade-in">
                   <CheckCircle2 className="w-4 h-4" />
-                  <span>Settings updated successfully!</span>
+                  <span>{t('settingsUpdated')}</span>
                 </div>
               )}
 
               <form onSubmit={handleSaveSettings} className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-xs space-y-6">
                 <div className="border-b border-gray-100 dark:border-slate-700 pb-4 flex gap-6">
-                  {['General', 'Store Profile', 'Notifications', 'Security'].map((tab) => (
+                  {[
+                    { key: 'General', label: t('general') },
+                    { key: 'Store Profile', label: t('storeProfile') },
+                    { key: 'Notifications', label: t('notifications') },
+                    { key: 'Security', label: t('security') },
+                  ].map((tab) => (
                     <button
-                      key={tab}
+                      key={tab.key}
                       type="button"
-                      onClick={() => setSettingsTab(tab)}
+                      onClick={() => setSettingsTab(tab.key)}
                       className={`text-xs font-semibold pb-2 border-b-2 transition-colors ${
-                        settingsTab === tab
+                        settingsTab === tab.key
                           ? 'border-[#5b46e8] text-[#5b46e8] dark:text-indigo-400'
                           : 'border-transparent text-gray-400 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200'
                       }`}
                     >
-                      {tab}
+                      {tab.label}
                     </button>
                   ))}
                 </div>
@@ -1246,7 +1418,7 @@ export function BotaniDashboard() {
                 {settingsTab === 'General' && (
                   <div className="space-y-4 max-w-md">
                     <div>
-                      <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1.5">Store Name</label>
+                      <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1.5">{t('storeName')}</label>
                       <input
                         type="text"
                         value={settingsForm.storeName}
@@ -1256,7 +1428,7 @@ export function BotaniDashboard() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1.5">Contact Email</label>
+                      <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1.5">{t('contactEmail')}</label>
                       <input
                         type="email"
                         value={settingsForm.contactEmail}
@@ -1266,14 +1438,14 @@ export function BotaniDashboard() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1.5">Currency</label>
+                      <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1.5">{t('currency')}</label>
                       <select
                         value={settingsForm.currency}
                         onChange={(e) => setSettingsForm({ ...settingsForm, currency: e.target.value })}
                         className="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-xs text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#5b46e8]/30 focus:border-[#5b46e8] transition-all"
                       >
-                        <option>USD ($)</option>
                         <option>IDR (Rp)</option>
+                        <option>USD ($)</option>
                         <option>EUR (€)</option>
                       </select>
                     </div>
@@ -1283,7 +1455,7 @@ export function BotaniDashboard() {
                         type="submit"
                         className="bg-[#4f46e5] text-white px-6 py-2.5 rounded-full text-xs font-medium hover:bg-[#4338ca] shadow-sm transition-all active:scale-95"
                       >
-                        Save Changes
+                        {t('saveChanges')}
                       </button>
                     </div>
                   </div>
@@ -1307,7 +1479,7 @@ export function BotaniDashboard() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
           <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-xl border border-gray-100 dark:border-slate-700 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-700 pb-4 mb-4">
-              <h3 className="font-bold text-gray-900 dark:text-white text-lg">Add New Customer</h3>
+              <h3 className="font-bold text-gray-900 dark:text-white text-lg">{t('addNewCustomer')}</h3>
               <button
                 onClick={() => setIsAddCustomerOpen(false)}
                 className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-slate-200"
@@ -1318,11 +1490,11 @@ export function BotaniDashboard() {
 
             <form onSubmit={handleAddCustomer} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">Full Name</label>
+                <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">{t('fullName')}</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Jenny Wilson"
+                  placeholder={t('fullNamePlaceholder')}
                   value={newCustomer.name}
                   onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
                   className="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-xs text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#5b46e8]/30 focus:border-[#5b46e8]"
@@ -1330,11 +1502,11 @@ export function BotaniDashboard() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">Email Address</label>
+                <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">{t('emailAddress')}</label>
                 <input
                   type="email"
                   required
-                  placeholder="e.g. jenny@example.com"
+                  placeholder={t('emailPlaceholder')}
                   value={newCustomer.email}
                   onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
                   className="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-xs text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#5b46e8]/30 focus:border-[#5b46e8]"
@@ -1342,10 +1514,10 @@ export function BotaniDashboard() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">Total Spent ($)</label>
+                <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">{t('totalSpent')}</label>
                 <input
                   type="number"
-                  placeholder="e.g. 150"
+                  placeholder="e.g. 150000"
                   value={newCustomer.totalSpent}
                   onChange={(e) => setNewCustomer({ ...newCustomer, totalSpent: e.target.value })}
                   className="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-xs text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#5b46e8]/30 focus:border-[#5b46e8]"
@@ -1353,7 +1525,7 @@ export function BotaniDashboard() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">Customer Status</label>
+                <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">{t('customerStatus')}</label>
                 <select
                   value={newCustomer.status}
                   onChange={(e) => setNewCustomer({ ...newCustomer, status: e.target.value as 'VIP' | 'Returning' | 'New' })}
@@ -1371,13 +1543,13 @@ export function BotaniDashboard() {
                   onClick={() => setIsAddCustomerOpen(false)}
                   className="px-4 py-2 rounded-full text-xs font-medium text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700"
                 >
-                  Cancel
+                  {t('cancel')}
                 </button>
                 <button
                   type="submit"
                   className="bg-[#4f46e5] text-white px-5 py-2 rounded-full text-xs font-medium hover:bg-[#4338ca] shadow-sm"
                 >
-                  Save Customer
+                  {t('saveCustomer')}
                 </button>
               </div>
             </form>
@@ -1394,7 +1566,7 @@ export function BotaniDashboard() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
           <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-xl border border-gray-100 dark:border-slate-700 animate-in fade-in zoom-in-95">
             <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-700 pb-4 mb-4">
-              <h3 className="font-bold text-gray-900 dark:text-white text-lg">Add New Product</h3>
+              <h3 className="font-bold text-gray-900 dark:text-white text-lg">{t('addNewProduct')}</h3>
               <button
                 onClick={() => setIsAddProductOpen(false)}
                 className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-slate-200"
@@ -1405,7 +1577,7 @@ export function BotaniDashboard() {
 
             <form onSubmit={handleAddProduct} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">Product Name</label>
+                <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">{t('productName')}</label>
                 <input
                   type="text"
                   required
@@ -1417,32 +1589,32 @@ export function BotaniDashboard() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">Category</label>
+                <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">{t('category')}</label>
                 <select
                   value={newProduct.cat}
                   onChange={(e) => setNewProduct({ ...newProduct, cat: e.target.value })}
                   className="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-xs text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#5b46e8]/30 focus:border-[#5b46e8]"
                 >
-                  <option value="Seeds">Seeds</option>
-                  <option value="Fertilizers">Fertilizers</option>
-                  <option value="Tools">Tools</option>
+                  <option value="Seeds">{t('seeds')}</option>
+                  <option value="Fertilizers">{t('fertilizers')}</option>
+                  <option value="Tools">{t('tools')}</option>
                 </select>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">Price ($)</label>
+                  <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">{t('price')}</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. 15.00"
+                    placeholder="e.g. 15000"
                     value={newProduct.price}
                     onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
                     className="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-xs text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#5b46e8]/30 focus:border-[#5b46e8]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">Initial Stock</label>
+                  <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1">{t('initialStock')}</label>
                   <input
                     type="number"
                     required
@@ -1460,13 +1632,13 @@ export function BotaniDashboard() {
                   onClick={() => setIsAddProductOpen(false)}
                   className="px-4 py-2 rounded-full text-xs font-medium text-gray-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700"
                 >
-                  Cancel
+                  {t('cancel')}
                 </button>
                 <button
                   type="submit"
                   className="bg-[#4f46e5] text-white px-5 py-2 rounded-full text-xs font-medium hover:bg-[#4338ca] shadow-sm"
                 >
-                  Save Product
+                  {t('saveProduct')}
                 </button>
               </div>
             </form>

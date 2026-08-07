@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ASSETS } from '../data/assets';
 import { useCheckout } from '../hooks/useCheckout';
+import { useLanguage } from '../context/LanguageContext';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   discountTotalProduct,
   onCartOpen
 }) => {
+  const { t } = useLanguage();
   const checkout = useCheckout(totalQty, subtotalProduct);
 
   const [copySuccess, setCopySuccess] = useState(false);
@@ -99,110 +101,110 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   <form className="checkout-form" onSubmit={e => e.preventDefault()}>
                     <div className="form-grid">
                       <label>
-                        <span>Nama Lengkap *</span>
+                        <span>{t('fullName')} *</span>
                         <input
                           type="text"
                           required
                           value={checkout.buyerForm.name}
                           onChange={e => checkout.updateBuyerForm('name', e.target.value)}
-                          placeholder="Nama lengkap Anda"
+                          placeholder={t('fullNamePlaceholder')}
                         />
                       </label>
 
                       <label>
-                        <span>Nomor WhatsApp *</span>
+                        <span>{t('whatsappNumber')} *</span>
                         <input
                           type="tel"
                           required
                           value={checkout.buyerForm.whatsapp}
                           onChange={e => checkout.updateBuyerForm('whatsapp', e.target.value)}
-                          placeholder="Contoh: 081234567890"
+                          placeholder={t('whatsappPlaceholder')}
                         />
                       </label>
 
                       <label className="full-field">
-                        <span>Email (Opsional)</span>
+                        <span>{t('emailOptional')}</span>
                         <input
                           type="email"
                           value={checkout.buyerForm.email}
                           onChange={e => checkout.updateBuyerForm('email', e.target.value)}
-                          placeholder="alamat@email.com"
+                          placeholder={t('emailPlaceholder')}
                         />
                       </label>
 
                       <label className="full-field">
-                        <span>Alamat Lengkap (Jalan / RT RW / No. Rumah) *</span>
+                        <span>{t('fullAddress')} *</span>
                         <textarea
                           rows={3}
                           required
                           value={checkout.buyerForm.address}
                           onChange={e => checkout.updateBuyerForm('address', e.target.value)}
-                          placeholder="Alamat domisili lengkap pengiriman"
+                          placeholder={t('fullAddressPlaceholder')}
                         ></textarea>
                       </label>
 
                       <label>
-                        <span>Kota / Kabupaten *</span>
+                        <span>{t('cityRegency')} *</span>
                         <input
                           type="text"
                           required
                           value={checkout.buyerForm.city}
                           onChange={e => checkout.updateBuyerForm('city', e.target.value)}
-                          placeholder="Contoh: Kota Bogor"
+                          placeholder={t('cityPlaceholder')}
                         />
                       </label>
 
                       <label>
-                        <span>Kecamatan *</span>
+                        <span>{t('district')} *</span>
                         <input
                           type="text"
                           required
                           value={checkout.buyerForm.district}
                           onChange={e => checkout.updateBuyerForm('district', e.target.value)}
-                          placeholder="Contoh: Bogor Barat"
+                          placeholder={t('districtPlaceholder')}
                         />
                       </label>
 
                       <label>
-                        <span>Desa / Kelurahan *</span>
+                        <span>{t('village')} *</span>
                         <input
                           type="text"
                           required
                           value={checkout.buyerForm.village}
                           onChange={e => checkout.updateBuyerForm('village', e.target.value)}
-                          placeholder="Contoh: Margajaya"
+                          placeholder={t('villagePlaceholder')}
                         />
                       </label>
 
                       <label>
-                        <span>Provinsi *</span>
+                        <span>{t('province')} *</span>
                         <input
                           type="text"
                           required
                           value={checkout.buyerForm.province}
                           onChange={e => checkout.updateBuyerForm('province', e.target.value)}
-                          placeholder="Contoh: Jawa Barat"
+                          placeholder={t('provincePlaceholder')}
                         />
                       </label>
 
                       <label>
-                        <span>Kode Pos *</span>
+                        <span>{t('postalCode')} *</span>
                         <input
                           type="text"
                           required
                           value={checkout.buyerForm.postal}
                           onChange={e => checkout.updateBuyerForm('postal', e.target.value)}
-                          placeholder="Contoh: 16116"
+                          placeholder={t('postalPlaceholder')}
                         />
                       </label>
 
                       <label className="full-field">
-                        <span>Catatan Pesanan (Opsional)</span>
+                        <span>{t('orderNoteOptional')}</span>
                         <input
                           type="text"
                           value={checkout.buyerForm.note}
                           onChange={e => checkout.updateBuyerForm('note', e.target.value)}
-                          placeholder="Catatan khusus lokasi atau pengiriman"
+                          placeholder={t('notePlaceholder')}
                         />
                       </label>
                     </div>

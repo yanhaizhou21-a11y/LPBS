@@ -77,6 +77,7 @@ h1, h2, h3, h4, h5, h6 {
 .text-gradient {
   background: linear-gradient(135deg, #15803d 0%, #047857 50%, #166534 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
