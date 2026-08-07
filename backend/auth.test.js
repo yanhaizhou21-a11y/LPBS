@@ -6,7 +6,8 @@ process.env.ADMIN_SESSION_SECRET = 'test-secret-with-at-least-32-characters';
 
 const { hashPassword, requireAdmin, verifyPassword, verifySessionToken } = await import('./routes/authRoutes.js');
 const { buildOrder } = await import('./routes/orderRoutes.js');
-const { buildProduct } = await import('./routes/productRoutes.js');
+const { default: productRouter, buildProduct } = await import('./routes/productRoutes.js');
+const { default: express } = await import('express');
 
 function tokenFor(role, exp = Math.floor(Date.now() / 1000) + 60) {
   const payload = Buffer.from(JSON.stringify({ sub: 'test', name: 'Test', role, exp })).toString('base64url');
@@ -46,9 +47,44 @@ test('admin middleware explicitly rejects buyer and staff sessions', () => {
   }
 });
 
+test('admin middleware allows a valid SUPER_ADMIN session', () => {
+  const req = { headers: { cookie: `botani_admin_session=${tokenFor('SUPER_ADMIN')}` } };
+  let called = false;
+  requireAdmin(req, {}, () => { called = true; });
+  assert.equal(called, true);
+});
+
+test('product update and delete routes explicitly deny unauthenticated, buyer, and staff roles', async (t) => {
+  const app = express();
+  app.use(express.json());
+  app.use('/products', productRouter);
+  const server = app.listen(0, '127.0.0.1');
+  await new Promise((resolve) => server.once('listening', resolve));
+  t.after(() => new Promise((resolve) => server.close(resolve)));
+  const { port } = server.address();
+  const identities = [null, 'BUYER', 'STAFF_INVENTORY', 'STAFF_FINANCE', 'STAFF_TRACKING'];
+  for (const method of ['PATCH', 'DELETE']) {
+    for (const role of identities) {
+      const response = await fetch(`http://127.0.0.1:${port}/products/protected-product`, {
+        method,
+        headers: role ? { cookie: `botani_admin_session=${tokenFor(role)}`, 'content-type': 'application/json' } : { 'content-type': 'application/json' },
+        body: method === 'PATCH' ? JSON.stringify({}) : undefined,
+      });
+      const body = await response.json();
+      assert.equal(response.status, 401, `${method} must reject ${role || 'anonymous'}`);
+      assert.match(body.message, /Unauthorized Access/);
+    }
+  }
+});
+
 test('product input is validated and normalized on the server', () => {
-  const product = buildProduct({ name: '  Benih Cabai Bonita  ', category: 'hortikultura', price: 25000, stock: 12, description: 'Benih cabai unggul untuk budidaya.', imageUrl: '' });
-  assert.equal(product.slug, 'benih-cabai-bonita'); assert.equal(product.name, 'Benih Cabai Bonita'); assert.throws(() => buildProduct({ ...product, category: 'rahasia' }), /Kategori produk tidak valid/);
+  const product = buildProduct({ name: '  Benih Cabai Bonita  ', nameEn: 'Bonita Chili Seeds', category: 'hortikultura', price: 25000, stock: 12, description: 'Benih cabai unggul untuk budidaya.', descriptionEn: 'Premium chili seeds for productive cultivation.', imageUrl: '' });
+  assert.equal(product.slug, 'benih-cabai-bonita');
+  assert.equal(product.name, 'Benih Cabai Bonita');
+  assert.equal(product.nameEn, 'Bonita Chili Seeds');
+  const updated = buildProduct({ ...product, name: 'Nama Produk Baru' }, product);
+  assert.equal(updated.slug, product.slug, 'editing a name must preserve stable product links');
+  assert.throws(() => buildProduct({ ...product, category: 'rahasia' }), /Kategori produk tidak valid/);
 });
 
 test('server recalculates product pricing instead of trusting client totals', () => {

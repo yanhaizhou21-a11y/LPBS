@@ -1,8 +1,8 @@
 export const PRODUCT_CATEGORIES = [
-  { id: 'hortikultura', label: 'Benih Hortikultura Botani' },
-  { id: 'pangan', label: 'Benih Pangan Botani' },
-  { id: 'bibit-tanaman', label: 'Bibit Tanaman' },
-  { id: 'distributorship', label: 'Produk Distributorship' },
+  { id: 'hortikultura', label: 'Benih Hortikultura Botani', labelEn: 'Botani Horticultural Seeds' },
+  { id: 'pangan', label: 'Benih Pangan Botani', labelEn: 'Botani Food Crop Seeds' },
+  { id: 'bibit-tanaman', label: 'Bibit Tanaman', labelEn: 'Plant Seedlings' },
+  { id: 'distributorship', label: 'Produk Distributorship', labelEn: 'Distribution Products' },
 ] as const;
 export type ProductCategory = typeof PRODUCT_CATEGORIES[number]['id'];
 export interface Product { slug: string; name: string; nameEn?: string; category: ProductCategory; price: number; stock: number; description: string; descriptionEn?: string; imageUrl?: string; active?: boolean; }
@@ -14,4 +14,4 @@ export const FEATURED_PRODUCTS: Product[] = [
   { slug: 'bibit-tanaman-buah', name: 'Bibit Tanaman Buah', nameEn: 'Fruit Plant Seedlings', category: 'bibit-tanaman', price: 45000, stock: 14, description: 'Pilihan bibit tanaman untuk kebun rumah dan pengembangan lahan.', descriptionEn: 'Selected plant seedlings for home gardens and land development.' },
   { slug: 'provibio-botani', name: 'Provibio Botani', nameEn: 'Provibio Botani', category: 'distributorship', price: 55000, stock: 21, description: 'Produk pendukung budidaya untuk perawatan tanaman yang lebih praktis.', descriptionEn: 'A practical crop-support product for easier plant care.' },
 ];
-export const categoryLabel = (id: ProductCategory) => PRODUCT_CATEGORIES.find((item) => item.id === id)?.label || id;
+export const categoryLabel = (id: ProductCategory, language: 'id' | 'en' = 'id') => { const category = PRODUCT_CATEGORIES.find((item) => item.id === id); return (language === 'en' ? category?.labelEn : category?.label) || id; };

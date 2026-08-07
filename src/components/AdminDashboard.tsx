@@ -11,6 +11,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { AdminProductsPanel } from './AdminProductsPanel';
+import { LanguageToggle } from './LanguageToggle';
 import { ThemeToggleButton } from './ThemeToggleButton';
 
 interface OrderItem {
@@ -144,6 +145,7 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
       {/* Top Navbar */}
       <header className="admin-header px-4 md:px-6 py-4 flex items-center justify-between sticky top-0 z-30">
         <div className="flex items-center gap-3">
+          <LanguageToggle />
           <ThemeToggleButton />
           <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
             <LayoutDashboard className="w-5 h-5" />

@@ -36,6 +36,15 @@ export async function connectDB() {
         upsert: true,
       },
     })));
+    await db.collection('products').bulkWrite(DEFAULT_PRODUCTS.map((product) => ({
+      updateOne: {
+        filter: { slug: product.slug },
+        update: [{ $set: {
+          nameEn: { $ifNull: ['$nameEn', product.nameEn] },
+          descriptionEn: { $ifNull: ['$descriptionEn', product.descriptionEn] },
+        } }],
+      },
+    })));
     isConnected = true;
     console.log(`[MongoDB] Connected successfully to database: "${dbName}"`);
     return db;
