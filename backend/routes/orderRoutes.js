@@ -2,11 +2,20 @@ import { Router } from 'express';
 import { getDB } from '../config/db.js';
 import { requireAdmin } from './authRoutes.js';
 import { DEFAULT_PRODUCTS, MAIN_PROMO_PRODUCT } from '../data/defaultProducts.js';
+import { localOrderStore } from '../data/localOrderStore.js';
 
 const router = Router();
-const ORDER_STATUSES = new Set(['PENDING_PAYMENT', 'PAID', 'PROCESSED', 'SHIPPED', 'COMPLETED']);
+const ORDER_STATUSES = new Set(['PENDING_PAYMENT', 'PAYMENT_REPORTED', 'PAID', 'PROCESSED', 'SHIPPED', 'COMPLETED', 'DONE']);
 const PAYMENT_METHODS = new Set(['QRIS', 'BSI', 'BNI', 'BRI']);
 const text = (value, max = 160) => typeof value === 'string' ? value.trim().slice(0, max) : '';
+const allowLocalStore = process.env.NODE_ENV !== 'production';
+const ordersCollection = () => {
+  try { return getDB().collection('orders'); }
+  catch (error) {
+    if (!allowLocalStore) throw error;
+    return null;
+  }
+};
 
 export function buildOrder(body, catalogProducts = []) {
   const rawItems = body?.cart?.items;
@@ -59,20 +68,20 @@ export function buildOrder(body, catalogProducts = []) {
     } : null,
     paymentMethod: body.paymentMethod,
     pricing: { normalTotal, discountTotal, productTotal, shippingTotal, grandTotal: productTotal + shippingTotal },
-    status: 'PENDING_PAYMENT', createdAt: new Date(), updatedAt: new Date(),
+    status: 'PAYMENT_REPORTED', createdAt: new Date(), updatedAt: new Date(),
   };
 }
 
 router.post('/', async (req, res) => {
   try {
-    const database = getDB();
+    const collection = ordersCollection();
     const requestedIds = Array.isArray(req.body?.cart?.items) ? req.body.cart.items.map((item) => text(item?.id, 80)) : [];
-    const catalogProducts = requestedIds.length
-      ? await database.collection('products').find({ slug: { $in: requestedIds }, active: true }).toArray()
+    const catalogProducts = collection && requestedIds.length
+      ? await getDB().collection('products').find({ slug: { $in: requestedIds }, active: true }).toArray()
       : [];
     const order = buildOrder(req.body, catalogProducts);
-    const result = await database.collection('orders').insertOne(order);
-    return res.status(201).json({ success: true, message: 'Pesanan berhasil dibuat.', orderId: result.insertedId, orderNumber: order.orderNumber });
+    const result = collection ? await collection.insertOne(order) : await localOrderStore.insert(order);
+    return res.status(201).json({ success: true, message: 'Pesanan berhasil dibuat.', orderId: result.insertedId || order.orderNumber, orderNumber: order.orderNumber });
   } catch (error) {
     if (error?.code === 11000) return res.status(409).json({ success: false, message: 'Nomor pesanan sudah digunakan. Silakan ulangi.' });
     if (error instanceof Error && /valid|lengkap|tersedia|stok/i.test(error.message)) return res.status(400).json({ success: false, message: error.message });
@@ -85,7 +94,8 @@ router.use(requireAdmin);
 
 router.get('/', async (_req, res) => {
   try {
-    const orders = await getDB().collection('orders').find({}).sort({ createdAt: -1 }).limit(100).toArray();
+    const collection = ordersCollection();
+    const orders = collection ? await collection.find({}).sort({ createdAt: -1 }).limit(100).toArray() : (await localOrderStore.list()).slice(0, 100);
     return res.json({ success: true, count: orders.length, orders });
   } catch (error) {
     console.error('Error fetching orders:', error instanceof Error ? error.message : error);
@@ -95,12 +105,13 @@ router.get('/', async (_req, res) => {
 
 router.get('/analytics/summary', async (_req, res) => {
   try {
-    const orders = await getDB().collection('orders').find({}).toArray();
+    const collection = ordersCollection();
+    const orders = collection ? await collection.find({}).toArray() : await localOrderStore.list();
     const summary = orders.reduce((result, order) => {
       result.totalOrders += 1;
       result.totalRevenue += Number(order.pricing?.grandTotal || 0);
       result.totalPackages += Number(order.cart?.totalQty || 0);
-      if (['PAID', 'PROCESSED', 'SHIPPED', 'COMPLETED'].includes(order.status)) result.paidCount += 1;
+      if (['PAID', 'PROCESSED', 'SHIPPED', 'COMPLETED', 'DONE'].includes(order.status)) result.paidCount += 1;
       else result.pendingCount += 1;
       return result;
     }, { totalOrders: 0, totalRevenue: 0, totalPackages: 0, pendingCount: 0, paidCount: 0 });
@@ -113,7 +124,9 @@ router.get('/analytics/summary', async (_req, res) => {
 
 router.get('/:orderNumber', async (req, res) => {
   try {
-    const order = await getDB().collection('orders').findOne({ orderNumber: text(req.params.orderNumber, 32) });
+    const collection = ordersCollection();
+    const orderNumber = text(req.params.orderNumber, 32);
+    const order = collection ? await collection.findOne({ orderNumber }) : await localOrderStore.find(orderNumber);
     return order ? res.json({ success: true, order }) : res.status(404).json({ success: false, message: 'Pesanan tidak ditemukan.' });
   } catch (error) {
     console.error('Error fetching order:', error instanceof Error ? error.message : error);
@@ -125,11 +138,11 @@ router.patch('/:orderNumber/status', async (req, res) => {
   const status = text(req.body?.status, 32);
   if (!ORDER_STATUSES.has(status)) return res.status(400).json({ success: false, message: 'Status pesanan tidak valid.' });
   try {
-    const result = await getDB().collection('orders').updateOne(
-      { orderNumber: text(req.params.orderNumber, 32) },
-      { $set: { status, updatedAt: new Date() } }
-    );
-    return result.matchedCount
+    const collection = ordersCollection();
+    const matched = collection
+      ? (await collection.updateOne({ orderNumber: text(req.params.orderNumber, 32) }, { $set: { status, updatedAt: new Date() } })).matchedCount > 0
+      : await localOrderStore.updateStatus(text(req.params.orderNumber, 32), status);
+    return matched
       ? res.json({ success: true, message: 'Status pesanan diperbarui.' })
       : res.status(404).json({ success: false, message: 'Pesanan tidak ditemukan.' });
   } catch (error) {

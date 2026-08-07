@@ -5,7 +5,7 @@ import { createHmac } from 'node:crypto';
 process.env.ADMIN_SESSION_SECRET = 'test-secret-with-at-least-32-characters';
 
 const { hashPassword, requireAdmin, verifyPassword, verifySessionToken } = await import('./routes/authRoutes.js');
-const { buildOrder } = await import('./routes/orderRoutes.js');
+const { default: orderRouter, buildOrder } = await import('./routes/orderRoutes.js');
 const { default: productRouter, buildProduct } = await import('./routes/productRoutes.js');
 const { default: express } = await import('express');
 
@@ -58,6 +58,7 @@ test('product update and delete routes explicitly deny unauthenticated, buyer, a
   const app = express();
   app.use(express.json());
   app.use('/products', productRouter);
+  app.use('/orders', orderRouter);
   const server = app.listen(0, '127.0.0.1');
   await new Promise((resolve) => server.once('listening', resolve));
   t.after(() => new Promise((resolve) => server.close(resolve)));
@@ -74,6 +75,16 @@ test('product update and delete routes explicitly deny unauthenticated, buyer, a
       assert.equal(response.status, 401, `${method} must reject ${role || 'anonymous'}`);
       assert.match(body.message, /Unauthorized Access/);
     }
+  }
+  for (const role of identities) {
+    const response = await fetch(`http://127.0.0.1:${port}/orders/BTS-20260807-ABC123/status`, {
+      method: 'PATCH',
+      headers: role ? { cookie: `botani_admin_session=${tokenFor(role)}`, 'content-type': 'application/json' } : { 'content-type': 'application/json' },
+      body: JSON.stringify({ status: 'DONE' }),
+    });
+    const body = await response.json();
+    assert.equal(response.status, 401, `order status must reject ${role || 'anonymous'}`);
+    assert.match(body.message, /Unauthorized Access/);
   }
 });
 
@@ -100,6 +111,7 @@ test('server recalculates product pricing instead of trusting client totals', ()
     pricing: { grandTotal: 1 },
   });
   assert.deepEqual(order.pricing, { normalTotal: 100_000, discountTotal: 20_000, productTotal: 80_000, shippingTotal: 20_000, grandTotal: 100_000 });
+  assert.equal(order.status, 'PAYMENT_REPORTED');
 });
 
 test('server prices a mixed cart from its trusted catalog', () => {

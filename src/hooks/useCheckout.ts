@@ -247,7 +247,7 @@ export function useCheckout(items: CartItem[], totalQty: number, subtotalProduct
     }
   };
 
-  const startPaymentSession = async () => {
+  const startPaymentSession = () => {
     const randomCode = crypto.randomUUID().replace(/-/g, '').slice(0, 6).toUpperCase();
     const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
     const orderNum = `BTS-${dateStr}-${randomCode}`;
@@ -264,31 +264,11 @@ export function useCheckout(items: CartItem[], totalQty: number, subtotalProduct
       isConfirmed: false
     };
 
-    setIsSavingOrder(true);
     setOrderSaveError(null);
-    try {
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderNumber: orderNum,
-          buyer: buyerForm,
-          cart: { items: items.map(({ id, qty }) => ({ id, qty })) },
-          shippingService: shippingType === 'JNE' ? selectedService : null,
-          paymentMethod
-        })
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Pesanan belum dapat disimpan.');
-      setPaymentSession(newSession);
-      setTimeLeft(3600);
-      setIsPaymentConfirmedChecked(false);
-      setCurrentStep(4);
-    } catch (error) {
-      setOrderSaveError(error instanceof Error ? error.message : 'Pesanan belum dapat disimpan.');
-    } finally {
-      setIsSavingOrder(false);
-    }
+    setPaymentSession(newSession);
+    setTimeLeft(3600);
+    setIsPaymentConfirmedChecked(false);
+    setCurrentStep(4);
   };
 
   const restartPayment = () => {
@@ -338,15 +318,36 @@ Bukti transfer telah saya siapkan. Mohon pesanan saya segera diproses. Terima ka
     return encodeURIComponent(msg);
   };
 
-  const confirmPaidAndOpenWhatsapp = () => {
+  const confirmPaidAndOpenWhatsapp = async () => {
     if (!paymentSession || paymentSession.isExpired || !isPaymentConfirmedChecked) return;
-
-    setPaymentSession(prev => prev ? { ...prev, isConfirmed: true } : null);
-    setCurrentStep(5);
-
-    const waMessage = generateWhatsappMessage();
-    const waUrl = `https://api.whatsapp.com/send?phone=${ADMIN_WHATSAPP_NUMBER}&text=${waMessage}`;
-    window.open(waUrl, '_blank');
+    setIsSavingOrder(true);
+    setOrderSaveError(null);
+    const whatsappWindow = window.open('about:blank', '_blank');
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderNumber: paymentSession.orderNumber,
+          buyer: buyerForm,
+          cart: { items: items.map(({ id, qty }) => ({ id, qty })) },
+          shippingService: shippingType === 'JNE' ? selectedService : null,
+          paymentMethod,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Pesanan belum dapat disimpan.');
+      setPaymentSession(prev => prev ? { ...prev, isConfirmed: true } : null);
+      setCurrentStep(5);
+      const waUrl = `https://api.whatsapp.com/send?phone=${ADMIN_WHATSAPP_NUMBER}&text=${generateWhatsappMessage()}`;
+      if (whatsappWindow) whatsappWindow.location.href = waUrl;
+      else window.location.href = waUrl;
+    } catch (error) {
+      whatsappWindow?.close();
+      setOrderSaveError(error instanceof Error ? error.message : 'Pesanan belum dapat disimpan.');
+    } finally {
+      setIsSavingOrder(false);
+    }
   };
 
   return {

@@ -260,11 +260,13 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
                 className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-emerald-500"
               >
                 <option value="ALL">Semua Status</option>
+                <option value="PAYMENT_REPORTED">PAYMENT_REPORTED</option>
                 <option value="PENDING_PAYMENT">PENDING_PAYMENT</option>
                 <option value="PAID">PAID</option>
                 <option value="PROCESSED">PROCESSED</option>
                 <option value="SHIPPED">SHIPPED</option>
                 <option value="COMPLETED">COMPLETED</option>
+                <option value="DONE">DONE</option>
               </select>
 
               <button
@@ -326,7 +328,7 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
                       <td className="py-3.5 px-4">
                         <span
                           className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold ${
-                            order.status === 'PAID' || order.status === 'COMPLETED'
+                            order.status === 'PAID' || order.status === 'COMPLETED' || order.status === 'DONE'
                               ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
                               : order.status === 'SHIPPED'
                               ? 'bg-blue-500/10 text-blue-400 border border-blue-500/30'
@@ -344,11 +346,13 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
                           onChange={e => handleStatusChange(order.orderNumber, e.target.value)}
                           className="bg-slate-950 border border-slate-700 text-[11px] text-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-emerald-500"
                         >
+                          <option value="PAYMENT_REPORTED">PAYMENT_REPORTED</option>
                           <option value="PENDING_PAYMENT">PENDING_PAYMENT</option>
                           <option value="PAID">PAID</option>
                           <option value="PROCESSED">PROCESSED</option>
                           <option value="SHIPPED">SHIPPED</option>
                           <option value="COMPLETED">COMPLETED</option>
+                          <option value="DONE">DONE</option>
                         </select>
                       </td>
                     </tr>

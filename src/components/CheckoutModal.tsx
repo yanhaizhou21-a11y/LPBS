@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Check, Search, Sprout, X } from 'lucide-react';
+import { Check, FileText, Search, Sprout, X } from 'lucide-react';
 import { ASSETS } from '../data/assets';
 import { useCheckout } from '../hooks/useCheckout';
 import { CartItem } from '../types';
@@ -558,13 +558,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                       type="button"
                       className="start-payment-btn"
                       onClick={checkout.startPaymentSession}
-                      disabled={checkout.isSavingOrder}
                     >
-                      {checkout.isSavingOrder ? 'Menyimpan pesanan…' : 'Lanjut ke Detail Pembayaran'}
+                      Tinjau Invoice Pembayaran
                     </button>
                   </div>
-                  {checkout.orderSaveError && <p className="form-error" role="alert">{checkout.orderSaveError}</p>}
-
                   <div className="checkout-nav">
                     <button
                       type="button"
@@ -584,7 +581,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     <span>LANGKAH 4</span>
                     <h2>Detail Pembayaran</h2>
                     <p>
-                      Selesaikan pembayaran sesuai metode yang dipilih dalam waktu maksimal <strong>1 jam</strong>, kemudian konfirmasikan pembayaran melalui WhatsApp.
+                      Periksa seluruh data pada invoice, lakukan pembayaran, lalu konfirmasi untuk menyimpan pesanan dan melanjutkan ke WhatsApp.
                     </p>
                   </div>
 
@@ -601,6 +598,17 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                         </strong>
                       </div>
                     </div>
+
+                    <section className="checkout-invoice" aria-labelledby="invoice-title">
+                      <div className="checkout-invoice-heading"><FileText size={21} aria-hidden="true" /><div><span>INVOICE PEMESANAN</span><h3 id="invoice-title">{checkout.paymentSession.orderNumber}</h3></div></div>
+                      <div className="checkout-invoice-parties">
+                        <div><span>DITAGIHKAN KEPADA</span><strong>{checkout.buyerForm.name}</strong><p>{checkout.buyerForm.whatsapp}{checkout.buyerForm.email ? ` · ${checkout.buyerForm.email}` : ''}</p><p>{checkout.buyerForm.address}, {checkout.buyerForm.village}, {checkout.buyerForm.district}, {checkout.buyerForm.city}, {checkout.buyerForm.province} {checkout.buyerForm.postal}</p></div>
+                        <div><span>PENGIRIMAN & PEMBAYARAN</span><strong>{checkout.shippingType === 'JNE' ? checkout.selectedService?.name : 'Ambil di Kantor Botani Seed'}</strong><p>{checkout.shippingType === 'JNE' && checkout.selectedDestination ? `${checkout.selectedDestination.village}, ${checkout.selectedDestination.district}` : 'Tanpa ongkos kirim'}</p><p>Metode: {checkout.paymentMethod}</p></div>
+                      </div>
+                      <div className="checkout-invoice-items">{items.map((item) => <div key={item.id}><span><strong>{item.name}</strong><small>{item.qty} × Rp {item.price.toLocaleString('id-ID')}</small></span><strong>Rp {(item.qty * item.price).toLocaleString('id-ID')}</strong></div>)}</div>
+                      <div className="checkout-invoice-totals"><div><span>Subtotal produk</span><strong>Rp {subtotalProduct.toLocaleString('id-ID')}</strong></div><div><span>Pengiriman</span><strong>Rp {checkout.shippingCostTotal.toLocaleString('id-ID')}</strong></div><div className="grand"><span>Total pembayaran</span><strong>Rp {checkout.grandTotal.toLocaleString('id-ID')}</strong></div></div>
+                      {checkout.buyerForm.note && <p className="checkout-invoice-note"><strong>Catatan:</strong> {checkout.buyerForm.note}</p>}
+                    </section>
 
                     {!checkout.paymentSession.isExpired ? (
                       <>
@@ -694,11 +702,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                         <button
                           type="button"
                           className="confirm-paid-btn"
-                          disabled={!checkout.isPaymentConfirmedChecked}
+                          disabled={!checkout.isPaymentConfirmedChecked || checkout.isSavingOrder}
                           onClick={checkout.confirmPaidAndOpenWhatsapp}
                         >
-                          Saya Sudah Bayar — Konfirmasi via WhatsApp
+                          {checkout.isSavingOrder ? 'Menyimpan Invoice…' : 'Konfirmasi & Lanjut ke WhatsApp'}
                         </button>
+
+                        {checkout.orderSaveError && <p className="form-error" role="alert">{checkout.orderSaveError}</p>}
 
                         <p className="payment-verification-note">
                           Lampirkan bukti pembayaran pada percakapan WhatsApp. Tim Botani Seed akan memeriksa pembayaran sebelum pesanan diproses.
