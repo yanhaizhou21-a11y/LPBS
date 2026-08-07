@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Check, Search, Sprout, X } from 'lucide-react';
 import { ASSETS } from '../data/assets';
 import { useCheckout } from '../hooks/useCheckout';
 import { CartItem } from '../types';
@@ -57,7 +58,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
         <div className="checkout-shell">
           <header className="checkout-header">
             <div className="checkout-brand">
-              <span className="checkout-brand-mark">🌱</span>
+              <Sprout className="checkout-brand-mark" size={32} aria-hidden="true" />
               <div>
                 <strong id="checkout-title">PT. Botani Seed Indonesia</strong>
                 <small>Pemesanan Paket Benih Sayuran</small>
@@ -69,7 +70,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               onClick={onClose}
               aria-label="Tutup halaman pemesanan"
             >
-              ×
+              <X size={23} aria-hidden="true" />
             </button>
           </header>
 
@@ -302,7 +303,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                         <div className="destination-search-wrap">
                           <label htmlFor="jneDestinationSearch">Cari Tujuan JNE:</label>
                           <div className="destination-search-input">
-                            <span>⌕</span>
+                            <Search size={18} aria-hidden="true" />
                             <input
                               id="jneDestinationSearch"
                               type="search"
@@ -655,7 +656,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                                     handleCopyAccount(bankAccountDetails[checkout.paymentMethod]?.number || '')
                                   }
                                 >
-                                  {copySuccess ? '✓ Nomor Rekening Tersalin!' : 'Salin Nomor Rekening'}
+                                  {copySuccess ? <><Check size={16} aria-hidden="true" /> Nomor Rekening Tersalin!</> : 'Salin Nomor Rekening'}
                                 </button>
                               </div>
 
@@ -738,7 +739,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               {/* STEP 5: CHECKOUT SUCCESS */}
               {checkout.currentStep === 5 && (
                 <div className="checkout-success">
-                  <div className="success-icon">✓</div>
+                  <div className="success-icon"><Check size={36} strokeWidth={3} aria-hidden="true" /></div>
                   <span>KONFIRMASI PEMBAYARAN</span>
                   <h2>WhatsApp Konfirmasi Telah Dibuka</h2>
                   <p>
@@ -775,7 +776,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               <div className="summary-product-list">
                 {items.map((item) => (
                   <div className="summary-product-row" key={item.id}>
-                    <div className="summary-product-icon">🌱</div>
+                    <Sprout className="summary-product-icon" size={30} aria-hidden="true" />
                     <div>
                       <strong>{item.name}</strong>
                       <span>{item.qty} × Rp {item.price.toLocaleString('id-ID')}</span>
