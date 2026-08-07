@@ -104,14 +104,14 @@ export function App() {
 
   return (
     <div className="app-root">
-      <Navbar cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
-      {view === 'products' ? <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCart={cart.openCart} /> : (
+      <Navbar onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
+      {view === 'products' ? <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} /> : (
         <main>
           <HeroSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
           <PeluangSection /><StorySection /><CompanyProfile />
           <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
           <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-          <FAQSection />
+          <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
         </main>
       )}
       <Footer onOpenPrivacyPolicy={openPrivacy} />

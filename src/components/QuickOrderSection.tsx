@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Lightbulb, PartyPopper, ShoppingCart, Zap } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
+import { Lightbulb, MessageCircle, PartyPopper, ShoppingBag } from 'lucide-react';
+import { ASSETS } from '../data/assets';
 
 interface QuickOrderSectionProps {
   onSetQtyDirectly: (qty: number) => void;
@@ -11,6 +13,7 @@ export const QuickOrderSection: React.FC<QuickOrderSectionProps> = ({
   onOpenCheckout
 }) => {
   const [selectedQty, setSelectedQty] = useState<number>(5);
+  const reduceMotion = useReducedMotion();
 
   const unitPrice = 20000;
   const isPromo = selectedQty >= 5;
@@ -23,82 +26,65 @@ export const QuickOrderSection: React.FC<QuickOrderSectionProps> = ({
     setSelectedQty(newQty);
   };
 
-  const handleQuickPreset = (qty: number) => {
-    setSelectedQty(qty);
-  };
-
-  const handleAddToCartClick = () => {
-    onSetQtyDirectly(selectedQty);
-  };
-
   const handleCheckoutClick = () => {
     onSetQtyDirectly(selectedQty);
     onOpenCheckout();
   };
 
+  const whatsappMessage = encodeURIComponent(
+    `Halo Botani Seed, saya ingin memesan ${selectedQty} Paket Benih Sayur Unggul. Total: Rp ${subtotal.toLocaleString('id-ID')}.`
+  );
+
   return (
     <section id="pesan-sekarang" className="quick-order-section">
       <div className="container">
-        <div className="section-header text-center">
-          <span className="section-subtitle">SIMULASI & PEMESANAN LANGSUNG</span>
-          <h2 className="section-title">
-            Hitung & Pesan <span className="text-gradient">Paket Benih Sayur</span>
-          </h2>
-          <p className="section-desc">
-            Pilih jumlah paket yang ingin Anda pesan. Dapatkan harga hemat 20% otomatis dengan memesan 5 paket atau lebih.
-          </p>
-        </div>
-
-        <div className="quick-order-calculator">
-          <div className="calculator-card">
-            <h3>Tentukan Jumlah Pesanan</h3>
-
-            <div className="preset-buttons">
-              <button
-                type="button"
-                className={`preset-btn ${selectedQty === 1 ? 'active' : ''}`}
-                onClick={() => handleQuickPreset(1)}
-              >
-                1 Paket (Rp 20.000)
-              </button>
-              <button
-                type="button"
-                className={`preset-btn ${selectedQty === 5 ? 'active' : ''}`}
-                onClick={() => handleQuickPreset(5)}
-              >
-                5 Paket (Hemat 20% — Rp 80.000)
-              </button>
-              <button
-                type="button"
-                className={`preset-btn ${selectedQty === 10 ? 'active' : ''}`}
-                onClick={() => handleQuickPreset(10)}
-              >
-                10 Paket (Hemat 20% — Rp 160.000)
-              </button>
+        <motion.div
+          className="quick-order-grid"
+          initial={reduceMotion ? false : { opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {/* LEFT PRODUCT DISPLAY CARD */}
+          <div className="quick-product-card">
+            <div className="product-card-top-panel">
+              <img src={ASSETS.productBanner} alt="Paket Benih Sayur Botani Seed" className="quick-product-img" />
+              <div className="product-card-bottom-bar">
+                <strong>PAKET BENIH SAYUR BOTANI SEED</strong>
+                <span>1 PAKET = 10 BENIH SAYURAN</span>
+              </div>
             </div>
+          </div>
 
-            <div className="qty-control-wrap">
-              <label htmlFor="customQty">Jumlah Paket Custom:</label>
-              <div className="qty-counter">
+          {/* RIGHT ORDER CALCULATOR FORM */}
+          <div className="quick-order-form-panel">
+            <span className="card-tag">PEMESANAN LANGSUNG</span>
+            <h2 className="quick-title">Paket Benih Sayur Botani Seed</h2>
+            <p className="quick-subtitle">
+              Pilih jumlah paket yang ingin Anda pesan. Dapatkan diskon 20% otomatis untuk pemesanan 5 paket atau lebih.
+            </p>
+
+            <div className="qty-picker-box">
+              <span className="qty-picker-label">Jumlah Pesanan:</span>
+              <div className="qty-counter-row">
                 <button
                   type="button"
-                  className="counter-btn"
+                  className="qty-btn"
                   onClick={() => handleQtyChange(selectedQty - 1)}
                   disabled={selectedQty <= 1}
                 >
                   −
                 </button>
                 <input
-                  id="customQty"
                   type="number"
                   min="1"
                   value={selectedQty}
-                  onChange={e => handleQtyChange(parseInt(e.target.value) || 1)}
-                  className="counter-input"
+                  onChange={(e) => handleQtyChange(parseInt(e.target.value) || 1)}
+                  className="qty-input"
                 />
                 <button
                   type="button"
-                  className="counter-btn"
+                  className="qty-btn"
                   onClick={() => handleQtyChange(selectedQty + 1)}
                 >
                   +
@@ -108,48 +94,39 @@ export const QuickOrderSection: React.FC<QuickOrderSectionProps> = ({
 
             {isPromo ? (
               <div className="promo-status-msg success">
-                <PartyPopper size={18} aria-hidden="true" /> Selamat! Anda berhak mendapatkan <strong>Diskon 20%</strong> karena memesan {selectedQty} paket!
+                <PartyPopper size={17} aria-hidden="true" /> Selamat! Anda berhak mendapatkan <strong>Diskon 20%</strong> (Hemat Rp {discountAmount.toLocaleString('id-ID')}).
               </div>
             ) : (
               <div className="promo-status-msg info">
-                <Lightbulb size={18} aria-hidden="true" /> Tambah {5 - selectedQty} paket lagi untuk mendapatkan <strong>Diskon 20%</strong> (Hemat Rp 20.000)!
+                <Lightbulb size={17} aria-hidden="true" /> Tambah {5 - selectedQty} paket lagi untuk klaim <strong>Diskon 20%</strong>.
               </div>
             )}
 
-            <div className="calc-summary-rows">
-              <div className="calc-row">
-                <span>Harga Normal ({selectedQty} paket × Rp 20.000):</span>
-                <strong>Rp {normalTotal.toLocaleString('id-ID')}</strong>
-              </div>
-              <div className="calc-row discount">
-                <span>Diskon Promo (20%):</span>
-                <strong>−Rp {discountAmount.toLocaleString('id-ID')}</strong>
-              </div>
-              <div className="calc-row subtotal">
-                <span>Subtotal Produk:</span>
-                <strong>Rp {subtotal.toLocaleString('id-ID')}</strong>
-              </div>
-              <small className="calc-footnote">* Ongkos kirim JNE akan dihitung otomatis pada tahap pengiriman.</small>
+            <div className="subtotal-display-card">
+              <span>Total Harga Produk:</span>
+              <strong className="subtotal-amount">Rp {subtotal.toLocaleString('id-ID')}</strong>
+              {isPromo && <small className="normal-strike">Rp {normalTotal.toLocaleString('id-ID')}</small>}
             </div>
 
-            <div className="calculator-actions">
+            <div className="quick-action-buttons">
               <button
                 type="button"
-                className="calc-cart-btn"
-                onClick={handleAddToCartClick}
-              >
-                <ShoppingCart size={18} aria-hidden="true" /> Tambahkan ke Keranjang
-              </button>
-              <button
-                type="button"
-                className="calc-checkout-btn"
+                className="btn-buy-now-green"
                 onClick={handleCheckoutClick}
               >
-                <Zap size={18} aria-hidden="true" /> Lanjut ke Pemesanan (Checkout)
+                <ShoppingBag size={18} aria-hidden="true" /> Beli Sekarang
               </button>
+              <a
+                href={`https://wa.me/6281299450708?text=${whatsappMessage}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-order-wa-orange"
+              >
+                <MessageCircle size={18} aria-hidden="true" /> Pesan via WhatsApp
+              </a>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

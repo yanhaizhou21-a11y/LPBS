@@ -1,101 +1,167 @@
 import React from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { ExternalLink } from 'lucide-react';
+import { ASSETS } from '../data/assets';
 
 export const StorySection: React.FC = () => {
+  const reduceMotion = useReducedMotion();
   const stories = [
     {
-      name: 'Diyah Rahmawati',
-      role: 'Petani Muda & Pengusaha Sayuran Segar',
-      location: 'Bogor, Jawa Barat',
-      quote: '"Memilih benih yang tepat dengan daya tumbuh tinggi adalah kunci utama keberhasilan panen. Benih dari Botani Seed terbukti menghasilkan tanaman yang subur dan tahan penyakit."',
-      sourceText: 'Lihat Liputan Berita Diyah Rahmawati di Radar Bogor',
-      sourceUrl: 'https://radarbogor.jawapos.com/bogor/2473489240/diyah-rahmawati-alumni-sv-ipb-sukses-jadi-petani-muda-omzetnya-capai-puluhan-juta'
+      omzet: 'Hingga Rp60 juta/bln',
+      author: 'DIYAH RAHMAWATI · PETANI MUDA & PENGUSAHA',
+      title: 'Alumni SV IPB yang Sukses Jadi Petani Muda',
+      desc: 'Diyah Rahmawati membuktikan bahwa usaha budidaya sayuran dapat memberikan omzet hingga puluhan juta rupiah per bulan. Kunci suksesnya adalah konsistensi, memilih benih unggul dengan daya tumbuh tinggi, serta pengelolaan jaringan pemasaran yang baik.',
+      linkText: 'Lihat Liputan Berita',
+      linkUrl: 'https://radarbogor.jawapos.com/bogor/2473489240/diyah-rahmawati-alumni-sv-ipb-sukses-jadi-petani-muda-omzetnya-capai-puluhan-juta'
     },
     {
-      name: 'Dodih',
-      role: 'Petani Mitra Budidaya Sayuran',
-      location: 'Jawa Barat',
-      quote: '"Panen sayuran yang seragam dan segar membuat hasil pertanian kami selalu dicari oleh tengkulak maupun konsumen langsung. Kualitas benih menentukan keuntungan petani."',
-      sourceText: 'Baca Artikel Inspirasi Pertanian Dodih',
-      sourceUrl: 'https://radarbogor.jawapos.com/bogor/2473489240/diyah-rahmawati-alumni-sv-ipb-sukses-jadi-petani-muda-omzetnya-capai-puluhan-juta'
+      omzet: 'Hingga Rp100 juta/bln',
+      author: 'DODIH · PETANI MITRA BUDIDAYA SAYURAN',
+      title: 'Pasokan Sayur Segar Konsisten dengan Benih Unggul',
+      desc: 'Pak Dodih mengelola budidaya sayuran segar untuk memasok kebutuhan pasar lokal dan usaha kuliner. Hasil panen yang seragam dan berkualitas tinggi membuat produknya selalu diminati pembeli.',
+      linkText: 'Baca Artikel Inspirasi',
+      linkUrl: 'https://radarbogor.jawapos.com/bogor/2473489240/diyah-rahmawati-alumni-sv-ipb-sukses-jadi-petani-muda-omzetnya-capai-puluhan-juta'
     }
   ];
 
   const steps = [
     {
       num: '1',
-      title: 'Pesan Paket Benih',
-      desc: 'Pilih paket benih sayuran unggul Botani Seed sesuai kebutuhan Anda.'
+      title: 'Pilih benih',
+      desc: 'Dapatkan paket benih sayuran unggul bersertifikat siap tanam.',
+      img: ASSETS.company1
     },
     {
       num: '2',
-      title: 'Semaikan & Tanam',
-      desc: 'Semaikan benih pada media tanam tanah atau sistem hidroponik modern.'
+      title: 'Semaikan',
+      desc: 'Semaikan benih pada media tanam tanah atau hidroponik.',
+      img: ASSETS.company2
     },
     {
       num: '3',
-      title: 'Perawatan Praktis',
-      desc: 'Lakukan penyiraman dan pemeliharaan rutin dengan petunjuk budidaya.'
+      title: 'Rawat',
+      desc: 'Siram dan rawat secara rutin sesuai panduan budidaya.',
+      img: ASSETS.company3
     },
     {
       num: '4',
-      title: 'Panen Segar',
-      desc: 'Nikmati hasil panen sayur berkualitas tinggi dengan warna & rasa optimal.'
+      title: 'Panen',
+      desc: 'Panen sayuran segar berkualitas tinggi dan nutrisi optimal.',
+      img: ASSETS.productBanner
     },
     {
       num: '5',
-      title: 'Pasarkan & Untung',
-      desc: 'Jual hasil panen ke tetangga, pasar, atau nikmati sendiri untuk hemat konsumsi.'
+      title: 'Pasarkan',
+      desc: 'Jual ke tetangga, pasar, warung, atau nikmati sendiri.',
+      img: ASSETS.company1
     }
   ];
 
   return (
     <section id="kisah" className="story-section">
       <div className="container">
-        <div className="section-header text-center">
-          <span className="section-subtitle">KISAH INSPIRATIF PETANI</span>
-          <h2 className="section-title">
-            Inspirasi & Bukti Sukses <span className="text-gradient">Budidaya Benih Sayur</span>
+        {/* STORY CARDS */}
+        <motion.div
+          className="section-header text-center"
+          initial={reduceMotion ? false : { opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <h2 className="section-title story-main-title">
+            Dua kisah nyata petani sayuran yang berkembang
           </h2>
-          <p className="section-desc">
-            Simak testimoni dan rekam jejak para petani muda Indonesia yang membuktikan potensi usaha budidaya sayuran unggul.
+          <p className="section-desc story-main-subtitle">
+            Kisah Diyah Rahmawati dan Dodih yang memulai usaha budidaya sayuran unggul dari skala kecil.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="stories-grid">
+        <motion.div
+          className="stories-grid-new"
+          initial={reduceMotion ? false : 'hidden'}
+          whileInView="show"
+          viewport={{ once: true, margin: '-60px' }}
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: { staggerChildren: 0.15 }
+            }
+          }}
+        >
           {stories.map((story, idx) => (
-            <div className="story-card" key={idx}>
-              <div className="story-quote-icon">“</div>
-              <p className="story-quote-text">{story.quote}</p>
-              <div className="story-author-info">
-                <strong className="author-name">{story.name}</strong>
-                <span className="author-role">{story.role} — {story.location}</span>
-              </div>
+            <motion.div
+              className="story-card-new"
+              key={idx}
+              variants={{
+                hidden: { opacity: 0, y: 35 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } }
+              }}
+            >
+              <div className="story-omzet-badge">{story.omzet}</div>
+              <span className="story-author-sub">{story.author}</span>
+              <h3 className="story-card-title">{story.title}</h3>
+              <p className="story-card-desc">{story.desc}</p>
               <a
-                href={story.sourceUrl}
+                href={story.linkUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="story-source-link"
+                className="story-link-btn"
               >
-                {story.sourceText} <ExternalLink size={15} aria-hidden="true" />
+                {story.linkText} <ExternalLink size={15} aria-hidden="true" />
               </a>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        <div className="steps-wrapper">
-          <div className="steps-header text-center">
-            <h3>5 Langkah Mudah Memulai Budidaya Benih Sayuran</h3>
-          </div>
-          <div className="steps-grid">
+        {/* STEPS SECTION */}
+        <div className="steps-section-wrapper" id="cara-mulai">
+          <motion.div
+            className="section-header text-center"
+            initial={reduceMotion ? false : { opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <h2 className="section-title steps-main-title">
+              Bagaimana cara memulainya?
+            </h2>
+            <p className="section-desc steps-main-subtitle">
+              Langkah mudah dari persiapan hingga pemasaran panen Anda
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="steps-grid-new"
+            initial={reduceMotion ? false : 'hidden'}
+            whileInView="show"
+            viewport={{ once: true, margin: '-60px' }}
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: { staggerChildren: 0.1 }
+              }
+            }}
+          >
             {steps.map((step, idx) => (
-              <div className="step-card" key={idx}>
-                <div className="step-number">{step.num}</div>
-                <h4 className="step-title">{step.title}</h4>
-                <p className="step-desc">{step.desc}</p>
-              </div>
+              <motion.div
+                className="step-card-new"
+                key={idx}
+                variants={{
+                  hidden: { opacity: 0, y: 30, scale: 0.95 },
+                  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } }
+                }}
+              >
+                <div className="step-badge-num">{step.num}</div>
+                <div className="step-img-wrap">
+                  <img src={step.img} alt={step.title} loading="lazy" />
+                </div>
+                <h4 className="step-card-title">{step.num}. {step.title}</h4>
+                <p className="step-card-desc">{step.desc}</p>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

@@ -1,47 +1,82 @@
 import React from 'react';
-import { Salad, Sprout, TrendingUp } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
+import { Salad, Store, TrendingUp } from 'lucide-react';
 
 export const PeluangSection: React.FC = () => {
+  const reduceMotion = useReducedMotion();
   const opportunities = [
     {
       icon: Salad,
-      title: 'Kebutuhan Harian Masyarakat',
-      desc: 'Sayuran merupakan kebutuhan konsumsi pokok harian setiap rumah tangga. Budidaya mandiri menghemat biaya belanja sekaligus membuka peluang usaha penjualan sayur segar berkualitas.'
+      iconBg: '#dcfce7',
+      iconColor: '#166534',
+      title: 'Kebutuhan harian',
+      desc: 'Rumah tangga, warung makan, dan usaha kuliner membutuhkan pasokan sayuran secara rutin.'
+    },
+    {
+      icon: Store,
+      iconBg: '#ffedd5',
+      iconColor: '#c2410c',
+      title: 'Pasar beragam',
+      desc: 'Penjualan dapat dilakukan ke tetangga, pasar, warung, komunitas, dan kanal pemesanan online.'
     },
     {
       icon: TrendingUp,
-      title: 'Pasar Luas & Sangat Fleksibel',
-      desc: 'Hasil panen benih sayur mudah dipasarkan ke lingkungan sekitar, pasar tradisional, minimarket, bisnis kuliner, hingga jaringan hidroponik & pasar organik yang terus berkembang.'
-    },
-    {
-      icon: Sprout,
-      title: 'Modal Terjangkau & Resiko Rendah',
-      desc: 'Cukup dimulai dari pekarangan atau lahan terbatas. Paket benih Botani Seed dapat diperoleh mulai dari Rp 20.000 dengan potensi hasil panen berlipat ganda.'
+      iconBg: '#ccfbf1',
+      iconColor: '#0f766e',
+      title: 'Bisa berkembang bertahap',
+      desc: 'Mulai dari satu komoditas, lalu tambah pilihan produk ketika permintaan dan kemampuan meningkat.'
     }
   ];
 
   return (
     <section id="peluang" className="peluang-section">
       <div className="container">
-        <div className="section-header text-center">
-          <span className="section-subtitle">PELUANG USAHA PERTANIAN</span>
-          <h2 className="section-title">
-            Mengapa Bisnis & Budidaya Benih Sayuran <span className="text-gradient">Sangat Menjanjikan?</span>
+        <motion.div
+          className="section-header text-center"
+          initial={reduceMotion ? false : { opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <h2 className="section-title peluang-main-title">
+            Kenapa jualan sayur punya peluang?
           </h2>
-          <p className="section-desc">
-            Pertanian sayuran modern kini menjadi salah satu sektor paling tahan krisis dengan perputaran modal cepat dan pasar konsumsi harian yang tidak pernah surut.
+          <p className="section-desc peluang-main-subtitle">
+            Sayuran dibutuhkan setiap hari dan dapat dipasarkan melalui lingkungan sekitar maupun kanal digital.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="opportunities-grid">
-          {opportunities.map(({ icon: Icon, title, desc }) => (
-            <div className="opportunity-card" key={title}>
-              <div className="card-icon-wrap"><Icon size={34} aria-hidden="true" /></div>
+        <motion.div
+          className="opportunities-grid"
+          initial={reduceMotion ? false : 'hidden'}
+          whileInView="show"
+          viewport={{ once: true, margin: '-60px' }}
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: { staggerChildren: 0.12 }
+            }
+          }}
+        >
+          {opportunities.map(({ icon: Icon, iconBg, iconColor, title, desc }) => (
+            <motion.div
+              className="opportunity-card"
+              key={title}
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }
+              }}
+            >
+              <div className="card-corner-shape" aria-hidden="true" />
+              <div className="card-icon-badge" style={{ backgroundColor: iconBg, color: iconColor }}>
+                <Icon size={24} aria-hidden="true" />
+              </div>
               <h3 className="card-title">{title}</h3>
               <p className="card-desc">{desc}</p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,5 +1,7 @@
-import React from 'react';
-import { AlertTriangle, ArrowRight, CheckCircle2, ShoppingCart, Video, Zap } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
+import { AlertTriangle, Play, ShoppingCart, Video, Zap } from 'lucide-react';
+import { ASSETS } from '../data/assets';
 
 interface PromoSectionProps {
   onAddToCart: (qty: number) => void;
@@ -7,78 +9,104 @@ interface PromoSectionProps {
 }
 
 export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenCheckout }) => {
+  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
+  const reduceMotion = useReducedMotion();
+
   return (
     <section id="promo" className="promo-section">
       <div className="container">
-        <div className="section-header text-center">
-          <span className="section-subtitle">PROMO HEMAT TERBATAS</span>
-          <h2 className="section-title">
-            Beli 5 Paket <span className="text-gradient">Hemat 20%</span>
-          </h2>
-          <p className="section-desc">
-            Manfaatkan harga promo paket hemat budidaya sayuran unggul sebelum batas penyesuaian harga promo berakhir.
-          </p>
-        </div>
-
-        <div className="promo-notice-banner">
-          <div className="notice-icon"><AlertTriangle size={26} aria-hidden="true" /></div>
-          <div className="notice-content">
-            <strong>PEMBERITAHUAN PENYESUAIAN HARGA PROMO:</strong>
-            <p>
-              Promo hemat 20% berlaku untuk setiap pembelian kelipatan 5 paket benih. 
-              Harga normal 5 paket <strong>Rp 100.000</strong> menjadi hanya <strong>Rp 80.000</strong> (Rp 16.000/paket). 
-              Penyesuaian tarif promo berikutnya akan diberlakukan mulai <strong>24 Agustus 2026</strong>.
-            </p>
+        {/* VALUE HIGHLIGHT ROW (Section 5) */}
+        <motion.div
+          className="value-highlight-wrapper"
+          initial={reduceMotion ? false : { opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="video-card-dark">
+            {!isPlayingVideo ? (
+              <div className="video-thumb-overlay" onClick={() => setIsPlayingVideo(true)} role="button" tabIndex={0}>
+                <div className="play-circle-btn">
+                  <Play size={28} fill="currentColor" />
+                </div>
+                <strong>PUTAR VIDEO (1:45)</strong>
+                <h4>Panduan & Informasi Benih Sayur</h4>
+                <p>Perkenalan lengkap isian paket benih dan panduan tanam.</p>
+              </div>
+            ) : (
+              <div className="video-responsive">
+                <iframe
+                  src="https://www.youtube.com/embed/5aC8q20T52E?autoplay=1"
+                  title="Video Perkenalan & Budidaya Benih Sayur Botani Seed"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            )}
           </div>
-        </div>
 
-        <div className="promo-grid">
-          <div className="promo-video-wrap">
-            <div className="video-responsive">
-              <iframe
-                src="https://www.youtube.com/embed/5aC8q20T52E"
-                title="Video Perkenalan & Budidaya Benih Sayur Botani Seed"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+          <div className="value-content-col">
+            <h2 className="value-title">
+              Rp20.000 sudah bisa dapat paket berisi 10 jenis benih.
+            </h2>
+            <p className="value-desc">
+              Setiap paket berisi varietas pilihan dengan daya berkecambah di atas 85% untuk kebutuhan tanam rumah tangga maupun usaha tani.
+            </p>
+            <button className="value-order-btn" onClick={onOpenCheckout}>
+              Pesan Paket Benih
+            </button>
+          </div>
+        </motion.div>
+
+        {/* PROMO 5 PAKET SECTION (Section 6) */}
+        <motion.div
+          className="promo-5-wrapper"
+          initial={reduceMotion ? false : { opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="promo-poster-col">
+            <div className="promo-poster-card" onClick={onOpenCheckout} role="button" tabIndex={0}>
+              <img src={ASSETS.productBanner} alt="Beli 5 Paket Hemat 20% Botani Seed" className="promo-poster-img" />
             </div>
-            <span className="video-caption"><Video size={17} aria-hidden="true" /> Video Panduan & Informasi Benih Sayur Botani Seed</span>
           </div>
 
           <div className="promo-details-card">
-            <span className="card-tag">PAKET PROMO HEMAT 5+</span>
-            <h3>Hitungan Hemat Pembelian Promo</h3>
+            <span className="card-tag">PROMO HEMAT TERBATAS</span>
+            <h2 className="promo-title">Beli 5 Paket, Hemat 20%</h2>
+            <p className="promo-subtitle">
+              Dari harga normal Rp100.000 menjadi hanya Rp80.000. Berlaku untuk kelipatan 5 paket benih.
+            </p>
 
-            <div className="promo-price-compare">
-              <div className="price-box normal">
-                <span>Harga Normal 5 Paket</span>
+            <div className="promo-notice-box">
+              <AlertTriangle size={18} aria-hidden="true" />
+              <span>
+                <strong>PEMBERITAHUAN PENYESUAIAN HARGA PROMO:</strong> Promo diskon 20% ini berlaku sebelum penyesuaian tarif berikutnya.
+              </span>
+            </div>
+
+            <div className="promo-price-bar">
+              <div className="price-item normal">
+                <span>Harga Normal</span>
                 <strong>Rp 100.000</strong>
               </div>
-              <div className="price-arrow"><ArrowRight size={24} aria-hidden="true" /></div>
-              <div className="price-box discount">
-                <span>Harga Promo (Diskon 20%)</span>
+              <div className="price-item promo">
+                <span>Harga Promo</span>
                 <strong>Rp 80.000</strong>
-                <small>Hemat Rp 20.000!</small>
               </div>
             </div>
 
-            <ul className="promo-feature-list">
-              <li><CheckCircle2 size={18} aria-hidden="true" /> Isian 10 jenis benih sayur pilihan unggul bersertifikat</li>
-              <li><CheckCircle2 size={18} aria-hidden="true" /> Daya kecambah & pertumbuhan tinggi (di atas 85%)</li>
-              <li><CheckCircle2 size={18} aria-hidden="true" /> Dilengkapi panduan cara penyemaian & perawatan</li>
-              <li><CheckCircle2 size={18} aria-hidden="true" /> Ongkir JNE dihitung otomatis dan akurat sesuai tujuan</li>
-            </ul>
-
             <div className="promo-card-actions">
-              <button className="promo-add-btn" onClick={() => onAddToCart(5)}>
-                <ShoppingCart size={18} aria-hidden="true" /> Tambahkan 5 Paket ke Keranjang (Rp 80.000)
+              <button className="promo-add-btn" onClick={() => { onAddToCart(5); onOpenCheckout(); }}>
+                <ShoppingCart size={18} aria-hidden="true" /> Beli 5 Paket Sekarang (Rp 80.000)
               </button>
               <button className="promo-checkout-btn" onClick={onOpenCheckout}>
                 <Zap size={18} aria-hidden="true" /> Pesan Langsung Sekarang
               </button>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

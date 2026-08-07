@@ -1,19 +1,12 @@
 import { motion, useReducedMotion } from 'motion/react';
-import { BadgeCheck, LockKeyhole, PackagePlus, ShoppingBag, Sprout, Star, Truck } from 'lucide-react';
 import { ASSETS } from '../data/assets';
 
 interface HeroSectionProps {
-  onAddToCart: (qty: number) => void;
+  onAddToCart?: (qty: number) => void;
   onOpenCheckout: () => void;
 }
 
-const benefits = [
-  { icon: BadgeCheck, text: 'Benih bersertifikat dan siap tanam' },
-  { icon: Sprout, text: '10+ varietas sayur pilihan' },
-  { icon: Truck, text: 'Tarif JNE otomatis ke seluruh Indonesia' },
-];
-
-export function HeroSection({ onAddToCart, onOpenCheckout }: HeroSectionProps) {
+export function HeroSection({ onOpenCheckout }: HeroSectionProps) {
   const reduceMotion = useReducedMotion();
   const enter = (delay: number) => ({
     initial: reduceMotion ? false : { opacity: 0, y: 24 },
@@ -27,52 +20,49 @@ export function HeroSection({ onAddToCart, onOpenCheckout }: HeroSectionProps) {
       <div className="container hero-container">
         <div className="hero-content">
           <motion.div className="hero-eyebrow" {...enter(0.05)}>
-            <span className="eyebrow-badge"><BadgeCheck size={15} /> Benih unggul bersertifikat</span>
-            <span className="eyebrow-sub">Dikembangkan oleh PT Botani Seed Indonesia · IPB University</span>
+            <span className="eyebrow-badge eyebrow-badge-green">
+              PELUANG USAHA SAYURAN DARI RUMAH
+            </span>
           </motion.div>
 
           <motion.h1 className="hero-title" {...enter(0.12)}>
-            Mulai kebun produktif dari <span className="text-gradient">satu paket benih.</span>
+            Hanya dari jualan sayuran bisa menghasilkan <span className="hero-text-highlight">2 digit?</span>
           </motion.h1>
 
           <motion.p className="hero-lead" {...enter(0.2)}>
-            Pilih benih sayuran untuk kebutuhan rumah, kebun komunitas, atau langkah pertama usaha tani Anda. Pesan tanpa membuat akun.
+            Dua kisah nyata menunjukkan bahwa usaha sayuran dapat berkembang ketika dijalankan konsisten, memahami pasokan, dan memanfaatkan saluran penjualan yang tepat.
           </motion.p>
 
-          <motion.ul className="hero-pills" {...enter(0.28)}>
-            {benefits.map(({ icon: Icon, text }) => (
-              <li className="hero-pill" key={text}><span className="pill-icon"><Icon size={14} /></span>{text}</li>
-            ))}
-          </motion.ul>
-
-          <motion.div className="hero-actions" {...enter(0.36)}>
-            <motion.button className="hero-primary-btn" onClick={onOpenCheckout} whileTap={reduceMotion ? undefined : { scale: 0.98 }}>
-              <ShoppingBag size={19} /> Pesan sekarang
-            </motion.button>
-            <motion.button className="hero-secondary-btn" onClick={() => onAddToCart(5)} whileTap={reduceMotion ? undefined : { scale: 0.98 }}>
-              <PackagePlus size={19} /> Ambil promo 5 paket
-            </motion.button>
+          <motion.div className="hero-actions" {...enter(0.32)}>
+            <motion.a
+              href="#kisah"
+              className="hero-orange-btn"
+              whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+            >
+              Simak Kisahnya ↓
+            </motion.a>
           </motion.div>
 
-          <motion.p className="hero-guarantee-note" {...enter(0.42)}><LockKeyhole size={14} /> Checkout tamu · data hanya untuk proses pesanan</motion.p>
+          <motion.p className="hero-disclaimer-note" {...enter(0.4)}>
+            *Penghasilan bukan jaminan hasil. Omzet berbeda dengan laba dan dipengaruhi skala usaha, biaya, pasokan, lokasi, serta pemasaran.
+          </motion.p>
         </div>
 
         <motion.div className="hero-visual" {...enter(0.28)}>
-          <div className="hero-card-product">
-            <div className="product-badge-discount">Hemat 20% untuk 5+</div>
-            <div className="hero-image-wrapper">
-              <img src={ASSETS.productBanner} alt="Paket benih sayuran Botani Seed" className="hero-product-img" width="900" height="620" />
-            </div>
-            <div className="product-card-body">
-              <span className="product-category">PAKET LENGKAP SIAP TANAM</span>
-              <h2 className="product-card-title">Paket Benih Sayur Unggul</h2>
-              <div className="product-rating"><span className="stars" aria-label="Rating 4,9 dari 5">{Array.from({ length: 5 }, (_, index) => <Star key={index} size={14} fill="currentColor" aria-hidden="true" />)}</span><span className="rating-score">4,9/5</span><span className="rating-count">1.240+ pembeli</span></div>
-              <div className="price-tag-wrap">
-                <div className="price-single"><span className="price-label">Satuan</span><span className="price-val">Rp20.000</span></div>
-                <div className="price-promo"><span className="promo-label">5 paket</span><span className="promo-val">Rp80.000</span><span className="normal-cross">Rp100.000</span></div>
-              </div>
-              <button className="card-add-btn" onClick={() => onAddToCart(1)}><PackagePlus size={17} /> Tambah ke keranjang</button>
-            </div>
+          <div
+            className="hero-poster-card"
+            onClick={onOpenCheckout}
+            role="button"
+            tabIndex={0}
+            aria-label="Pesan paket benih sayur"
+          >
+            <img
+              src={ASSETS.productBanner}
+              alt="Hanya dari jualan sayuran bisa menghasilkan 2 digit - Botani Seed"
+              className="hero-poster-img"
+              width="900"
+              height="1100"
+            />
           </div>
         </motion.div>
       </div>

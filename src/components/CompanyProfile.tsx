@@ -1,97 +1,135 @@
 import React from 'react';
-import { BadgeCheck, PackageCheck, ShieldCheck } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
+import { Award, CheckCircle2, ShieldCheck, Truck } from 'lucide-react';
 import { ASSETS } from '../data/assets';
 
 export const CompanyProfile: React.FC = () => {
+  const reduceMotion = useReducedMotion();
   const highlights = [
     {
-      icon: BadgeCheck,
-      title: 'Benih Bersertifikat',
-      desc: 'Diproduksi sesuai standar sertifikasi resmi dengan tingkat kemurnian benih dan daya berkecambah di atas 85%.'
+      icon: Award,
+      title: 'Benih Unggul Bersertifikat',
+      desc: 'Diproduksi dan diseleksi langsung oleh tim peneliti pakar benih IPB University.'
     },
     {
-      icon: ShieldCheck,
-      title: 'Kualitas Terjamin',
-      desc: 'Setiap lot benih melewati uji laboratorium intensif untuk menjamin ketahanan terhadap hama & penyakit utama.'
+      icon: CheckCircle2,
+      title: 'Daya Kecambah >85%',
+      desc: 'Tingkat keberhasilan berkecambah & tumbuh tinggi pada tanah maupun sistem hidroponik.'
     },
     {
-      icon: PackageCheck,
-      title: '10 Jenis Benih Pilihan',
-      desc: 'Paket praktis yang mengombinasikan 10 jenis sayuran paling populer dan bernilai konsumsi tinggi.'
+      icon: Truck,
+      title: 'Pengiriman Aman & Cepat',
+      desc: 'Tarif JNE resmi otomatis dihitung dari Bogor dan dikirim dengan proteksi maksimal.'
     }
   ];
 
-  const galleryImages = [
-    {
-      src: ASSETS.company1,
-      caption: 'Display produk Botani Seed Indonesia'
-    },
-    {
-      src: ASSETS.company2,
-      caption: 'Gudang penyimpanan produk'
-    },
-    {
-      src: ASSETS.company3,
-      caption: 'Proses pengiriman pesanan'
-    }
+  const gallery = [
+    { title: 'Pengemasan Rapi & Aman', img: ASSETS.company1 },
+    { title: 'Gudang Benih Bersih', img: ASSETS.company2 },
+    { title: 'Pengiriman Rutin JNE', img: ASSETS.company3 },
+    { title: 'Mitra Petani Sayur', img: ASSETS.company1 },
+    { title: 'Pameran & Edukasi Pertanian', img: ASSETS.company2 },
+    { title: 'Pengiriman Ke Seluruh Indonesia', img: ASSETS.company3 }
   ];
 
   return (
     <section id="profil" className="company-section">
       <div className="container">
-        <div className="section-header text-center">
-          <span className="section-subtitle">PROFIL PERUSAHAAN</span>
-          <h2 className="section-title">
-            PT. Botani Seed Indonesia — <span className="text-gradient">Produsen Benih Unggul</span>
-          </h2>
-          <p className="section-desc">
-            PT Botani Seed Indonesia berkomitmen menghadirkan benih tanaman dan sayuran bermutu tinggi untuk mendukung ketahanan pangan serta kesejahteraan petani dan masyarakat Indonesia.
-          </p>
-        </div>
-
-        <div className="company-grid">
-          <div className="company-bio-card">
-            <h3>Tentang PT Botani Seed Indonesia</h3>
-            <p>
-              Dengan pengalaman bertahun-tahun dalam pemuliaan dan riset benih, kami menyediakan lebih dari <strong>50+ jenis benih sayuran pilihan</strong> yang adaptif di berbagai wilayah Indonesia.
+        {/* WHY CHOOSE SECTION (Section 8) */}
+        <div className="why-choose-wrapper">
+          <motion.div
+            className="section-header text-center"
+            initial={reduceMotion ? false : { opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <h2 className="section-title why-main-title">
+              Kenapa harus memilih Paket Benih Sayur Botani Seed?
+            </h2>
+            <p className="section-desc why-main-desc">
+              PT Botani Seed Indonesia merupakan badan usaha milik IPB University yang bergerak di bidang perbenihan. Kami berkomitmen menyediakan benih tanaman dan sayuran unggul berkualitas tinggi yang mudah ditanam oleh siapa saja.
             </p>
-            <p>
-              Fokus utama kami adalah menghadirkan benih dengan mutu genetik dan fisik unggul, sehingga menghasilkan panen yang melimpah, seragam, dan berkualitas super.
-            </p>
+          </motion.div>
 
-            <div className="company-motto-box">
-              <span>Motto Perusahaan:</span>
-              <strong>"Menanam Kebaikan, Memanen Kesejahteraan"</strong>
-            </div>
-          </div>
-
-          <div className="company-highlights-wrap">
+          <motion.div
+            className="why-cards-grid"
+            initial={reduceMotion ? false : 'hidden'}
+            whileInView="show"
+            viewport={{ once: true, margin: '-60px' }}
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: { staggerChildren: 0.12 }
+              }
+            }}
+          >
             {highlights.map(({ icon: Icon, title, desc }) => (
-              <div className="highlight-item-card" key={title}>
-                <div className="highlight-icon"><Icon size={26} aria-hidden="true" /></div>
-                <div>
-                  <h4>{title}</h4>
-                  <p>{desc}</p>
+              <motion.div
+                className="why-card"
+                key={title}
+                variants={{
+                  hidden: { opacity: 0, y: 30 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }
+                }}
+              >
+                <div className="why-icon-badge">
+                  <Icon size={24} aria-hidden="true" />
                 </div>
-              </div>
+                <h3 className="why-card-title">{title}</h3>
+                <p className="why-card-desc">{desc}</p>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
 
-        <div className="company-gallery-wrapper">
-          <div className="gallery-header text-center">
-            <h3>Dokumentasi Kegiatan PT Botani Seed Indonesia</h3>
-            <p>Dokumentasi display produk, aktivitas gudang, dan proses pengiriman pesanan ke seluruh Indonesia.</p>
-          </div>
+        {/* TRUST GALLERY SECTION (Section 9) */}
+        <div className="trust-gallery-wrapper">
+          <motion.div
+            className="section-header text-center"
+            initial={reduceMotion ? false : { opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <h2 className="section-title gallery-main-title">
+              Dipercaya oleh Ribuan Petani & Pekebun
+            </h2>
+            <p className="section-desc gallery-main-desc">
+              Dokumentasi kegiatan pengemasan, pengiriman, dan mitra budidaya benih Botani Seed.
+            </p>
+          </motion.div>
 
-          <div className="gallery-grid">
-            {galleryImages.map((img, idx) => (
-              <div className="gallery-card" key={idx}>
-                <img src={img.src} alt={img.caption} className="gallery-img" loading="lazy" />
-                <div className="gallery-caption">{img.caption}</div>
-              </div>
+          <motion.div
+            className="trust-gallery-grid"
+            initial={reduceMotion ? false : 'hidden'}
+            whileInView="show"
+            viewport={{ once: true, margin: '-60px' }}
+            variants={{
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: { staggerChildren: 0.08 }
+              }
+            }}
+          >
+            {gallery.map((item, idx) => (
+              <motion.div
+                className="gallery-card-item"
+                key={idx}
+                variants={{
+                  hidden: { opacity: 0, scale: 0.94, y: 20 },
+                  show: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } }
+                }}
+              >
+                <div className="gallery-img-wrap">
+                  <img src={item.img} alt={item.title} loading="lazy" />
+                </div>
+                <span className="gallery-caption">{item.title}</span>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
