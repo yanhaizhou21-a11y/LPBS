@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'motion/react';
-import { BadgeCheck, LockKeyhole, PackagePlus, ShoppingBag, Sprout, Truck } from 'lucide-react';
+import { BadgeCheck, LockKeyhole, PackagePlus, ShoppingBag, Sprout, Star, Truck } from 'lucide-react';
 import { ASSETS } from '../data/assets';
 
 interface HeroSectionProps {
@@ -66,7 +66,7 @@ export function HeroSection({ onAddToCart, onOpenCheckout }: HeroSectionProps) {
             <div className="product-card-body">
               <span className="product-category">PAKET LENGKAP SIAP TANAM</span>
               <h2 className="product-card-title">Paket Benih Sayur Unggul</h2>
-              <div className="product-rating"><span className="stars" aria-label="Rating 4,9 dari 5">★★★★★</span><span className="rating-score">4,9/5</span><span className="rating-count">1.240+ pembeli</span></div>
+              <div className="product-rating"><span className="stars" aria-label="Rating 4,9 dari 5">{Array.from({ length: 5 }, (_, index) => <Star key={index} size={14} fill="currentColor" aria-hidden="true" />)}</span><span className="rating-score">4,9/5</span><span className="rating-count">1.240+ pembeli</span></div>
               <div className="price-tag-wrap">
                 <div className="price-single"><span className="price-label">Satuan</span><span className="price-val">Rp20.000</span></div>
                 <div className="price-promo"><span className="promo-label">5 paket</span><span className="promo-val">Rp80.000</span><span className="normal-cross">Rp100.000</span></div>

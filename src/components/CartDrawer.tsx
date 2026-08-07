@@ -1,4 +1,5 @@
 import React from 'react';
+import { Lightbulb, PartyPopper, ShoppingCart, Sprout, X } from 'lucide-react';
 import { CartItem } from '../types';
 
 interface CartDrawerProps {
@@ -47,18 +48,18 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
       <aside className="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title" onClick={e => e.stopPropagation()}>
         <header className="cart-drawer-header">
           <div className="header-title">
-            <span className="drawer-icon">🛒</span>
+            <ShoppingCart className="drawer-icon" size={22} aria-hidden="true" />
             <h3 id="cart-title">Keranjang Belanja</h3>
           </div>
           <button className="cart-close-btn" onClick={onClose} aria-label="Tutup keranjang">
-            ×
+            <X size={22} aria-hidden="true" />
           </button>
         </header>
 
         <div className="cart-drawer-body">
           {totalQty === 0 ? (
             <div className="cart-empty-state">
-              <span className="empty-icon">🌱</span>
+              <Sprout className="empty-icon" size={48} aria-hidden="true" />
               <p>Keranjang belanja Anda masih kosong.</p>
               <button className="empty-action-btn" onClick={onClose}>
                 Lihat Promo & Pesan Benih
@@ -69,7 +70,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="cart-items-list">
                 {items.map(item => (
                   <div className="cart-item-card" key={item.id}>
-                    <div className="item-icon">🌱</div>
+                    <Sprout className="item-icon" size={32} aria-hidden="true" />
                     <div className="item-details">
                       <strong className="item-name">{item.name}</strong>
                       <span className="item-price">Rp {item.price.toLocaleString('id-ID')} / paket</span>
@@ -97,11 +98,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
               {isPromoEligible ? (
                 <div className="cart-promo-banner success">
-                  🎉 Diskon 20% aktif! Hemat Rp {discountTotal.toLocaleString('id-ID')}
+                  <PartyPopper size={18} aria-hidden="true" /> Diskon 20% aktif! Hemat Rp {discountTotal.toLocaleString('id-ID')}
                 </div>
               ) : items.some((item) => item.id === 'paket-benih-sayur') ? (
                 <div className="cart-promo-banner info">
-                  💡 Tambah {5 - (items.find((item) => item.id === 'paket-benih-sayur')?.qty || 0)} paket promo lagi untuk klaim diskon 20%!
+                  <Lightbulb size={18} aria-hidden="true" /> Tambah {5 - (items.find((item) => item.id === 'paket-benih-sayur')?.qty || 0)} paket promo lagi untuk klaim diskon 20%!
                 </div>
               ) : null}
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { AlertTriangle, ArrowRight, CircleCheck, ShoppingCart, Video, Zap } from 'lucide-react';
 
 interface PromoSectionProps {
   onAddToCart: (qty: number) => void;
@@ -20,7 +21,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
         </div>
 
         <div className="promo-notice-banner">
-          <div className="notice-icon">⚠️</div>
+          <div className="notice-icon"><AlertTriangle size={26} aria-hidden="true" /></div>
           <div className="notice-content">
             <strong>PEMBERITAHUAN PENYESUAIAN HARGA PROMO:</strong>
             <p>
@@ -41,7 +42,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
                 allowFullScreen
               ></iframe>
             </div>
-            <span className="video-caption">🎥 Video Panduan & Informasi Benih Sayur Botani Seed</span>
+            <span className="video-caption"><Video size={17} aria-hidden="true" /> Video Panduan & Informasi Benih Sayur Botani Seed</span>
           </div>
 
           <div className="promo-details-card">
@@ -53,7 +54,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
                 <span>Harga Normal 5 Paket</span>
                 <strong>Rp 100.000</strong>
               </div>
-              <div className="price-arrow">→</div>
+              <div className="price-arrow"><ArrowRight size={24} aria-hidden="true" /></div>
               <div className="price-box discount">
                 <span>Harga Promo (Diskon 20%)</span>
                 <strong>Rp 80.000</strong>
@@ -62,18 +63,18 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
             </div>
 
             <ul className="promo-feature-list">
-              <li>✔️ Isian 10 jenis benih sayur pilihan unggul bersertifikat</li>
-              <li>✔️ Daya kecambah & pertumbuhan tinggi ( di atas 85% )</li>
-              <li>✔️ Dilengkapi panduan cara penyemaian & perawatan</li>
-              <li>✔️ Ongkir JNE dihitung otomatis dan akurat sesuai tujuan</li>
+              <li><CircleCheck size={18} aria-hidden="true" /> Isian 10 jenis benih sayur pilihan unggul bersertifikat</li>
+              <li><CircleCheck size={18} aria-hidden="true" /> Daya kecambah & pertumbuhan tinggi (di atas 85%)</li>
+              <li><CircleCheck size={18} aria-hidden="true" /> Dilengkapi panduan cara penyemaian & perawatan</li>
+              <li><CircleCheck size={18} aria-hidden="true" /> Ongkir JNE dihitung otomatis dan akurat sesuai tujuan</li>
             </ul>
 
             <div className="promo-card-actions">
               <button className="promo-add-btn" onClick={() => onAddToCart(5)}>
-                🛒 Tambahkan 5 Paket ke Keranjang (Rp 80.000)
+                <ShoppingCart size={18} aria-hidden="true" /> Tambahkan 5 Paket ke Keranjang (Rp 80.000)
               </button>
               <button className="promo-checkout-btn" onClick={onOpenCheckout}>
-                ⚡ Pesan Langsung Sekarang
+                <Zap size={18} aria-hidden="true" /> Pesan Langsung Sekarang
               </button>
             </div>
           </div>

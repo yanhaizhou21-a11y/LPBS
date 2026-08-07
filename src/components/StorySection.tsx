@@ -1,4 +1,5 @@
 import React from 'react';
+import { ExternalLink } from 'lucide-react';
 
 export const StorySection: React.FC = () => {
   const stories = [
@@ -76,7 +77,7 @@ export const StorySection: React.FC = () => {
                 rel="noopener noreferrer"
                 className="story-source-link"
               >
-                🔗 {story.sourceText} →
+                {story.sourceText} <ExternalLink size={15} aria-hidden="true" />
               </a>
             </div>
           ))}

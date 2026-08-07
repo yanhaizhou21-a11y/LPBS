@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Lightbulb, PartyPopper, ShoppingCart, Zap } from 'lucide-react';
 
 interface QuickOrderSectionProps {
   onSetQtyDirectly: (qty: number) => void;
@@ -107,11 +108,11 @@ export const QuickOrderSection: React.FC<QuickOrderSectionProps> = ({
 
             {isPromo ? (
               <div className="promo-status-msg success">
-                🎉 Selamat! Anda berhak mendapatkan <strong>Diskon 20%</strong> karena memesan {selectedQty} paket!
+                <PartyPopper size={18} aria-hidden="true" /> Selamat! Anda berhak mendapatkan <strong>Diskon 20%</strong> karena memesan {selectedQty} paket!
               </div>
             ) : (
               <div className="promo-status-msg info">
-                💡 Tambah {5 - selectedQty} paket lagi untuk mendapatkan <strong>Diskon 20%</strong> (Hemat Rp 20.000)!
+                <Lightbulb size={18} aria-hidden="true" /> Tambah {5 - selectedQty} paket lagi untuk mendapatkan <strong>Diskon 20%</strong> (Hemat Rp 20.000)!
               </div>
             )}
 
@@ -137,14 +138,14 @@ export const QuickOrderSection: React.FC<QuickOrderSectionProps> = ({
                 className="calc-cart-btn"
                 onClick={handleAddToCartClick}
               >
-                🛒 Tambahkan ke Keranjang
+                <ShoppingCart size={18} aria-hidden="true" /> Tambahkan ke Keranjang
               </button>
               <button
                 type="button"
                 className="calc-checkout-btn"
                 onClick={handleCheckoutClick}
               >
-                ⚡ Lanjut ke Pemesanan (Checkout)
+                <Zap size={18} aria-hidden="true" /> Lanjut ke Pemesanan (Checkout)
               </button>
             </div>
           </div>

@@ -1,17 +1,21 @@
 import React from 'react';
+import { BadgeCheck, PackageCheck, ShieldCheck } from 'lucide-react';
 import { ASSETS } from '../data/assets';
 
 export const CompanyProfile: React.FC = () => {
   const highlights = [
     {
+      icon: BadgeCheck,
       title: 'Benih Bersertifikat',
       desc: 'Diproduksi sesuai standar sertifikasi resmi dengan tingkat kemurnian benih dan daya berkecambah di atas 85%.'
     },
     {
+      icon: ShieldCheck,
       title: 'Kualitas Terjamin',
       desc: 'Setiap lot benih melewati uji laboratorium intensif untuk menjamin ketahanan terhadap hama & penyakit utama.'
     },
     {
+      icon: PackageCheck,
       title: '10 Jenis Benih Pilihan',
       desc: 'Paket praktis yang mengombinasikan 10 jenis sayuran paling populer dan bernilai konsumsi tinggi.'
     }
@@ -62,12 +66,12 @@ export const CompanyProfile: React.FC = () => {
           </div>
 
           <div className="company-highlights-wrap">
-            {highlights.map((item, idx) => (
-              <div className="highlight-item-card" key={idx}>
-                <div className="highlight-icon">🌱</div>
+            {highlights.map(({ icon: Icon, title, desc }) => (
+              <div className="highlight-item-card" key={title}>
+                <div className="highlight-icon"><Icon size={26} aria-hidden="true" /></div>
                 <div>
-                  <h4>{item.title}</h4>
-                  <p>{item.desc}</p>
+                  <h4>{title}</h4>
+                  <p>{desc}</p>
                 </div>
               </div>
             ))}
