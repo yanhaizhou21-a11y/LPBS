@@ -13,14 +13,16 @@ import { CartDrawer } from './components/CartDrawer';
 import { CartToast } from './components/CartToast';
 import { SecretAdminLogin } from './components/SecretAdminLogin';
 import { AdminDashboard } from './components/AdminDashboard';
+import { BotaniDashboard } from './components/BotaniDashboard';
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { CookieConsentBanner } from './components/CookieConsentBanner';
 import { ProductsPage } from './components/ProductsPage';
 
 const CheckoutModal = lazy(() => import('./components/CheckoutModal').then((module) => ({ default: module.CheckoutModal })));
-type View = 'landing' | 'products' | 'admin-login' | 'admin-dashboard';
+type View = 'landing' | 'products' | 'admin-login' | 'admin-dashboard' | 'dashboard';
 
 function viewFromPath(): View {
+  if (window.location.pathname === '/dashboard') return 'dashboard';
   if (window.location.pathname === '/admin/dashboard') return 'admin-dashboard';
   if (window.location.pathname === '/secret-admin-login') return 'admin-login';
   if (window.location.pathname === '/products') return 'products';
@@ -33,7 +35,7 @@ export function App() {
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(window.location.pathname === '/kebijakan-privasi');
   const [view, setView] = useState<View>(viewFromPath);
   const [adminName, setAdminName] = useState('Admin PT Botani Seed');
-  const [authChecked, setAuthChecked] = useState(['landing', 'products'].includes(viewFromPath()));
+  const [authChecked, setAuthChecked] = useState(['landing', 'products', 'dashboard'].includes(viewFromPath()));
   const [accessDenied, setAccessDenied] = useState(window.location.pathname === '/admin/dashboard');
 
   const navigate = (nextView: View, path: string, replace = false) => {
@@ -51,7 +53,7 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    if (view === 'landing' || view === 'products') return;
+    if (view === 'landing' || view === 'products' || view === 'dashboard') return;
     let active = true;
     const requestedDashboard = window.location.pathname === '/admin/dashboard';
     fetch('/api/auth/session')
@@ -94,6 +96,10 @@ export function App() {
 
   if (!authChecked) return <div className="route-loading" role="status">Memverifikasi sesi admin…</div>;
 
+  if (view === 'dashboard') {
+    return <BotaniDashboard />;
+  }
+
   if (view === 'admin-login') {
     return <SecretAdminLogin accessDenied={accessDenied} onLoginSuccess={(name) => { setAdminName(name); navigate('admin-dashboard', '/admin/dashboard', true); }} onBackToHome={() => navigate('landing', '/')} />;
   }
@@ -129,3 +135,4 @@ export function App() {
 }
 
 export default App;
+
