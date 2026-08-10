@@ -3,6 +3,7 @@ import { Check, FileText, Search, Sprout, X } from 'lucide-react';
 import { ASSETS } from '../data/assets';
 import { useCheckout } from '../hooks/useCheckout';
 import { CartItem } from '../types';
+import { FloatingInput } from './ui/floating-input';
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -109,32 +110,33 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
                   <form className="checkout-form" onSubmit={e => e.preventDefault()}>
                     <div className="form-grid">
-                      <label>
-                        <span>Nama Lengkap *</span>
-                        <input
-                          type="text"
-                          required
-                          value={checkout.buyerForm.name}
-                          onChange={e => checkout.updateBuyerForm('name', e.target.value)}
-                          placeholder="Nama lengkap Anda"
-                        />
-                      </label>
+                      <FloatingInput
+                        label="Nama lengkap *"
+                        type="text"
+                        required
+                        autoComplete="name"
+                        value={checkout.buyerForm.name}
+                        aria-invalid={Boolean(checkout.buyerFormError)}
+                        aria-describedby={checkout.buyerFormError ? 'buyer-form-error' : undefined}
+                        onChange={e => checkout.updateBuyerForm('name', e.target.value)}
+                      />
 
-                      <label>
-                        <span>Nomor WhatsApp *</span>
-                        <input
-                          type="tel"
-                          required
-                          value={checkout.buyerForm.whatsapp}
-                          onChange={e => checkout.updateBuyerForm('whatsapp', e.target.value)}
-                          placeholder="Contoh: 081234567890"
-                        />
-                      </label>
+                      <FloatingInput
+                        label="Nomor WhatsApp *"
+                        type="tel"
+                        required
+                        inputMode="tel"
+                        autoComplete="tel"
+                        value={checkout.buyerForm.whatsapp}
+                        aria-invalid={Boolean(checkout.buyerFormError)}
+                        aria-describedby={checkout.buyerFormError ? 'buyer-form-error' : undefined}
+                        onChange={e => checkout.updateBuyerForm('whatsapp', e.target.value)}
+                      />
 
                     </div>
 
                     {checkout.buyerFormError && (
-                      <p className="form-error" role="alert">{checkout.buyerFormError}</p>
+                      <p id="buyer-form-error" className="form-error" role="alert">{checkout.buyerFormError}</p>
                     )}
                   </form>
 
@@ -370,15 +372,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
                   <details className="checkout-optional-note" open={Boolean(checkout.buyerForm.note)}>
                     <summary>Tambah catatan (opsional)</summary>
-                    <label>
-                      <span>Catatan untuk pesanan</span>
-                      <input
-                        type="text"
-                        value={checkout.buyerForm.note}
-                        onChange={e => checkout.updateBuyerForm('note', e.target.value)}
-                        placeholder="Contoh: hubungi sebelum pengiriman"
-                      />
-                    </label>
+                    <FloatingInput
+                      label="Catatan untuk pesanan"
+                      type="text"
+                      value={checkout.buyerForm.note}
+                      onChange={e => checkout.updateBuyerForm('note', e.target.value)}
+                    />
                   </details>
 
                   {checkout.shippingValidationError && (

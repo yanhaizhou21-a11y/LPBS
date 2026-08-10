@@ -13,6 +13,7 @@ import {
 import { AdminProductsPanel } from './AdminProductsPanel';
 import { LanguageToggle } from './LanguageToggle';
 import { ThemeToggleButton } from './ThemeToggleButton';
+import { readJsonResponse } from '../lib/http';
 
 interface OrderItem {
   orderNumber: string;
@@ -80,8 +81,8 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
         return;
       }
 
-      const ordersData = await ordersRes.json();
-      const summaryData = await summaryRes.json();
+      const ordersData = await readJsonResponse(ordersRes, 'Data pesanan tidak dapat dibaca.');
+      const summaryData = await readJsonResponse(summaryRes, 'Ringkasan pesanan tidak dapat dibaca.');
 
       if (ordersData.success) {
         setOrders(ordersData.orders || []);
@@ -109,11 +110,11 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
       });
-      const data = await res.json();
       if (res.status === 401) {
         onUnauthorized();
         return;
       }
+      const data = await readJsonResponse(res, 'Status pesanan belum dapat diperbarui.');
       if (data.success) {
         setOrders(prev =>
           prev.map(o => (o.orderNumber === orderNumber ? { ...o, status: newStatus } : o))

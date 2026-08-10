@@ -8,6 +8,7 @@ import {
   PaymentSession,
   CartItem
 } from '../types';
+import { readJsonResponse } from '../lib/http';
 
 const ADMIN_WHATSAPP_NUMBER = '6281299450708';
 const BUYER_STORAGE_KEY = 'botani_buyer_session';
@@ -337,7 +338,7 @@ Bukti transfer telah saya siapkan. Mohon pesanan saya segera diproses. Terima ka
           paymentMethod,
         }),
       });
-      const data = await response.json();
+      const data = await readJsonResponse(response, 'Pesanan belum dapat disimpan. Pastikan server aktif, lalu coba lagi.');
       if (!response.ok) throw new Error(data.message || 'Pesanan belum dapat disimpan.');
       setPaymentSession(prev => prev ? { ...prev, isConfirmed: true } : null);
       setCurrentStep(5);

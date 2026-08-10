@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Leaf, MessageCircle, PackageSearch, Search, ShoppingCart } from 'lucide-react';
 import { FEATURED_PRODUCTS, PRODUCT_CATEGORIES, Product, ProductCategory, categoryLabel } from '../data/products';
 import { useLanguage } from '../i18n';
+import { readJsonResponse } from '../lib/http';
 
 export function ProductsPage({ onGoHome, onAddToCart, onOpenCheckout }: { onGoHome: () => void; onAddToCart: (product: Product) => void; onOpenCheckout: () => void }) {
   const { language, t } = useLanguage();
@@ -10,7 +11,7 @@ export function ProductsPage({ onGoHome, onAddToCart, onOpenCheckout }: { onGoHo
   const [query, setQuery] = useState('');
 
   useEffect(() => {
-    fetch('/api/products').then((response) => response.ok ? response.json() : null).then((data) => {
+    fetch('/api/products').then((response) => response.ok ? readJsonResponse(response, t('catalog.loadError')) : null).then((data) => {
       if (!data?.products?.length) return;
       const merged = new Map(FEATURED_PRODUCTS.map((product) => [product.slug, product]));
       data.products.forEach((product: Product) => merged.set(product.slug, { ...merged.get(product.slug), ...product }));

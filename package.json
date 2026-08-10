@@ -9,6 +9,7 @@
     "dev:all": "concurrently \"npm run dev\" \"npm run server\"",
     "build": "tsc && vite build",
     "test:auth": "node --test backend/auth.test.js",
+    "test:http": "node scripts/check-http-parser.cjs",
     "preview": "vite preview"
   },
   "dependencies": {

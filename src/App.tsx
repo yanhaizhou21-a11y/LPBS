@@ -23,6 +23,7 @@ import { PaketIsiSection } from './components/PaketIsiSection';
 import { TestimonialSection } from './components/TestimonialSection';
 import { BottomCTASection } from './components/BottomCTASection';
 import { isPublicPage, publicPageFromPath, type PublicPageId } from './config/public-pages';
+import { readJsonResponse } from './lib/http';
 
 const CheckoutModal = lazy(() => import('./components/CheckoutModal').then((module) => ({ default: module.CheckoutModal })));
 type View = PublicPageId | 'admin-login' | 'admin-dashboard' | 'dashboard';
@@ -102,7 +103,7 @@ export function App() {
     let active = true;
     const requestedDashboard = window.location.pathname === '/admin/dashboard';
     fetch('/api/auth/session')
-      .then(async (response) => ({ response, data: await response.json() }))
+      .then(async (response) => ({ response, data: await readJsonResponse(response, 'Respons sesi admin tidak valid.') }))
       .then(({ response, data }) => {
         if (!active) return;
         if (response.ok && data.success) {

@@ -2021,6 +2021,104 @@
     font-size: 0.95rem;
   }
 
+  /* Shared floating input */
+  .floating-input {
+    position: relative;
+    width: 100%;
+  }
+
+  .floating-input-field {
+    width: 100%;
+    min-height: 52px;
+    padding: 1.1rem 1rem 0.35rem;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    outline: 0;
+    background: var(--color-bg-card);
+    color: var(--color-text-dark);
+    font: inherit;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  }
+
+  .checkout-form .floating-input-field,
+  .checkout-optional-note .floating-input-field,
+  .admin-product-form .floating-input-field {
+    min-height: 52px;
+    padding: 1.1rem 1rem 0.35rem;
+  }
+
+  .floating-input-field:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--color-primary) 46%, var(--color-border));
+  }
+
+  .floating-input-field:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent);
+  }
+
+  .floating-input-field:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .floating-input-label,
+  .checkout-form .floating-input-label,
+  .checkout-optional-note .floating-input-label,
+  .admin-product-form .floating-input-label {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    z-index: 1;
+    display: block;
+    max-width: calc(100% - 2rem);
+    padding: 0 0.25rem;
+    overflow: hidden;
+    background: var(--color-bg-card);
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    pointer-events: none;
+    transform: translate(-0.25rem, -50%);
+    transform-origin: left center;
+    transition: top 0.18s ease, color 0.18s ease, font-size 0.18s ease, transform 0.18s ease;
+  }
+
+  .floating-input-field:focus+.floating-input-label,
+  .floating-input-field:not(:placeholder-shown)+.floating-input-label {
+    top: 0;
+    color: var(--color-primary);
+    font-size: 0.72rem;
+    transform: translate(-0.25rem, -50%);
+  }
+
+  .floating-input-field[aria-invalid="true"] {
+    border-color: #dc2626;
+  }
+
+  .floating-input-field[aria-invalid="true"]+.floating-input-label {
+    color: #dc2626;
+  }
+
+  .admin-login-card .floating-input-field,
+  .admin-login-card .floating-input-label {
+    border-color: #334155;
+    background: #0f172a;
+    color: #fff;
+  }
+
+  .admin-login-card .floating-input-label {
+    color: #94a3b8;
+  }
+
+  .admin-login-card .floating-input-field:focus,
+  .admin-login-card .floating-input-field:focus+.floating-input-label {
+    border-color: #10b981;
+    color: #6ee7b7;
+  }
+
   /* STEP 1 FORM */
   .form-grid {
     display: grid;
@@ -3465,6 +3563,8 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .floating-input-field,
+    .floating-input-label,
     .site-nav-link,
     .site-order,
     .site-nav-link svg,
@@ -3593,6 +3693,11 @@
   .dark .jne-destination-results {
     background: var(--color-bg-light);
     color: var(--color-text-body);
+  }
+
+  .dark .checkout-form .floating-input-label,
+  .dark .checkout-optional-note .floating-input-label {
+    background: var(--color-bg-light);
   }
 
   .footer-trust {
