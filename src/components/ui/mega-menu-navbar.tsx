@@ -220,17 +220,17 @@ function MenuTrigger({
       onClick={onToggle}
       onFocus={onOpen}
       className={cn(
-        "flex items-center gap-1 rounded-lg px-3 py-1.5 text-[13px] font-medium transition-colors",
+        "flex items-center gap-1 rounded-lg px-3 py-1.5 text-[13px] font-semibold transition-colors",
         "text-zinc-700 hover:bg-zinc-100 hover:text-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500",
-        "dark:text-zinc-300 dark:hover:bg-white/[0.08] dark:hover:text-emerald-400",
-        isOpen && "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300",
+        "dark:text-zinc-300 dark:hover:bg-zinc-800/80 dark:hover:text-emerald-400",
+        isOpen && "bg-emerald-50 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300",
       )}
     >
       {label}
       <ChevronDown
         className={cn(
-          "size-3.5 opacity-60 transition-transform duration-200",
-          isOpen && "rotate-180",
+          "size-3.5 opacity-70 transition-transform duration-200",
+          isOpen && "rotate-180 text-emerald-600 dark:text-emerald-400",
         )}
       />
     </button>
@@ -249,12 +249,12 @@ function FeatureGrid({ items }: { items: MegaMenuItem[] }) {
             href={item.href}
             className={cn(
               "group/item flex items-start gap-3 rounded-xl p-3 transition-colors",
-              "hover:bg-emerald-50/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400",
+              "hover:bg-emerald-50/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400",
               "dark:hover:bg-emerald-950/30 dark:focus-visible:ring-emerald-700",
             )}
           >
             {Icon ? (
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-zinc-200/80 bg-zinc-50 transition-colors group-hover/item:border-emerald-200 group-hover/item:bg-white dark:border-white/[0.08] dark:bg-white/[0.04] dark:group-hover/item:bg-emerald-900/30">
+              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-zinc-200/80 bg-zinc-50 transition-colors group-hover/item:border-emerald-200 group-hover/item:bg-white dark:border-zinc-800 dark:bg-zinc-900 dark:group-hover/item:bg-emerald-900/40">
                 <Icon className={cn("size-4.5", item.iconClassName ?? "text-emerald-700 dark:text-emerald-400")} />
               </span>
             ) : null}
@@ -328,18 +328,18 @@ function MobileAccordion({
   const contentId = `mobile-${value}-content`;
 
   return (
-    <div className="border-b border-zinc-200 dark:border-zinc-800">
+    <div className="border-b border-zinc-100 dark:border-zinc-800/80">
       <button
         type="button"
         aria-expanded={isOpen}
         aria-controls={contentId}
         onClick={() => onToggle(value)}
-        className="flex w-full items-center justify-between py-3.5 text-sm font-semibold text-zinc-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 dark:text-zinc-100"
+        className="flex w-full items-center justify-between py-3.5 text-sm font-bold text-zinc-900 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 dark:text-zinc-100"
       >
-        {title}
+        <span>{title}</span>
         <ChevronDown
           className={cn(
-            "size-4 text-zinc-500 transition-transform duration-200",
+            "size-4 text-zinc-400 transition-transform duration-200",
             isOpen && "rotate-180 text-emerald-600 dark:text-emerald-400",
           )}
         />
@@ -353,7 +353,7 @@ function MobileAccordion({
         )}
       >
         <div className="overflow-hidden">
-          <div className="ml-2 flex flex-col gap-1 border-l-2 border-emerald-200 pl-3 dark:border-emerald-900">
+          <div className="ml-1 flex flex-col gap-1 border-l-2 border-emerald-500/30 pl-3 dark:border-emerald-500/30">
             {children}
           </div>
         </div>
@@ -369,7 +369,7 @@ function MobileMenuItem({ item, onNavigate }: { item: MegaMenuItem; onNavigate: 
     <a
       href={item.href}
       onClick={onNavigate}
-      className="flex items-center justify-between rounded-lg px-2.5 py-2 text-sm text-zinc-700 transition-colors hover:bg-emerald-50 hover:text-emerald-800 dark:text-zinc-300 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300"
+      className="flex items-center justify-between rounded-xl px-2.5 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-emerald-50 hover:text-emerald-800 dark:text-zinc-300 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300"
     >
       <span className="flex items-center gap-2.5">
         {Icon ? <Icon className={cn("size-4 text-emerald-600 dark:text-emerald-400", item.iconClassName)} /> : null}
@@ -457,7 +457,7 @@ export function MegaMenuNavbar({
       ref={navRef}
       className={cn(
         "sticky top-0 z-50 w-full border-b border-zinc-200/80 bg-white/90 backdrop-blur-xl shadow-xs",
-        "dark:border-white/[0.08] dark:bg-zinc-950/90",
+        "dark:border-zinc-800/80 dark:bg-zinc-950/90",
         className,
       )}
       onMouseLeave={(event) => {
@@ -702,7 +702,7 @@ export function MegaMenuNavbar({
               aria-label="Buka navigasi menu"
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen(true)}
-              className="flex size-10 items-center justify-center rounded-xl border border-zinc-200 text-zinc-700 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900 lg:hidden"
+              className="flex size-10 items-center justify-center rounded-xl border border-zinc-200/90 text-zinc-700 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:border-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-900 lg:hidden"
             >
               <Menu className="size-5" />
             </button>
@@ -715,7 +715,7 @@ export function MegaMenuNavbar({
         aria-hidden={!mobileOpen}
         onClick={closeMobile}
         className={cn(
-          "fixed inset-0 z-50 bg-black/60 backdrop-blur-xs transition-opacity duration-300 lg:hidden",
+          "fixed inset-0 z-50 bg-black/65 backdrop-blur-sm transition-opacity duration-300 lg:hidden",
           mobileOpen ? "opacity-100" : "pointer-events-none opacity-0",
         )}
       />
@@ -727,24 +727,24 @@ export function MegaMenuNavbar({
         aria-hidden={!mobileOpen}
         aria-label="Navigasi Menu Mobile"
         className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-full max-w-sm flex-col bg-white p-5 shadow-2xl transition-transform duration-300 ease-out dark:bg-zinc-950 lg:hidden",
+          "fixed inset-y-0 right-0 z-50 flex w-full max-w-xs sm:max-w-sm flex-col bg-white p-5 shadow-2xl transition-transform duration-300 ease-out dark:bg-zinc-950 border-l border-zinc-200/80 dark:border-zinc-800/80 lg:hidden",
           mobileOpen ? "translate-x-0" : "translate-x-full",
         )}
       >
-        <div className="mb-6 flex items-center justify-between border-b border-zinc-100 pb-4 dark:border-zinc-800">
+        <div className="mb-4 flex items-center justify-between border-b border-zinc-100 pb-3.5 dark:border-zinc-800/80">
           <Brand brandName={brandName} brandHref={brandHref} logo={logo} onNavigate={closeMobile} />
           <button
             ref={closeButtonRef}
             type="button"
             onClick={closeMobile}
             aria-label="Tutup menu navigasi"
-            className="flex size-9 items-center justify-center rounded-lg text-zinc-500 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:text-zinc-400 dark:hover:bg-zinc-900"
+            className="flex size-9 items-center justify-center rounded-xl text-zinc-500 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:text-zinc-400 dark:hover:bg-zinc-900"
           >
             <X className="size-5" />
           </button>
         </div>
 
-        <nav aria-label="Mobile navigation" className="-mx-5 flex-1 overflow-y-auto px-5">
+        <nav aria-label="Mobile navigation" className="-mx-5 flex-1 overflow-y-auto px-5 py-1">
           <MobileAccordion
             title="Halaman & Rute"
             value="pages"
@@ -792,9 +792,9 @@ export function MegaMenuNavbar({
           </MobileAccordion>
         </nav>
 
-        <div className="mt-auto border-t border-zinc-100 pt-4 dark:border-zinc-800 space-y-3">
-          <div className="flex items-center justify-between px-1">
-            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Pengaturan Tampilan</span>
+        <div className="mt-auto border-t border-zinc-100 pt-4 dark:border-zinc-800/80 space-y-3">
+          <div className="flex items-center justify-between rounded-xl bg-zinc-50 p-2.5 dark:bg-zinc-900">
+            <span className="text-xs font-semibold text-zinc-600 dark:text-zinc-400">Tampilan & Bahasa</span>
             <div className="flex items-center gap-2">
               <LanguageToggle />
               <ThemeToggleButton />
@@ -808,7 +808,7 @@ export function MegaMenuNavbar({
                 closeMobile();
                 onOpenCheckout();
               }}
-              className="w-full flex h-10 items-center justify-center rounded-xl bg-emerald-600 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-700"
+              className="w-full flex h-11 items-center justify-center rounded-xl bg-emerald-600 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-700"
             >
               {ctaLabel}
             </button>
@@ -816,7 +816,7 @@ export function MegaMenuNavbar({
             <a
               href={ctaHref}
               onClick={closeMobile}
-              className="w-full flex h-10 items-center justify-center rounded-xl bg-emerald-600 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-700"
+              className="w-full flex h-11 items-center justify-center rounded-xl bg-emerald-600 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-700"
             >
               {ctaLabel}
             </a>

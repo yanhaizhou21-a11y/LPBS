@@ -1,150 +1,153 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useReducedMotion, AnimatePresence } from 'motion/react';
-import { ExternalLink, Sparkles, Award } from 'lucide-react';
-import { ASSETS } from '../data/assets';
-import { ExpandableProfileCard } from './ui/expandable-profile-card';
+import { Sparkles, Award, ArrowRight, Quote, CheckCircle2, TrendingUp, MapPin } from 'lucide-react';
+import { ExpandableProfileCard, type ProfileDetailInfo } from './ui/expandable-profile-card';
 import { CarouselNavigator, DEFAULT_BOTANI_THEMES } from './ui/carousel-navigator';
+
+interface StoryProfile {
+  id: string;
+  title: string;
+  subtitle: string;
+  badge: string;
+  imageSrc: string;
+  details: ProfileDetailInfo;
+}
 
 export const StorySection: React.FC = () => {
   const reduceMotion = useReducedMotion();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const autoDelay = 5000;
+  const [isPaused, setIsPaused] = useState(false);
+  const autoDelay = 6000;
 
-  const profileStories = [
+  const profileStories: StoryProfile[] = [
     {
+      id: 'diyah',
       title: 'Diyah Rahmawati',
       subtitle: 'Alumni SV IPB · Petani Muda & Pengusaha',
       badge: 'Omzet Rp60 Juta/Bln',
       imageSrc: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb22657?auto=format&fit=crop&q=80&w=1000',
-      newsUrl: 'https://radarbogor.jawapos.com/bogor/2473489240/diyah-rahmawati-alumni-sv-ipb-sukses-jadi-petani-muda-omzetnya-capai-puluhan-juta',
-      content: (
-        <div className="space-y-4">
-          <p>
-            Diyah Rahmawati membuktikan bahwa usaha budidaya sayuran dapat memberikan omzet hingga puluhan juta rupiah per bulan dari lahan pekarangan dan kebun terpadu.
-          </p>
-          <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 p-4 dark:border-emerald-950/50 dark:bg-emerald-950/20">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
-              Kunci Sukses Budidaya
-            </h4>
-            <p className="mt-1 text-xs text-emerald-900 dark:text-emerald-300">
-              Memilih benih sayur unggul bersertifikasi dengan daya kecambah &gt;85%, nutrisi organik tepat dosis, serta kemitraan pemasaran rutin ke resto dan swalayan.
-            </p>
-          </div>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            *Liputan Radar Bogor & Media Nasional IPB University
-          </p>
-        </div>
-      ),
+      details: {
+        omzet: 'Rp60.000.000 / Bulan',
+        lokasi: 'Dramaga, Bogor, Jawa Barat',
+        komoditas: 'Pakcoy, Selada Keriting, Bayam Hijau, Kangkung',
+        dayaKecambah: '>90% Teruji Laboratorium',
+        quote: 'Kunci utama omzet puluhan juta berulang adalah tidak berkompromi pada kualitas benih. Sekali tanam, daya kecambah tinggi memastikan panen serentak dan hemat biaya bibit.',
+        fullBio: 'Diyah Rahmawati memulai usaha hortikultura sayuran hidroponik dan semi-organik saat menyelesaikan studi di Sekolah Vokasi IPB University. Berbekal benih bersertifikat Botani Seed, ia kini rutin menyuplai 3 ritase per minggu ke jejaring pasar swalayan dan restoran sehat.',
+        tipsSukses: [
+          'Gunakan benih bersertifikat resmi dengan daya berkecambah >85% agar tidak ada polybag kosong.',
+          'Patuhi jadwal nutrisi dan penyiraman pagi/sore hari secara konsisten.',
+          'Bangun relasi dengan pemilik restoran dan warung sayur lokal untuk kepastian pasar.',
+        ],
+      },
     },
     {
+      id: 'dodih',
       title: 'Pak Dodih',
       subtitle: 'Petani Mitra Budidaya Sayuran',
       badge: 'Omzet Rp100 Juta/Bln',
       imageSrc: 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&q=80&w=1000',
-      newsUrl: 'https://radarbogor.jawapos.com/bogor/2473489240/diyah-rahmawati-alumni-sv-ipb-sukses-jadi-petani-muda-omzetnya-capai-puluhan-juta',
-      content: (
-        <div className="space-y-4">
-          <p>
-            Pak Dodih mengelola budidaya sayuran segar untuk memasok kebutuhan pasar lokal, rumah makan, dan supermarket mitra binaan di wilayah Jabodetabek.
-          </p>
-          <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 p-4 dark:border-emerald-950/50 dark:bg-emerald-950/20">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
-              Konsistensi Pasokan
-            </h4>
-            <p className="mt-1 text-xs text-emerald-900 dark:text-emerald-300">
-              Vigor benih Botani Seed yang seragam mempercepat masa panen hingga 25-30 hari untuk sayur daun, memastikan rotasi tanam tanpa jeda.
-            </p>
-          </div>
-        </div>
-      ),
+      details: {
+        omzet: 'Hingga Rp100.000.000 / Bulan',
+        lokasi: 'Cianjur & Sukabumi, Jawa Barat',
+        komoditas: 'Cabai Rawit Prima, Terong Ungu, Tomat Ceri, Buncis',
+        dayaKecambah: 'Vigor Kuat & Seragam',
+        quote: 'Pasar induk dan grosir sangat menuntut bentuk buah yang seragam dan tahan simpan. Benih Botani Seed terbukti menghasilkan cabai dan sayur buah berbobot padat.',
+        fullBio: 'Mengelola lahan pertanian komersial seluas 2 hektar bersama kelompok tani binaan. Menggunakan varietas benih sayur buah unggul dari IPB University yang tahan terhadap penyakit layu bakteri dan antraknosa.',
+        tipsSukses: [
+          'Pengolahan tanah yang matang dengan pupuk kompos dasar sebelum pindah tanam.',
+          'Pemilihan benih tahan iklim tropis ekstrim (tahan hujan dan panas terik).',
+          'Rotasi tanam terencana antara sayur daun dan buah untuk memutus siklus hama.',
+        ],
+      },
     },
     {
-      title: 'Tim Pemulia Pakar IPB',
-      subtitle: 'Divisi Riset & Perbenihan Hortikultura',
-      badge: 'Daya Kecambah >85%',
-      imageSrc: 'https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?auto=format&fit=crop&q=80&w=1000',
-      content: (
-        <div className="space-y-4">
-          <p>
-            Benih PT Botani Seed Indonesia dikembangkan dan diuji langsung oleh tim pemulia tanaman IPB University yang berpengalaman puluhan tahun dalam genetika benih tropis.
-          </p>
-          <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 p-4 dark:border-emerald-950/50 dark:bg-emerald-950/20">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
-              Standar Sertifikasi Resmi
-            </h4>
-            <p className="mt-1 text-xs text-emerald-900 dark:text-emerald-300">
-              Kemurnian fisik &gt;98%, kadar air terkontrol, dan tahan terhadap serangan penyakit layu bakteri serta jamur tanah.
-            </p>
-          </div>
-        </div>
-      ),
+      id: 'syukur',
+      title: 'Prof. Dr. Ir. Muhamad Syukur',
+      subtitle: 'Guru Besar & Pemulia Benih IPB University',
+      badge: 'Riset Pemuliaan IPB',
+      imageSrc: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=1000',
+      details: {
+        omzet: 'Riset 30+ Varietas Nasional',
+        lokasi: 'Laboratorium Pemuliaan IPB, Baranangsiang',
+        komoditas: 'Formulasi Cabai Unggul, Tomat, Terong, Sayur Tropis',
+        dayaKecambah: '>88% Standard SNI / IPB',
+        quote: 'Benih adalah fondasi kedaulatan pangan. Kami merancang benih yang tidak hanya subur, tapi juga mudah ditumbuhkan oleh masyarakat awam di pekarangan rumah.',
+        fullBio: 'Pakar genetika dan pemuliaan tanaman hortikultura ternama Indonesia dari Departemen Agronomi dan Hortikultura IPB University. Berdedikasi menghasilkan benih unggul adaptif lokal yang kini diproduksi dan didistribusikan oleh PT Botani Seed Indonesia.',
+        tipsSukses: [
+          'Simpan kemasan benih yang belum dibuka di tempat sejuk dan kedap udara.',
+          'Pastikan media semai gembur dan tidak tergenang air berlebih saat persemaian 7 hari pertama.',
+          'Berikan pencahayaan matahari minimal 5-6 jam per hari untuk fotosintesis maksimal.',
+        ],
+      },
     },
     {
+      id: 'maryam',
       title: 'Siti Maryam',
-      subtitle: 'Praktisi Urban Farming & Hidroponik',
+      subtitle: 'Praktisi Urban Farming & Pegiat Hidroponik',
       badge: 'Panen Mandiri Rumah',
       imageSrc: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80&w=1000',
-      content: (
-        <div className="space-y-4">
-          <p>
-            Memanfaatkan balkon dan pekarangan rumah seluas 12m² dengan sistem hidroponik NFT dan polybag untuk memasok sayuran sehat bagi keluarga dan tetangga sekitar.
-          </p>
-          <div className="rounded-xl border border-emerald-100 bg-emerald-50/70 p-4 dark:border-emerald-950/50 dark:bg-emerald-950/20">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
-              Hemat & Menguntungkan
-            </h4>
-            <p className="mt-1 text-xs text-emerald-900 dark:text-emerald-300">
-              Menghemat belanja sayur hingga Rp1,5 juta/bulan sekaligus menghasilkan pendapatan tambahan dari penjualan sayur pakcoy dan selada segar.
-            </p>
-          </div>
-        </div>
-      ),
+      details: {
+        omzet: 'Hemat Belanja Rp1,8 Juta/Bln',
+        lokasi: 'Pekarangan Rumah, Tangerang Selatan',
+        komoditas: 'Kangkung, Bayam Merah & Hijau, Pakcoy, Selada',
+        dayaKecambah: '92% Tumbuh Subur di Polybag',
+        quote: 'Awalnya cuma coba-coba menanam di polybag dan talang air depan rumah. Ternyata hasilnya melimpah, sayuran lebih manis dan renyah karena tanpa pestisida kimia!',
+        fullBio: 'Ibu rumah tangga dan penggerak komunitas ketahanan pangan RT/RW. Memanfaatkan balkon lantai dua dan sudut pekarangan 10m² untuk menghasilkan panen sayur segar setiap akhir pekan.',
+        tipsSukses: [
+          'Mulai dari benih sayur daun yang cepat panen (kangkung 21 hari, bayam 25 hari).',
+          'Gunakan botol bekas atau polybag ramah lingkungan untuk menekan modal awal.',
+          'Ajak keluarga menyiram dan merawat tanaman sebagai sarana edukasi sehat.',
+        ],
+      },
     },
   ];
 
   useEffect(() => {
+    if (isPaused) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % profileStories.length);
     }, autoDelay);
     return () => clearInterval(timer);
-  }, [currentSlide, profileStories.length]);
+  }, [currentSlide, isPaused, profileStories.length]);
+
+  const currentProfile = profileStories[currentSlide];
 
   const steps = [
     {
       num: '1',
-      title: 'Pilih benih',
-      desc: 'Dapatkan paket benih sayuran unggul bersertifikat siap tanam.',
-      img: ASSETS.company1,
+      title: 'Pilih Benih Bersertifikat',
+      desc: 'Dapatkan paket 10 varietas benih sayuran unggul siap tanam bersertifikat resmi IPB University.',
+      img: 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800&auto=format&fit=crop&q=80',
     },
     {
       num: '2',
-      title: 'Semaikan',
-      desc: 'Semaikan benih pada media tanam tanah atau hidroponik.',
-      img: ASSETS.company2,
+      title: 'Semaikan Sesuai SOP',
+      desc: 'Semaikan benih pada media tanah gembur atau rockwool hidroponik selama 7-10 hari hingga berkecambah seragam.',
+      img: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb22657?w=800&auto=format&fit=crop&q=80',
     },
     {
       num: '3',
-      title: 'Rawat',
-      desc: 'Siram dan rawat secara rutin sesuai panduan budidaya.',
-      img: ASSETS.company3,
+      title: 'Pindah Tanam & Rawat',
+      desc: 'Pindahkan bibit ke polybag atau bedengan, siram pagi-sore dan berikan nutrisi organik secara teratur.',
+      img: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800&auto=format&fit=crop&q=80',
     },
     {
       num: '4',
-      title: 'Panen',
-      desc: 'Panen sayuran segar berkualitas tinggi dan nutrisi optimal.',
-      img: ASSETS.productBanner,
+      title: 'Panen Sayur Segar',
+      desc: 'Panen sayuran segar mulai hari ke-21 hingga 30 dengan daun hijau tebal, renyah, dan bernutrisi tinggi.',
+      img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&auto=format&fit=crop&q=80',
     },
     {
       num: '5',
-      title: 'Pasarkan',
-      desc: 'Jual ke tetangga, pasar, warung, atau nikmati sendiri.',
-      img: ASSETS.company1,
+      title: 'Konsumsi & Pasarkan',
+      desc: 'Nikmati sayuran sehat untuk keluarga atau pasarkan ke tetangga, warung makan, dan pasar lokal.',
+      img: 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=800&auto=format&fit=crop&q=80',
     },
   ];
 
   return (
     <section id="kisah" className="story-section py-16 sm:py-24">
-      <div className="container">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* SECTION HEADER */}
         <motion.div
           className="section-header text-center max-w-3xl mx-auto mb-12"
@@ -153,44 +156,123 @@ export const StorySection: React.FC = () => {
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 mb-3">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 px-3.5 py-1 text-xs font-bold text-emerald-800 dark:text-emerald-300 mb-3 shadow-xs">
             <Sparkles className="size-3.5" />
-            <span>INSPIRASI & KISAH NYATA PETANI</span>
+            <span>INSPIRASI NYATA & TOKOH BUDIDAYA</span>
           </div>
-          <h2 className="section-title text-3xl font-extrabold tracking-tight sm:text-4xl text-zinc-900 dark:text-zinc-50">
-            Kisah Sukses & Profil Mitra Budidaya Sayuran
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
+            Kisah Sukses Mitra & Riset Benih Botani Seed
           </h2>
-          <p className="section-desc mt-3 text-base text-zinc-600 dark:text-zinc-300">
-            Buktikan sendiri bagaimana benih bersertifikat IPB University membantu petani muda, penghobi rumahan, dan mitra komersial menghasilkan panen berkualitas beromzet puluhan juta rupiah.
+          <p className="mt-3 text-base sm:text-lg text-zinc-600 dark:text-zinc-300">
+            Pilih atau klik kartu profil di bawah untuk membaca rahasia panen melimpah, omzet bisnis, dan tips langsung dari para petani & pakar IPB University.
           </p>
         </motion.div>
 
-        {/* INTERACTIVE EXPANDABLE CARDS SLIDER CAROUSEL */}
-        <div className="mb-14">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {profileStories.map((story, idx) => {
-              const isCurrent = idx === currentSlide;
-
-              return (
-                <div
-                  key={story.title}
-                  className={`transition-all duration-300 ${
-                    isCurrent
-                      ? 'scale-[1.02] ring-2 ring-emerald-500 rounded-2xl shadow-lg'
-                      : 'opacity-85 hover:opacity-100'
-                  }`}
-                  onClick={() => setCurrentSlide(idx)}
-                >
-                  <ExpandableProfileCard
-                    title={story.title}
-                    subtitle={story.subtitle}
-                    badge={story.badge}
-                    imageSrc={story.imageSrc}
-                    content={story.content}
-                  />
+        {/* SPOTLIGHT FEATURED STORY (ACTIVE SLIDE FOCUS) */}
+        <div
+          className="mb-10"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentProfile.id}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent p-6 sm:p-8 dark:border-emerald-900/60 dark:from-emerald-950/40 shadow-sm"
+            >
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center">
+                <div className="lg:col-span-4">
+                  <div className="relative h-64 sm:h-72 w-full overflow-hidden rounded-2xl shadow-md">
+                    <img
+                      src={currentProfile.imageSrc}
+                      alt={currentProfile.title}
+                      className="h-full w-full object-cover"
+                    />
+                    <div className="absolute top-3 left-3">
+                      <span className="rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text-white shadow-sm">
+                        {currentProfile.badge}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              );
-            })}
+
+                <div className="lg:col-span-8 flex flex-col justify-between space-y-4">
+                  <div>
+                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                      {currentProfile.subtitle}
+                    </span>
+                    <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 mt-1">
+                      {currentProfile.title}
+                    </h3>
+                  </div>
+
+                  <div className="flex items-start gap-3 rounded-2xl bg-white/80 dark:bg-zinc-900/80 p-4 border border-emerald-100 dark:border-emerald-900/40">
+                    <Quote className="size-5 shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />
+                    <p className="text-xs sm:text-sm italic text-zinc-700 dark:text-zinc-300 leading-relaxed">
+                      "{currentProfile.details.quote}"
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {currentProfile.details.omzet && (
+                      <div className="rounded-xl bg-white/90 dark:bg-zinc-900/90 p-3 border border-zinc-200/80 dark:border-zinc-800">
+                        <span className="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
+                          <TrendingUp className="size-3" /> Hasil
+                        </span>
+                        <p className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate">
+                          {currentProfile.details.omzet}
+                        </p>
+                      </div>
+                    )}
+                    {currentProfile.details.dayaKecambah && (
+                      <div className="rounded-xl bg-white/90 dark:bg-zinc-900/90 p-3 border border-zinc-200/80 dark:border-zinc-800">
+                        <span className="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
+                          <Award className="size-3" /> Daya Tumbuh
+                        </span>
+                        <p className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate">
+                          {currentProfile.details.dayaKecambah}
+                        </p>
+                      </div>
+                    )}
+                    {currentProfile.details.lokasi && (
+                      <div className="col-span-2 sm:col-span-1 rounded-xl bg-white/90 dark:bg-zinc-900/90 p-3 border border-zinc-200/80 dark:border-zinc-800">
+                        <span className="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
+                          <MapPin className="size-3" /> Lokasi
+                        </span>
+                        <p className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate">
+                          {currentProfile.details.lokasi}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* 4 EXPANDABLE CARDS GRID */}
+        <div
+          className="mb-14"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {profileStories.map((story, idx) => (
+              <ExpandableProfileCard
+                key={story.id}
+                title={story.title}
+                subtitle={story.subtitle}
+                badge={story.badge}
+                imageSrc={story.imageSrc}
+                details={story.details}
+                isActive={idx === currentSlide}
+                onSelect={() => setCurrentSlide(idx)}
+              />
+            ))}
           </div>
 
           {/* CAROUSEL CONTROLLER */}
@@ -205,8 +287,8 @@ export const StorySection: React.FC = () => {
           </div>
         </div>
 
-        {/* STEPS SECTION */}
-        <div className="steps-section-wrapper pt-8 border-t border-zinc-200/80 dark:border-zinc-800" id="cara-mulai">
+        {/* 5-STEP BUDIDAYA GUIDE */}
+        <div className="steps-section-wrapper pt-12 border-t border-zinc-200/80 dark:border-zinc-800" id="cara-mulai">
           <motion.div
             className="section-header text-center max-w-2xl mx-auto mb-10"
             initial={reduceMotion ? false : { opacity: 0, y: 30 }}
@@ -214,20 +296,20 @@ export const StorySection: React.FC = () => {
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-900 dark:bg-amber-950 dark:text-amber-300 mb-2">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 dark:bg-amber-950/80 px-3.5 py-1 text-xs font-bold text-amber-900 dark:text-amber-300 mb-2 shadow-xs">
               <Award className="size-3.5" />
               <span>PANDUAN PRAKTIS 5 LANGKAH</span>
             </div>
-            <h3 className="text-2xl font-bold tracking-tight sm:text-3xl text-zinc-900 dark:text-zinc-50">
+            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
               Bagaimana Cara Memulainya?
             </h3>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-              Langkah mudah dari persiapan benih hingga menikmati dan memasarkan panen segar Anda
+            <p className="mt-2 text-sm sm:text-base text-zinc-600 dark:text-zinc-400">
+              Alur mudah mulai dari memilih benih bersertifikasi hingga menikmati panen segar Anda sendiri
             </p>
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5"
+            className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5"
             initial={reduceMotion ? false : 'hidden'}
             whileInView="show"
             viewport={{ once: true, margin: '-60px' }}
@@ -241,7 +323,7 @@ export const StorySection: React.FC = () => {
           >
             {steps.map((step, idx) => (
               <motion.div
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white p-4 shadow-xs transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+                className="group relative flex flex-col overflow-hidden rounded-2xl border border-zinc-200/90 bg-white p-4 shadow-xs transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
                 key={idx}
                 variants={{
                   hidden: { opacity: 0, y: 25, scale: 0.96 },
@@ -253,21 +335,21 @@ export const StorySection: React.FC = () => {
                   },
                 }}
               >
-                <div className="absolute top-3 right-3 flex size-7 items-center justify-center rounded-full bg-emerald-100 text-xs font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                <div className="absolute top-3 right-3 z-10 flex size-7 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white shadow-sm">
                   {step.num}
                 </div>
-                <div className="mb-3 h-32 w-full overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800">
+                <div className="mb-3 h-36 w-full overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800">
                   <img
                     src={step.img}
                     alt={step.title}
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-108"
                   />
                 </div>
-                <h4 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
+                <h4 className="text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-100">
                   {step.num}. {step.title}
                 </h4>
-                <p className="mt-1 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                <p className="mt-1.5 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
                   {step.desc}
                 </p>
               </motion.div>

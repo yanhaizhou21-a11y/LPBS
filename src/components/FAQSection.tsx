@@ -1,133 +1,139 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion, useReducedMotion } from 'motion/react';
-import { ChevronDown } from 'lucide-react';
+import { HelpCircle, MessageCircle, ShoppingBag } from 'lucide-react';
+import { MotionAccordion, type MotionAccordionItem } from './ui/motion-faqs-accordion';
 
 interface FAQSectionProps {
   onOpenCheckout?: () => void;
 }
 
 export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenCheckout }) => {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
   const reduceMotion = useReducedMotion();
 
-  const faqs = [
+  const faqItems: MotionAccordionItem[] = [
     {
-      q: 'Apa saja isi paket benih sayur ini?',
-      a: 'Dalam 1 paket benih sayur Botani Seed, Anda mendapatkan 10 jenis varietas sayur pilihan (seperti bayam, kangkung, sawi, terong, cabai, tomat, timun, dll) yang sudah dikemas higienis bersertifikat IPB.'
+      question: 'Apa saja varietas benih yang didapatkan dalam 1 paket?',
+      answer: (
+        <span>
+          Dalam 1 paket benih sayur <strong>PT Botani Seed Indonesia</strong>, Anda mendapatkan <strong>10 varietas unggul pilihan</strong> (kombinasi sayur daun & buah seperti bayam hijau, kangkung super, sawi caisim manis, pakcoy hidropinik, terong ungu, cabai rawit prima, tomat ceri, mentimun renyah, selada keriting, dan buncis tegak) yang dikemas higienis dengan panduan penanaman lengkap.
+        </span>
+      ),
     },
     {
-      q: 'Apakah ada garansi daya tumbuh benih?',
-      a: 'Benih Botani Seed telah melewati uji mutu laboratorium perbenihan IPB University dengan daya kecambah terjamin di atas 85% jika disemaikan sesuai panduan.'
+      question: 'Apakah ada garansi daya tumbuh dan sertifikasi benih?',
+      answer: (
+        <span>
+          <strong>Ya, bergaransi resmi.</strong> Seluruh benih telah melewati uji viabilitas dan vigor di laboratorium pemuliaan tanaman <strong>IPB University</strong> dengan jaminan daya berkecambah di atas <strong>85%</strong> dan tingkat kemurnian fisik mencapai <strong>&gt;98%</strong>.
+        </span>
+      ),
     },
     {
-      q: 'Bagaimana cara melakukan pemesanan?',
-      a: 'Cukup klik tombol "Beli sekarang", isi data penerima & alamat pengiriman, pilih tarif JNE otomatis, lalu lakukan pembayaran via QRIS atau Transfer Bank. Tanpa perlu mendaftar akun!'
+      question: 'Bagaimana cara melakukan pemesanan dan apakah bisa COD?',
+      answer: (
+        <span>
+          Pemesanan sangat mudah! Cukup klik tombol <strong>"Pesan Sekarang"</strong>, lengkapi data penerima dan alamat tujuan (terintegrasi otomatis dengan tarif ongkir JNE ke seluruh kecamatan di Indonesia), lalu pilih metode pembayaran via <strong>QRIS otomatis</strong>, <strong>Transfer Virtual Account</strong>, atau <strong>Bayar di Tempat (COD)</strong> tanpa perlu membuat akun terlebih dahulu.
+        </span>
+      ),
     },
     {
-      q: 'Berapa lama pengiriman lokasi saya?',
-      a: 'Pengiriman dilakukan dari gudang Bogor via JNE. Untuk Jabodetabek estimasi 1–2 hari kerja, Pulau Jawa 2–3 hari kerja, dan luar Jawa 3–5 hari kerja.'
+      question: 'Berapa lama masa simpan (kadaluarsa) benih?',
+      answer: (
+        <span>
+          Kemasan aluminium foil kedap udara menjaga kualitas benih tetap prima hingga <strong>12–18 bulan</strong> sejak tanggal produksi jika disimpan di tempat kering dan terhindar dari sinar matahari langsung.
+        </span>
+      ),
     },
     {
-      q: 'Apakah harus membuat akun untuk beli?',
-      a: 'Tidak perlu. Anda bisa melakukan pemesanan langsung sebagai tamu (guest checkout) untuk kemudahan dan kecepatan transaksi.'
+      question: 'Apakah pemula yang belum pernah berkebun bisa berhasil menanam?',
+      answer: (
+        <span>
+          <strong>Sangat bisa!</strong> Setiap paket disertai modul SOP budidaya praktis berbahasa Indonesia yang memandu Anda mulai dari persiapan wadah/polybag, perendaman benih, peracikan media tanam/nutrisi, hingga jadwal penyiraman dan panen sayuran segar.
+        </span>
+      ),
     },
     {
-      q: 'Apakah menerima pemesanan jumlah besar?',
-      a: 'Ya, kami melayani pemesanan grosir, program bantuan pertanian, reseller, serta kebutuhan pengadaan instansi.'
-    }
+      question: 'Apakah melayani pemesanan grosir untuk kemitraan atau instansi?',
+      answer: (
+        <span>
+          Ya, kami melayani kemitraan pasokan benih skala besar untuk kelompok tani, program CSR/ketahanan pangan pemerintah, distributor daerah, maupun pengadaan kebun komersial dengan harga khusus B2B.
+        </span>
+      ),
+    },
   ];
 
-  const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
   return (
-    <section id="faq" className="faq-section">
-      <div className="container">
-        {/* FAQ ACCORDION SECTION (Section 10) */}
-        <div className="faq-wrapper">
-          <motion.div
-            className="section-header text-center"
-            initial={reduceMotion ? false : { opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <h2 className="section-title faq-main-title">
-              Pertanyaan yang sering ditanyakan
-            </h2>
-          </motion.div>
+    <section id="faq" className="faq-section py-16 sm:py-24">
+      <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
+        {/* HEADER */}
+        <motion.div
+          className="section-header text-center mb-12"
+          initial={reduceMotion ? false : { opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 px-3.5 py-1 text-xs font-bold text-emerald-800 dark:text-emerald-300 mb-3 shadow-xs">
+            <HelpCircle className="size-3.5" />
+            <span>TANYA JAWAB SEPUTAR BENIH</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
+            Pertanyaan yang Sering Diajukan
+          </h2>
+          <p className="mt-3 text-base sm:text-lg text-zinc-600 dark:text-zinc-300 max-w-2xl mx-auto">
+            Semua yang perlu Anda ketahui tentang kualitas benih bersertifikat IPB, panduan penanaman, dan kemudahan pengiriman.
+          </p>
+        </motion.div>
 
-          <motion.div
-            className="faq-accordion-list"
-            initial={reduceMotion ? false : 'hidden'}
-            whileInView="show"
-            viewport={{ once: true, margin: '-60px' }}
-            variants={{
-              hidden: { opacity: 0 },
-              show: {
-                opacity: 1,
-                transition: { staggerChildren: 0.08 }
-              }
-            }}
-          >
-            {faqs.map((faq, index) => {
-              const isOpen = openIndex === index;
-              return (
-                <motion.div
-                  className={`faq-item-row ${isOpen ? 'active' : ''}`}
-                  key={index}
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } }
-                  }}
-                >
-                  <button
-                    type="button"
-                    className="faq-question-btn"
-                    onClick={() => toggleFAQ(index)}
-                    aria-expanded={isOpen}
-                  >
-                    <span>{faq.q}</span>
-                    <ChevronDown size={20} className={`faq-arrow-icon ${isOpen ? 'rotate' : ''}`} />
-                  </button>
-                  {isOpen && (
-                    <div className="faq-answer-content">
-                      <p>{faq.a}</p>
-                    </div>
-                  )}
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
+        {/* MOTION ACCORDION COMPONENT */}
+        <motion.div
+          initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <MotionAccordion items={faqItems} gap={14} />
+        </motion.div>
+
+        {/* BOTTOM QUICK ACTIONS BANNER */}
+        <motion.div
+          className="mt-14 overflow-hidden rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent p-6 sm:p-8 text-center dark:border-emerald-900/60 dark:from-emerald-950/40"
+          initial={reduceMotion ? false : { opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            Masih ada pertanyaan seputar budidaya?
+          </h3>
+          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto">
+            Tim ahli agronomi dan customer care PT Botani Seed Indonesia siap membantu konsultasi penanaman Anda secara gratis.
+          </p>
+
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            {onOpenCheckout && (
+              <button
+                type="button"
+                onClick={onOpenCheckout}
+                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition-all hover:bg-emerald-700 hover:shadow-md"
+              >
+                <ShoppingBag className="size-4" />
+                <span>Pesan Paket Sekarang</span>
+              </button>
+            )}
+            <a
+              href="https://wa.me/6281299450708?text=Halo%20Admin%20Botani%20Seed%2C%20saya%20ingin%20konsultasi%20paket%20benih%20sayuran"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-white px-5 py-3 text-sm font-bold text-emerald-800 shadow-xs transition-all hover:bg-emerald-50 dark:border-emerald-800 dark:bg-zinc-900 dark:text-emerald-300 dark:hover:bg-zinc-800"
+            >
+              <MessageCircle className="size-4 text-emerald-600 dark:text-emerald-400" />
+              <span>Konsultasi WhatsApp Gratis</span>
+            </a>
+          </div>
+        </motion.div>
       </div>
-
-      <motion.div
-        className="final-cta-section"
-        initial={reduceMotion ? false : { opacity: 0, y: 35 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="container text-center">
-          <h2 className="cta-banner-title">Mulai langkah pertamamu hari ini.</h2>
-          <p className="cta-banner-subtitle">
-            Tanyakan isi paket, stok, promo, dan cara pemesanannya langsung kepada admin resmi Botani Seed.
-          </p>
-          <a
-            href="https://wa.me/6281299450708?text=Halo%20Admin%20Botani%20Seed%2C%20saya%20ingin%20tanya%20dan%20pesan%20paket%20benih."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="cta-wa-btn"
-          >
-            <span>💬</span> Tanya & Pesan via WhatsApp
-          </a>
-          <p className="cta-banner-note">
-            Anda dapat berkonsultasi terlebih dahulu tanpa harus langsung membeli.
-          </p>
-        </div>
-      </motion.div>
     </section>
   );
 };
+
+export default FAQSection;
