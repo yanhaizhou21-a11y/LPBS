@@ -558,9 +558,7 @@ export function BotaniDashboard() {
           <nav className="space-y-1.5">
             {[
               { label: t('dashboard'), key: 'Dashboard', icon: LayoutDashboard },
-              { label: t('products'), key: 'Products', icon: Package },
               { label: t('order'), key: 'Order', icon: FileText },
-              { label: t('inventory'), key: 'Inventory', icon: Boxes },
             ].map((item) => {
               const Icon = item.icon;
               const isActive = activeNav === item.key;

@@ -262,9 +262,7 @@ export function BotaniDashboard() {
           <nav className="space-y-1.5">
             {[
               { label: 'Dashboard', icon: LayoutDashboard },
-              { label: 'Products', icon: Package },
               { label: 'Order', icon: FileText },
-              { label: 'Inventory', icon: Boxes },
               { label: 'Customers', icon: Users },
             ].map((item) => {
               const Icon = item.icon;
