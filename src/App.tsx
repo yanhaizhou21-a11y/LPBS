@@ -22,17 +22,16 @@ import { SolusiSection } from './components/SolusiSection';
 import { PaketIsiSection } from './components/PaketIsiSection';
 import { TestimonialSection } from './components/TestimonialSection';
 import { BottomCTASection } from './components/BottomCTASection';
+import { isPublicPage, publicPageFromPath, type PublicPageId } from './config/public-pages';
 
 const CheckoutModal = lazy(() => import('./components/CheckoutModal').then((module) => ({ default: module.CheckoutModal })));
-type View = 'landing' | 'landing2' | 'products' | 'admin-login' | 'admin-dashboard' | 'dashboard';
+type View = PublicPageId | 'admin-login' | 'admin-dashboard' | 'dashboard';
 
 function viewFromPath(): View {
   if (window.location.pathname === '/dashboard') return 'dashboard';
   if (window.location.pathname === '/admin/dashboard') return 'admin-dashboard';
   if (window.location.pathname === '/secret-admin-login') return 'admin-login';
-  if (window.location.pathname === '/products') return 'products';
-  if (window.location.pathname === '/home2') return 'landing2';
-  return 'landing';
+  return publicPageFromPath(window.location.pathname) ?? 'landing';
 }
 
 export function App() {
@@ -40,18 +39,21 @@ export function App() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(window.location.pathname === '/kebijakan-privasi');
   const [view, setView] = useState<View>(viewFromPath);
+  const [currentPath, setCurrentPath] = useState(() => `${window.location.pathname}${window.location.hash}`);
   const [adminName, setAdminName] = useState('Admin PT Botani Seed');
-  const [authChecked, setAuthChecked] = useState(['landing', 'landing2', 'products', 'dashboard'].includes(viewFromPath()));
+  const [authChecked, setAuthChecked] = useState(isPublicPage(viewFromPath()) || viewFromPath() === 'dashboard');
   const [accessDenied, setAccessDenied] = useState(window.location.pathname === '/admin/dashboard');
 
   const navigate = (nextView: View, path: string, replace = false) => {
     window.history[replace ? 'replaceState' : 'pushState']({}, '', path);
     setView(nextView);
+    setCurrentPath(path);
   };
 
   useEffect(() => {
     const syncRoute = () => {
       setView(viewFromPath());
+      setCurrentPath(`${window.location.pathname}${window.location.hash}`);
       setIsPrivacyModalOpen(window.location.pathname === '/kebijakan-privasi');
     };
     window.addEventListener('popstate', syncRoute);
@@ -75,6 +77,7 @@ export function App() {
           e.preventDefault();
           window.history.pushState({}, '', href);
           setView(viewFromPath());
+          setCurrentPath(href);
           if (hash) {
             setTimeout(() => {
               const el = document.getElementById(hash);
@@ -128,11 +131,13 @@ export function App() {
 
   const openPrivacy = () => {
     window.history.pushState({}, '', '/kebijakan-privasi');
+    setCurrentPath('/kebijakan-privasi');
     setIsPrivacyModalOpen(true);
   };
 
   const closePrivacy = () => {
     window.history.pushState({}, '', '/');
+    setCurrentPath('/');
     setIsPrivacyModalOpen(false);
   };
 
@@ -152,7 +157,7 @@ export function App() {
 
   return (
     <div className="app-root">
-      <Navbar cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
+      <Navbar currentPath={currentPath} cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
       {view === 'landing2' ? (
         <main>
           <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />

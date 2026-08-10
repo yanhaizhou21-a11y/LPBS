@@ -1,110 +1,165 @@
-# Kembalikan navbar buyer ke hirarki tugas yang ringkas
+# Bangun navigasi publik bersama yang siap menampung banyak homepage
 
-Commit yang diaudit: `fb6aebccc6996e6ba22c84af87dbe7d0918f7cb2`
+Commit yang diaudit: `bd95e1fe6e68bd1b287767adffa69114d6393671`
+
+## Ringkasan audit
+
+Surface yang diaudit adalah navbar publik pada `/`, `/home2`, dan `/products`, termasuk perilaku desktop/mobile serta kontrak penambahan homepage berikutnya. Dashboard dan portal admin sengaja tidak masuk scope karena memiliki audience dan navigasi berbeda.
+
+Referensi eksternal yang dipilih pengguna adalah Velt. Homepage dan halaman pricing Velt memakai hirarki navigasi yang sama: brand, beberapa menu berkelompok, tautan langsung, aksi akun, dan satu CTA utama. Rencana ini mengadaptasi pola pengelolaan dan hirarkinya ke identitas Botani Seed; bukan menyalin merek, copy, atau pixel styling Velt.
 
 ## Evidence chain
 
-- `memory/Prompt md.md` dan `memory/prd.md` menetapkan notch navbar sebagai identitas komponen, Motion untuk transisi, Lucide untuk ikon, serta pembelian mobile yang cepat sebagai tujuan utama.
-- `src/components/Navbar.tsx` kini hanya membungkus `MegaMenuNavbar`.
-- `src/components/ui/mega-menu-navbar.tsx` adalah implementasi generik sepanjang lebih dari 850 baris. Drawer mobile menampilkan empat halaman, lima akses cepat, dua CTA, kontrol bahasa/tema, dan brand header; prioritas pembelian tenggelam di bawah daftar tersebut.
-- Menu memuat copy `COD / Bebas Ongkir`, `Jaminan Mutu & Sertifikasi`, `benih bersertifikasi resmi IPB University`, `omzet puluhan juta`, dan `bebas pestisida`. Opsi checkout aktual hanya QRIS/transfer bank dan JNE/pickup. PRD melarang klaim yang belum dibuktikan.
-- Riwayat repo (`1e55bf5:src/components/Navbar.tsx`) sudah memiliki notch navbar ringkas, perilaku hide-on-scroll-down/show-on-scroll-up, reduced-motion, empat link, bahasa, tema, dan CTA. CSS notch dan mobile nav-nya masih tersedia di `src/index.css`, sehingga koreksi dapat memakai implementasi yang pernah menjadi sumber desain, bukan membuat sistem ketiga.
-- Pengguna secara khusus menilai navbar mobile, tipografi, dan pemilihan komponennya terasa generik seperti AI slop.
+- `src/components/Navbar.tsx` menjadi satu owner tampilan navbar, tetapi daftar tujuannya masih berupa tiga link hardcoded (`/`, `/products`, dan `/#profil`). Menambah homepage baru akan memerlukan perubahan manual di navbar.
+- `src/App.tsx` memiliki union `View`, pencocokan path, dan cabang render tersendiri untuk `landing`, `landing2`, dan `products`. Metadata navigasi dan pengetahuan route publik belum memiliki sumber bersama.
+- `src/i18n.tsx` menyimpan label navbar secara hardcoded per bahasa. Belum ada nama dan deskripsi terstruktur untuk varian homepage yang dapat dipakai desktop dan mobile.
+- `src/index.css` masih mengikat identitas navbar pada kelas `.notch-*` dan `.mobile-navigation`. Keputusan baru pengguna secara eksplisit meminta pola navbar Velt untuk dipakai lintas banyak homepage, sehingga keputusan notch lama di `memory/Prompt md.md` dan `memory/prd.md` perlu ditandai sebagai superseded setelah implementasi disetujui.
+- Navbar sudah dipasang sekali oleh `App.tsx` di atas semua route publik. Titik integrasi ini benar dan harus dipertahankan; jangan menduplikasi navbar ke masing-masing homepage.
+
+## Temuan terverifikasi
+
+### 1. Hirarki sekarang tidak siap untuk Homepage 3, 4, dan seterusnya
+
+Link flat yang ditulis langsung di `Navbar.tsx` akan cepat penuh dan memaksa desktop serta mobile dikelola terpisah. Koreksinya adalah satu registry halaman publik yang menjadi sumber label, path, status aktif, visibilitas menu, dan pengelompokan. Navbar desktop dan mobile membaca registry yang sama.
+
+### 2. Bentuk notch dan menu flat tidak mendukung navigation grouping
+
+Siluet notch cocok untuk tiga tujuan, tetapi tidak menyediakan ruang atau pola disclosure ketika varian homepage bertambah. Koreksinya adalah header horizontal Botani Seed yang terinspirasi hirarki Velt: satu menu `Homepage` berkelompok, tautan langsung untuk tugas pembelian, dan action cluster yang konsisten. Warna, tipografi, radius, dan logo tetap memakai design token Botani Seed.
+
+### 3. Mobile belum mempunyai kontrak skalabilitas dan aksesibilitas
+
+Panel mobile saat ini mengulang tiga link tanpa grouping, active state yang jelas, focus management lengkap, atau aturan overflow untuk daftar yang tumbuh. Koreksinya adalah mobile sheet dari konfigurasi yang sama, dengan grup homepage berbentuk accordion, target sentuh minimum 44px, body scroll lock, Escape/backdrop close, dan focus return.
 
 ## Design decision
 
-Hapus mega menu generik dan pulihkan satu navbar buyer yang mengikuti tiga tugas utama:
+Gunakan satu shared public header dengan susunan berikut.
 
-- Berpindah ke `Beranda`, `Produk`, atau `Tentang kami`.
-- Melihat keranjang.
-- Melanjutkan pesanan.
+### Desktop
 
-Desktop tetap memakai siluet notch. Mobile memakai satu panel kecil dengan tiga link, bahasa, tema, dan satu CTA; keranjang tetap dapat dijangkau langsung dari header sehingga tidak diduplikasi di menu. Navbar menghilang saat scroll turun dan muncul saat scroll naik, tetap terlihat ketika menu terbuka, dan menghormati reduced motion.
+- Kiri: logo Botani Seed menuju `/`.
+- Tengah:
+  - Trigger `Homepage` membuka popover berisi homepage yang sudah tersedia. Setiap item memiliki nama pendek, satu baris deskripsi, dan active state.
+  - Tautan langsung `Produk` menuju `/products`.
+  - Tautan langsung `Tentang kami` menuju section profil pada homepage utama.
+- Kanan: language toggle, theme toggle, cart dengan count, lalu satu CTA `Pesan sekarang`.
+- Header tetap menjadi satu instance di `App.tsx`, sticky, hilang saat scroll turun dan muncul saat scroll naik. Saat popover atau mobile menu terbuka, header tidak boleh bersembunyi.
+
+### Mobile
+
+- Bar utama hanya berisi logo, cart, dan tombol menu; semua target sentuh minimum 44x44px.
+- Tombol menu membuka sheet setinggi viewport dari kanan dengan backdrop. Lebar maksimum 420px dan 100% pada layar sempit.
+- Grup `Homepage` terbuka secara default dan berisi hanya route yang benar-benar tersedia. Jangan menampilkan placeholder `/home3` atau `/home4` sebelum page-nya ada.
+- `Produk` dan `Tentang kami` tetap menjadi tujuan langsung. Language/theme ditempatkan pada utility row; satu CTA order berada di bagian bawah sheet.
+- Item aktif memakai kombinasi warna, weight, dan indikator visual; jangan bergantung pada warna saja.
+- Sheet menutup setelah navigasi, klik backdrop, atau Escape; focus dikembalikan ke tombol menu dan body scroll dipulihkan.
+
+## Shared route contract
+
+Buat metadata tunggal di `src/config/public-pages.ts` dengan bentuk minimal:
+
+```ts
+type PublicPageDefinition = {
+  id: 'home' | 'home2' | 'products'
+  path: '/' | '/home2' | '/products'
+  labelKey: TranslationKey
+  descriptionKey?: TranslationKey
+  group: 'homepages' | 'primary'
+  navigationVisible: boolean
+}
+```
+
+- Isi awal: Home 1 (`/`), Home 2 (`/home2`), dan Produk (`/products`).
+- `Navbar.tsx` memakai registry untuk menyusun menu desktop/mobile dan menentukan active state.
+- `App.tsx` memakai registry untuk resolusi public path; mapping page id ke komponen tetap berada dekat render owner agar registry tidak mencampur metadata dengan JSX dan state checkout.
+- Saat Homepage 3 dibuat, pekerjaan minimum adalah menambah komponen, satu definition, satu renderer mapping, dan copy bilingual. Tidak ada array menu kedua.
+- Jangan menambah React Router hanya untuk perubahan ini; routing native yang ada sudah cukup untuk jumlah route saat ini.
 
 ## Reuse
 
-- Pulihkan struktur notch yang sudah terbukti di histori `1e55bf5:src/components/Navbar.tsx`; adaptasikan, jangan salin contoh Next.js mentah dari prompt.
-- Gunakan `LanguageToggle`, `ThemeToggleButton`, logo `ASSETS.logo`, Motion, dan ikon Lucide yang sudah terpasang.
-- Gunakan kelas `.notch-*` dan `.mobile-navigation` yang sudah ada di `src/index.css`, lalu hapus aturan yang benar-benar yatim setelah verifikasi.
-- Gunakan terjemahan `nav.home`, `nav.products`, `nav.about`, `nav.cart`, dan `nav.orderNow` dari `src/i18n.tsx`.
+- Pertahankan `src/components/Navbar.tsx` sebagai owner; refactor isi, jangan membuat navbar kedua.
+- Gunakan `LanguageToggle`, `ThemeToggleButton`, `CartDrawer`, logo `ASSETS.logo`, Motion, dan ikon Lucide yang sudah tersedia.
+- Gunakan token warna/light-dark yang sudah ada di `src/index.css`; ganti kelas `.notch-*` dengan kelas semantik `.site-header`, `.site-nav`, `.nav-popover`, dan `.mobile-nav-sheet` hanya sejauh diperlukan.
+- Gunakan mekanisme `useReducedMotion` dan algoritme hide/show on scroll yang sudah berjalan.
+- Jangan memasang shadcn, Radix, atau dependency menu baru. Popover/accordion sederhana dapat dibuat dengan React, semantic buttons, CSS, dan Motion yang sudah terpasang.
 
 ## Changes
 
-### 1. Jadikan `Navbar` satu-satunya owner UI navigasi buyer
+### 1. Tambahkan registry halaman publik
+
+**File baru:** `src/config/public-pages.ts`
+
+- Definisikan type dan initial definitions untuk `/`, `/home2`, dan `/products`.
+- Sediakan helper kecil untuk lookup path dan filter group; hindari class, provider, atau generic registry framework.
+- Pastikan `/admin/*`, secret login, dan `/dashboard` tidak pernah masuk registry publik.
+
+### 2. Hubungkan route resolution ke registry
+
+**File:** `src/App.tsx`
+
+- Turunkan public page id dari registry alih-alih mengulang literal path pada beberapa kondisi.
+- Pertahankan cabang auth/admin yang sudah ada dan renderer mapping eksplisit untuk landing page.
+- Pasang `Navbar` satu kali untuk semua public pages seperti sekarang.
+- Sediakan current pathname ke navbar bila diperlukan; jangan membuat global routing context baru.
+
+### 3. Refactor navbar menjadi Velt-inspired shared header
 
 **File:** `src/components/Navbar.tsx`
 
-- Ganti wrapper `MegaMenuNavbar` dengan markup notch yang pernah dipakai repo.
-- Link primer hanya:
-  - `Beranda` → `/`
-  - `Produk` → `/products`
-  - `Tentang kami` → `/#profil`
-- Jangan tampilkan `/dashboard`, `/admin/dashboard`, atau secret login pada navigasi buyer. `/dashboard` adalah surface berbeda dan bukan tugas pembelian utama.
-- Di header desktop, tampilkan logo, tiga link, language toggle, theme toggle, tombol keranjang dengan jumlah item, dan satu CTA `Pesan sekarang`.
-- Di mobile header, tampilkan tombol menu, logo, dan tombol keranjang. Drawer/panel berisi tiga link, language toggle, theme toggle, dan satu CTA `Pesan sekarang`.
-- Pertahankan algoritme scroll: tampil saat dekat top, saat scroll naik, atau saat menu terbuka; sembunyi saat scroll turun melewati threshold. Gunakan `useReducedMotion` untuk transisi nol durasi.
-- Tutup menu setelah navigasi, Escape, dan klik CTA. Kembalikan fokus ke tombol menu setelah panel ditutup.
-- Gunakan label ARIA dari i18n; jangan hardcode `Main navigation` atau copy Indonesia di mode English.
+- Hapus shell notch dan daftar link hardcoded.
+- Susun logo, grouped homepage popover, tautan langsung, dan utility/action cluster sesuai keputusan desktop.
+- Semua item homepage berasal dari `public-pages.ts` dan hanya ditampilkan jika `navigationVisible` true.
+- Tambahkan active state untuk current page dan `aria-current="page"` pada item yang tepat.
+- Pastikan popover dapat dibuka dengan Enter/Space, ditutup dengan Escape/outside click, dan focus tetap logis.
+- Pertahankan cart count, callbacks checkout/order, bilingual mode, theme control, reduced motion, serta hide-on-scroll behavior.
 
-### 2. Hapus implementasi mega menu yang tidak lagi punya konsumen
+### 4. Terapkan mobile sheet dari sumber navigasi yang sama
 
-**File:** `src/components/ui/mega-menu-navbar.tsx`
+**File:** `src/components/Navbar.tsx`
 
-- Hapus file setelah `rg "MegaMenuNavbar|mega-menu-navbar" src` membuktikan hanya `Navbar.tsx` yang mengimpornya.
-- Dengan penghapusan ini ikut hilang data generik pages/features/use cases/resources, dua CTA WhatsApp/order, subtitle `IPB University`, dan klaim promosi yang tidak terverifikasi.
-- Jangan menggantinya dengan config/abstraction navbar baru. Tiga link lokal di `Navbar.tsx` lebih jelas dan murah dirawat.
+- Render menu mobile dari registry yang sama; jangan membuat `mobileLinks` terpisah.
+- Gunakan accordion `Homepage`, direct links, utility row, dan satu CTA sesuai keputusan mobile.
+- Lock scroll dengan cleanup saat unmount, trap focus selama sheet terbuka, dan kembalikan focus saat ditutup.
+- Pastikan navigasi hash `/#profil` menutup sheet dan memindahkan fokus/scroll secara wajar.
 
-### 3. Rapikan CSS notch dan perilaku mobile
+### 5. Ganti styling notch dengan header responsif
 
 **File:** `src/index.css`
 
-- Audit blok `.notch-*`, `.mobile-navigation`, dan breakpoint terkait yang masih tersisa dari implementasi lama.
-- Pada 375–430px:
-  - Logo dan ikon tidak saling bertabrakan.
-  - Tombol menu dan keranjang minimal 44px.
-  - Panel berada di bawah notch, lebar mengikuti viewport dengan margin 16px, tinggi berdasarkan konten—bukan drawer 88vw penuh.
-  - Tiga link memiliki satu baris label, spacing konsisten, dan CTA utama tidak terduplikasi.
-- Pertahankan kontras light/dark dari token global. Jangan menambah gradient, glass card, badge, atau shadow dekoratif baru.
-- Hapus selector mega-menu/Tailwind helper yang menjadi yatim hanya jika pencarian repo membuktikan tidak dipakai komponen lain.
+- Buat header dengan max-width yang mengikuti content container, background solid yang terbaca pada light/dark, border halus, dan shadow minimal. Jangan meniru warna Velt.
+- Desktop popover harus cukup lebar untuk nama/deskripsi tetapi tidak menjadi mega-menu berisi promosi.
+- Pada 320-767px gunakan mobile bar dan sheet; pada 768px ke atas gunakan desktop navigation.
+- Cegah horizontal overflow, jaga focus ring visible, dan matikan/transisikan gerak secara instan pada `prefers-reduced-motion`.
+- Setelah pencarian repo memastikan tidak ada consumer, hapus selector `.notch-*` dan `.mobile-navigation` yang yatim.
 
-### 4. Lengkapi copy bilingual yang ringkas dan benar
+### 6. Tambahkan copy bilingual dan sinkronkan keputusan desain
 
-**File:** `src/i18n.tsx`
+**Files:** `src/i18n.tsx`, `memory/prd.md`, `memory/Prompt md.md`
 
-- Pastikan semua label navbar, ARIA, dan CTA panel memiliki pasangan ID/EN.
-- Gunakan sentence case: `Cerita petani`, bukan deretan Title Case; `Pesan sekarang`, bukan label dengan klaim dalam tanda kurung.
-- Hapus semua referensi `COD`, `Bebas Ongkir`, sertifikasi, hasil kecambah, omzet, dan bebas pestisida dari navbar. Klaim hanya boleh kembali jika ada sumber produk yang disetujui dan tempat yang tepat untuk menjelaskannya.
-
-### 5. Sinkronkan kontrak navigasi
-
-**File:** `memory/prd.md`
-
-- Perbarui route/navigation table agar membedakan route publik buyer (`/`, `/products`, `/home2`, kebijakan privasi) dari route internal.
-- Catat bahwa navbar utama hanya mengekspos tiga tujuan buyer, keranjang, bahasa, tema, dan CTA order; route internal tidak masuk navigasi publik.
-- Tambahkan acceptance criterion mobile: maksimal tiga link dalam menu, satu CTA order, tidak ada klaim pengiriman/pembayaran yang tidak tersedia, serta show-on-scroll-up/hide-on-scroll-down.
+- Tambahkan label/deskripsi ID dan EN untuk grup Homepage, Home 1, dan Home 2; gunakan copy faktual dan singkat.
+- Tambahkan ARIA labels untuk buka/tutup menu, buka grup, dan status halaman aktif.
+- Di PRD, dokumentasikan registry publik, shared header, route yang diekspos, dan acceptance criteria desktop/mobile.
+- Tandai notch navbar pada Prompt/PRD sebagai keputusan lama yang digantikan oleh Velt-inspired shared navigation. Jangan menghapus referensi historis tanpa catatan supersession.
 
 ## Scope
 
-Termasuk: navbar landing/product, menu mobile, scroll behavior, cart count, language/theme controls, i18n copy, dark/light states, dan pembersihan komponen navbar yatim.
+Termasuk: shared public navbar, registry route/menu, desktop grouped navigation, mobile sheet, current-page state, cart/language/theme/action controls, scroll behavior, dark/light, bilingual copy, dan dokumentasi desain.
 
-Tidak termasuk: redesign isi landing page, dashboard/admin navigation, perubahan route router, perubahan isi produk, dan penambahan klaim marketing baru.
+Tidak termasuk: membuat isi Homepage 3/4, mengubah dashboard/admin navigation, migrasi ke React Router, redesign isi landing/products, penambahan akun buyer, atau menyalin branding/copy Velt.
 
 ## Validation
 
-1. Jalankan `rg "MegaMenuNavbar|mega-menu-navbar|COD / Bebas Ongkir|bersertifikasi resmi|omzet puluhan juta|bebas pestisida" src` dan pastikan tidak ada referensi navbar lama/klaim terlarang.
-2. Jalankan `npm run build`.
-3. Pada `/`, `/home2`, dan `/products` di 375, 390, 430, 768, 1024, dan 1440px, verifikasi logo, link, cart count, dan CTA tidak overflow.
-4. Mobile: buka/tutup menu dengan pointer, Escape, Tab/Shift+Tab; pastikan fokus terlihat, panel menutup setelah link/CTA, dan scroll body tetap masuk akal.
-5. Scroll turun lalu naik pada halaman panjang; navbar harus hilang/muncul tanpa flicker. Saat menu terbuka navbar tidak boleh menghilang.
-6. Ganti ID/EN serta light/dark di setiap route publik; semua label berubah, warna memenuhi kontras, dan tidak ada flash copy bahasa lain.
-7. Aktifkan `prefers-reduced-motion`; perubahan posisi navbar/menu harus instan atau minimal tanpa spring.
+1. Jalankan `rg "notch-|mobile-navigation|PUBLIC_PAGES|public-pages" src memory` untuk memastikan registry memiliki satu owner dan CSS lama benar-benar yatim sebelum dihapus.
+2. Jalankan `npm run build` dan test suite yang sudah ada.
+3. Verifikasi `/`, `/home2`, dan `/products` pada lebar 320, 375, 390, 430, 768, 1024, dan 1440px; tidak boleh ada overflow, collision, atau content tertutup header.
+4. Desktop: buka popover Homepage dengan pointer dan keyboard, pindah item dengan Tab, tutup dengan Escape/outside click, lalu periksa focus return dan active state.
+5. Mobile: buka sheet, uji accordion, Tab/Shift+Tab, Escape, backdrop, navigasi, body scroll lock, serta focus return. Semua target interaktif minimum 44px.
+6. Scroll turun/naik pada seluruh route publik. Header harus hide/show tanpa flicker dan tetap terlihat ketika menu terbuka.
+7. Uji ID/EN, light/dark, cart kosong/berisi dua digit, serta `prefers-reduced-motion`; label tidak terpotong dan kontras/focus tetap jelas.
+8. Tambahkan fixture sementara Homepage 3 pada registry selama test lokal untuk memastikan desktop dan mobile memperoleh item yang sama, lalu jangan commit dead route tersebut.
 
 ## Stop conditions
 
-- Hentikan penghapusan `mega-menu-navbar.tsx` jika ditemukan import kedua di luar `Navbar.tsx`; migrasikan konsumen itu secara eksplisit terlebih dahulu.
-- Hentikan bila bisnis memang menginginkan `/dashboard` publik untuk buyer; tentukan nama/audience route tersebut sebelum memasukkannya ke hirarki buyer.
-- Jangan mengembalikan klaim COD, gratis ongkir, sertifikasi, hasil, atau omzet tanpa bukti tertulis dan aturan kapan klaim itu benar.
-
-## Design documentation
-
-Perbarui `memory/prd.md` dalam perubahan yang sama. `memory/Prompt md.md` tetap menjadi referensi visual notch; jangan mengubah prompt referensi untuk menyesuaikan implementasi.
+- Jangan membuat link Home 3/4 sebelum komponen dan route masing-masing siap.
+- Hentikan perubahan jika bisnis ingin dashboard buyer masuk navbar publik; audience dan keamanan route harus diputuskan lebih dulu.
+- Jangan mengejar pixel-perfect clone Velt tanpa screenshot desktop/mobile yang disetujui; plan ini mengadaptasi information architecture, bukan identitas visualnya.
+- Jangan menambah library navigation baru bila kebutuhan dapat dipenuhi oleh React, CSS, Motion, dan Lucide yang sudah ada.
