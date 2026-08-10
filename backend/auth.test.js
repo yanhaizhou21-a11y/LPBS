@@ -106,6 +106,7 @@ test('server recalculates product pricing instead of trusting client totals', ()
       city: 'Bogor', village: 'Babakan', district: 'Dramaga', province: 'Jawa Barat', postal: '16680', note: '',
     },
     cart: { items: [{ id: 'paket-benih-sayur', qty: 5 }] },
+    shippingType: 'JNE',
     shippingService: { code: 'REG', name: 'JNE REG', totalFee: 20_000, eta: '2–3 hari' },
     paymentMethod: 'QRIS',
     pricing: { grandTotal: 1 },
@@ -117,12 +118,25 @@ test('server recalculates product pricing instead of trusting client totals', ()
 test('server prices a mixed cart from its trusted catalog', () => {
   const order = buildOrder({
     orderNumber: 'BTS-20260806-DEF456',
-    buyer: { name: 'Pembeli', whatsapp: '081234567890', email: '', address: 'Jalan Mawar 1', city: 'Bogor', village: 'Babakan', district: 'Dramaga', province: 'Jawa Barat', postal: '16680', note: '' },
+    buyer: { name: 'Pembeli', whatsapp: '081234567890', note: '' },
     cart: { items: [{ id: 'benih-bayam-rosa', qty: 2 }, { id: 'padi-ipb-9g', qty: 1 }] },
+    shippingType: 'Ambil di kantor',
     shippingService: null,
     paymentMethod: 'BRI',
   });
   assert.equal(order.cart.totalQty, 3);
   assert.equal(order.pricing.grandTotal, 125_000);
   assert.deepEqual(order.cart.items.map(({ id, qty }) => ({ id, qty })), [{ id: 'benih-bayam-rosa', qty: 2 }, { id: 'padi-ipb-9g', qty: 1 }]);
+});
+
+test('shipping validation keeps pickup short and JNE complete', () => {
+  const base = {
+    orderNumber: 'BTS-20260806-GHI789',
+    buyer: { name: 'Pembeli', whatsapp: '081234567890' },
+    cart: { items: [{ id: 'paket-benih-sayur', qty: 1 }] },
+    paymentMethod: 'QRIS',
+  };
+  assert.throws(() => buildOrder({ ...base, shippingType: 'JNE', shippingService: null }), /Data pembeli belum lengkap|Layanan pengiriman tidak valid/);
+  assert.throws(() => buildOrder({ ...base, shippingType: 'Ambil di kantor', shippingService: { code: 'REG', totalFee: 10_000 } }), /Layanan pengiriman tidak valid/);
+  assert.throws(() => buildOrder({ ...base, shippingType: 'Kurir pribadi', shippingService: null }), /Metode pengiriman tidak valid/);
 });

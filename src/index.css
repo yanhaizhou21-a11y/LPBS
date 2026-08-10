@@ -1959,6 +1959,10 @@
     padding: 0 1rem;
   }
 
+  .checkout-progress-count {
+    display: none;
+  }
+
   .checkout-progress-item {
     display: flex;
     align-items: center;
@@ -2007,13 +2011,6 @@
     margin-bottom: 2rem;
   }
 
-  .checkout-step-heading span {
-    font-size: 0.75rem;
-    font-weight: 800;
-    color: var(--color-primary);
-    letter-spacing: 0.05em;
-  }
-
   .checkout-step-heading h2 {
     font-size: 1.75rem;
     margin: 0.25rem 0;
@@ -2029,10 +2026,6 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1.25rem;
-  }
-
-  .full-field {
-    grid-column: span 2;
   }
 
   .checkout-form label {
@@ -2058,6 +2051,55 @@
     outline: none;
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15);
+  }
+
+  .shipping-address-field,
+  .checkout-optional-note label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    color: var(--color-text-body);
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .shipping-address-field textarea,
+  .checkout-optional-note input {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-card);
+    color: var(--color-text-body);
+    font: inherit;
+    resize: vertical;
+  }
+
+  .shipping-address-field textarea:focus,
+  .checkout-optional-note input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15);
+  }
+
+  .checkout-optional-note {
+    margin-top: 1rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-light);
+  }
+
+  .checkout-optional-note summary {
+    min-height: 28px;
+    color: var(--color-primary);
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .checkout-optional-note[open] summary {
+    margin-bottom: 0.75rem;
   }
 
   .form-error {
@@ -2154,7 +2196,7 @@
 
   .automatic-jne-heading h3 {
     font-size: 1.35rem;
-    margin: 0.25rem 0;
+    margin: 1.25rem 0 0.25rem;
   }
 
   .destination-search-wrap {
@@ -2795,12 +2837,125 @@
       grid-template-columns: 1fr;
     }
 
-    .full-field {
-      grid-column: span 1;
+    .checkout-modal-backdrop {
+      padding: 0;
+    }
+
+    .checkout-page {
+      min-height: 100svh;
+      border-radius: 0;
+    }
+
+    .checkout-shell {
+      padding: 1rem;
+    }
+
+    .checkout-header {
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .checkout-brand-mark {
+      width: 26px;
+    }
+
+    .checkout-brand small {
+      display: none;
     }
 
     .checkout-progress {
-      overflow-x: auto;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding: 0;
+      overflow: visible;
+    }
+
+    .checkout-progress-line {
+      display: none;
+    }
+
+    .checkout-progress-item {
+      display: none;
+      gap: 0.35rem;
+    }
+
+    .checkout-progress-item.current {
+      display: flex;
+    }
+
+    .checkout-progress-count {
+      display: block;
+      color: var(--color-text-muted);
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .checkout-progress-item span {
+      width: 28px;
+      height: 28px;
+      font-size: 0.78rem;
+    }
+
+    .checkout-progress-item strong {
+      display: none;
+      max-width: 104px;
+      font-size: 0.75rem;
+      line-height: 1.15;
+    }
+
+    .checkout-progress-item.current strong {
+      display: block;
+    }
+
+    .checkout-step-heading {
+      margin-bottom: 1.25rem;
+    }
+
+    .checkout-step-heading h2 {
+      font-size: 1.45rem;
+    }
+
+    .checkout-layout {
+      gap: 1.5rem;
+    }
+
+    .automatic-jne-panel,
+    .active-payment-panel,
+    .checkout-summary-panel {
+      padding: 1rem;
+    }
+
+    .option-card,
+    .payment-method-card,
+    .service-card,
+    .selected-destination-card,
+    .payment-activation-panel,
+    .payment-session-header {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .payment-activation-panel {
+      gap: 1rem;
+    }
+
+    .start-payment-btn,
+    .checkout-primary-btn,
+    .checkout-secondary-btn {
+      width: 100%;
+      min-height: 48px;
+    }
+
+    .checkout-nav {
+      flex-direction: column-reverse;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+    }
+
+    .checkout-invoice-parties {
+      grid-template-columns: 1fr;
     }
 
     .shipment-weight-card {
@@ -3047,6 +3202,10 @@
     display: none;
   }
 
+  .mobile-cart-trigger {
+    display: none;
+  }
+
   .notch-spacer {
     height: 64px;
   }
@@ -3215,6 +3374,9 @@
   .dark .checkout-form input,
   .dark .checkout-form textarea,
   .dark .checkout-form select,
+  .dark .shipping-address-field textarea,
+  .dark .checkout-optional-note,
+  .dark .checkout-optional-note input,
   .dark .destination-search-input,
   .dark .destination-search-input input,
   .dark .jne-destination-results {
@@ -3366,6 +3528,14 @@
 
     .mobile-menu-trigger {
       display: inline-flex;
+    }
+
+    .mobile-cart-trigger {
+      display: inline-grid;
+      grid-column: 3;
+      justify-self: end;
+      min-width: 44px;
+      padding: 8px;
     }
 
     .notch-brand {

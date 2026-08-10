@@ -75,22 +75,23 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
           </header>
 
           <div className="checkout-progress">
-            <div className={`checkout-progress-item ${checkout.currentStep >= 1 ? 'active' : ''}`}>
+            <span className="checkout-progress-count">Langkah {Math.min(checkout.currentStep, 4)} dari 4</span>
+            <div className={`checkout-progress-item ${checkout.currentStep >= 1 ? 'active' : ''} ${checkout.currentStep === 1 ? 'current' : ''}`} aria-current={checkout.currentStep === 1 ? 'step' : undefined}>
               <span>1</span>
-              <strong>Data Pemesan</strong>
+              <strong>Kontak</strong>
             </div>
             <div className="checkout-progress-line"></div>
-            <div className={`checkout-progress-item ${checkout.currentStep >= 2 ? 'active' : ''}`}>
+            <div className={`checkout-progress-item ${checkout.currentStep >= 2 ? 'active' : ''} ${checkout.currentStep === 2 ? 'current' : ''}`} aria-current={checkout.currentStep === 2 ? 'step' : undefined}>
               <span>2</span>
               <strong>Pengiriman</strong>
             </div>
             <div className="checkout-progress-line"></div>
-            <div className={`checkout-progress-item ${checkout.currentStep >= 3 ? 'active' : ''}`}>
+            <div className={`checkout-progress-item ${checkout.currentStep >= 3 ? 'active' : ''} ${checkout.currentStep === 3 ? 'current' : ''}`} aria-current={checkout.currentStep === 3 ? 'step' : undefined}>
               <span>3</span>
               <strong>Pembayaran</strong>
             </div>
             <div className="checkout-progress-line"></div>
-            <div className={`checkout-progress-item ${checkout.currentStep >= 4 ? 'active' : ''}`}>
+            <div className={`checkout-progress-item ${checkout.currentStep >= 4 ? 'active' : ''} ${checkout.currentStep === 4 ? 'current' : ''}`} aria-current={checkout.currentStep === 4 ? 'step' : undefined}>
               <span>4</span>
               <strong>Detail Pembayaran</strong>
             </div>
@@ -102,9 +103,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               {checkout.currentStep === 1 && (
                 <div className="checkout-step active">
                   <div className="checkout-step-heading">
-                    <span>LANGKAH 1</span>
-                    <h2>Data Pemesan</h2>
-                    <p>Masukkan data pengiriman yang dapat dihubungi oleh tim Botani Seed.</p>
+                    <h2>Kontak pemesan</h2>
+                    <p>Kami memakai nomor ini untuk mengonfirmasi pesanan.</p>
                   </div>
 
                   <form className="checkout-form" onSubmit={e => e.preventDefault()}>
@@ -131,91 +131,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                         />
                       </label>
 
-                      <label className="full-field">
-                        <span>Email (Opsional)</span>
-                        <input
-                          type="email"
-                          value={checkout.buyerForm.email}
-                          onChange={e => checkout.updateBuyerForm('email', e.target.value)}
-                          placeholder="alamat@email.com"
-                        />
-                      </label>
-
-                      <label className="full-field">
-                        <span>Alamat Lengkap (Jalan / RT RW / No. Rumah) *</span>
-                        <textarea
-                          rows={3}
-                          required
-                          value={checkout.buyerForm.address}
-                          onChange={e => checkout.updateBuyerForm('address', e.target.value)}
-                          placeholder="Alamat domisili lengkap pengiriman"
-                        ></textarea>
-                      </label>
-
-                      <label>
-                        <span>Kota / Kabupaten *</span>
-                        <input
-                          type="text"
-                          required
-                          value={checkout.buyerForm.city}
-                          onChange={e => checkout.updateBuyerForm('city', e.target.value)}
-                          placeholder="Contoh: Kota Bogor"
-                        />
-                      </label>
-
-                      <label>
-                        <span>Kecamatan *</span>
-                        <input
-                          type="text"
-                          required
-                          value={checkout.buyerForm.district}
-                          onChange={e => checkout.updateBuyerForm('district', e.target.value)}
-                          placeholder="Contoh: Bogor Barat"
-                        />
-                      </label>
-
-                      <label>
-                        <span>Desa / Kelurahan *</span>
-                        <input
-                          type="text"
-                          required
-                          value={checkout.buyerForm.village}
-                          onChange={e => checkout.updateBuyerForm('village', e.target.value)}
-                          placeholder="Contoh: Margajaya"
-                        />
-                      </label>
-
-                      <label>
-                        <span>Provinsi *</span>
-                        <input
-                          type="text"
-                          required
-                          value={checkout.buyerForm.province}
-                          onChange={e => checkout.updateBuyerForm('province', e.target.value)}
-                          placeholder="Contoh: Jawa Barat"
-                        />
-                      </label>
-
-                      <label>
-                        <span>Kode Pos *</span>
-                        <input
-                          type="text"
-                          required
-                          value={checkout.buyerForm.postal}
-                          onChange={e => checkout.updateBuyerForm('postal', e.target.value)}
-                          placeholder="Contoh: 16116"
-                        />
-                      </label>
-
-                      <label className="full-field">
-                        <span>Catatan Pesanan (Opsional)</span>
-                        <input
-                          type="text"
-                          value={checkout.buyerForm.note}
-                          onChange={e => checkout.updateBuyerForm('note', e.target.value)}
-                          placeholder="Catatan khusus lokasi atau pengiriman"
-                        />
-                      </label>
                     </div>
 
                     {checkout.buyerFormError && (
@@ -239,7 +154,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                       className="checkout-primary-btn"
                       onClick={checkout.goToStep2}
                     >
-                      Lanjut ke Pengiriman
+                      Pilih pengiriman
                     </button>
                   </div>
                 </div>
@@ -249,12 +164,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               {checkout.currentStep === 2 && (
                 <div className="checkout-step active">
                   <div className="checkout-step-heading">
-                    <span>LANGKAH 2</span>
-                    <h2>Alamat dan Pengiriman</h2>
-                    <p>
-                      Cari tujuan JNE berdasarkan kelurahan, kecamatan, kota/kabupaten, atau kode pos.
-                      Ongkir akan dihitung otomatis dari tarif JNE resmi dari Bogor.
-                    </p>
+                    <h2>Pilih pengiriman</h2>
+                    <p>Pilih JNE untuk dikirim ke alamat Anda atau ambil langsung di kantor Botani Seed.</p>
                   </div>
 
                   <div className="shipping-options">
@@ -293,15 +204,24 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
                   {checkout.shippingType === 'JNE' && (
                     <div className="automatic-jne-panel">
+                      <label className="shipping-address-field">
+                        <span>Alamat jalan, RT/RW, dan nomor rumah *</span>
+                        <textarea
+                          rows={2}
+                          required
+                          value={checkout.buyerForm.address}
+                          onChange={e => checkout.updateBuyerForm('address', e.target.value)}
+                          placeholder="Contoh: Jl. Raya Dramaga No. 12, RT 02/RW 04"
+                        />
+                      </label>
                       <div className="automatic-jne-heading">
-                        <span>DATA TARIF JNE RESMI DARI BOGOR</span>
-                        <h3>Pilih Tujuan Pengiriman JNE</h3>
-                        <p>Ketik minimal tiga karakter. Gunakan nama kelurahan, kecamatan, atau kode pos.</p>
+                        <h3>Cari kelurahan atau kode pos</h3>
+                        <p>Pilih hasil yang sesuai agar alamat dan ongkir dihitung otomatis.</p>
                       </div>
 
                       {!checkout.selectedDestination ? (
                         <div className="destination-search-wrap">
-                          <label htmlFor="jneDestinationSearch">Cari Tujuan JNE:</label>
+                          <label htmlFor="jneDestinationSearch">Kelurahan atau kode pos</label>
                           <div className="destination-search-input">
                             <Search size={18} aria-hidden="true" />
                             <input
@@ -448,6 +368,19 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     </div>
                   )}
 
+                  <details className="checkout-optional-note" open={Boolean(checkout.buyerForm.note)}>
+                    <summary>Tambah catatan (opsional)</summary>
+                    <label>
+                      <span>Catatan untuk pesanan</span>
+                      <input
+                        type="text"
+                        value={checkout.buyerForm.note}
+                        onChange={e => checkout.updateBuyerForm('note', e.target.value)}
+                        placeholder="Contoh: hubungi sebelum pengiriman"
+                      />
+                    </label>
+                  </details>
+
                   {checkout.shippingValidationError && (
                     <div className="shipping-validation-message" role="alert">{checkout.shippingValidationError}</div>
                   )}
@@ -465,7 +398,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                       className="checkout-primary-btn"
                       onClick={checkout.goToStep3}
                     >
-                      Lanjut ke Pembayaran
+                      Pilih pembayaran
                     </button>
                   </div>
                 </div>
@@ -475,7 +408,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               {checkout.currentStep === 3 && (
                 <div className="checkout-step active">
                   <div className="checkout-step-heading">
-                    <span>LANGKAH 3</span>
                     <h2>Pilih Metode Pembayaran</h2>
                     <p>
                       Pilih QRIS atau Rekening Bank yang akan digunakan. Detail pembayaran dan countdown 1 jam akan tampil pada langkah berikutnya.
@@ -559,7 +491,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                       className="start-payment-btn"
                       onClick={checkout.startPaymentSession}
                     >
-                      Tinjau Invoice Pembayaran
+                      Lihat detail pembayaran
                     </button>
                   </div>
                   <div className="checkout-nav">
@@ -578,7 +510,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               {checkout.currentStep === 4 && checkout.paymentSession && (
                 <div className="checkout-step active">
                   <div className="checkout-step-heading">
-                    <span>LANGKAH 4</span>
                     <h2>Detail Pembayaran</h2>
                     <p>
                       Periksa seluruh data pada invoice, lakukan pembayaran, lalu konfirmasi untuk menyimpan pesanan dan melanjutkan ke WhatsApp.
@@ -602,7 +533,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                     <section className="checkout-invoice" aria-labelledby="invoice-title">
                       <div className="checkout-invoice-heading"><FileText size={21} aria-hidden="true" /><div><span>INVOICE PEMESANAN</span><h3 id="invoice-title">{checkout.paymentSession.orderNumber}</h3></div></div>
                       <div className="checkout-invoice-parties">
-                        <div><span>DITAGIHKAN KEPADA</span><strong>{checkout.buyerForm.name}</strong><p>{checkout.buyerForm.whatsapp}{checkout.buyerForm.email ? ` · ${checkout.buyerForm.email}` : ''}</p><p>{checkout.buyerForm.address}, {checkout.buyerForm.village}, {checkout.buyerForm.district}, {checkout.buyerForm.city}, {checkout.buyerForm.province} {checkout.buyerForm.postal}</p></div>
+                        <div>
+                          <span>DITAGIHKAN KEPADA</span>
+                          <strong>{checkout.resolvedBuyer.name}</strong>
+                          <p>{checkout.resolvedBuyer.whatsapp}</p>
+                          <p>{checkout.shippingType === 'JNE'
+                            ? `${checkout.resolvedBuyer.address}, ${checkout.resolvedBuyer.village}, ${checkout.resolvedBuyer.district}, ${checkout.resolvedBuyer.city}, ${checkout.resolvedBuyer.province} ${checkout.resolvedBuyer.postal}`
+                            : 'Ambil di Kantor Botani Seed'}</p>
+                        </div>
                         <div><span>PENGIRIMAN & PEMBAYARAN</span><strong>{checkout.shippingType === 'JNE' ? checkout.selectedService?.name : 'Ambil di Kantor Botani Seed'}</strong><p>{checkout.shippingType === 'JNE' && checkout.selectedDestination ? `${checkout.selectedDestination.village}, ${checkout.selectedDestination.district}` : 'Tanpa ongkos kirim'}</p><p>Metode: {checkout.paymentMethod}</p></div>
                       </div>
                       <div className="checkout-invoice-items">{items.map((item) => <div key={item.id}><span><strong>{item.name}</strong><small>{item.qty} × Rp {item.price.toLocaleString('id-ID')}</small></span><strong>Rp {(item.qty * item.price).toLocaleString('id-ID')}</strong></div>)}</div>
@@ -705,7 +643,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                           disabled={!checkout.isPaymentConfirmedChecked || checkout.isSavingOrder}
                           onClick={checkout.confirmPaidAndOpenWhatsapp}
                         >
-                          {checkout.isSavingOrder ? 'Menyimpan Invoice…' : 'Konfirmasi & Lanjut ke WhatsApp'}
+                          {checkout.isSavingOrder ? 'Menyimpan invoice…' : 'Konfirmasi via WhatsApp'}
                         </button>
 
                         {checkout.orderSaveError && <p className="form-error" role="alert">{checkout.orderSaveError}</p>}

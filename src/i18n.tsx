@@ -5,6 +5,7 @@ const messages = {
   id: {
     'nav.home': 'Beranda', 'nav.products': 'Produk', 'nav.opportunity': 'Peluang', 'nav.stories': 'Cerita petani', 'nav.about': 'Tentang kami',
     'nav.cart': 'Keranjang', 'nav.order': 'Pesan', 'nav.orderNow': 'Pesan sekarang', 'nav.openMenu': 'Buka menu', 'nav.closeMenu': 'Tutup menu',
+    'nav.primary': 'Navigasi utama', 'nav.secondary': 'Navigasi dan aksi pesanan', 'nav.mobile': 'Menu navigasi mobile',
     'footer.tagline': 'Benih baik, tumbuh bersama.', 'footer.description': 'Benih tanaman dan sayuran bersertifikat untuk pekebun rumahan, komunitas, dan pelaku usaha tani Indonesia.',
     'footer.trust': 'Checkout tanpa akun. Data digunakan untuk memproses pesanan.', 'footer.explore': 'Jelajahi', 'footer.business': 'Peluang usaha',
     'footer.company': 'Tentang perusahaan', 'footer.promo': 'Promo 5 paket', 'footer.faq': 'Pertanyaan umum', 'footer.privacy': 'Kebijakan privasi',
@@ -28,6 +29,7 @@ const messages = {
   en: {
     'nav.home': 'Home', 'nav.products': 'Products', 'nav.opportunity': 'Opportunity', 'nav.stories': 'Farmer stories', 'nav.about': 'About us',
     'nav.cart': 'Cart', 'nav.order': 'Order', 'nav.orderNow': 'Order now', 'nav.openMenu': 'Open menu', 'nav.closeMenu': 'Close menu',
+    'nav.primary': 'Primary navigation', 'nav.secondary': 'Navigation and order actions', 'nav.mobile': 'Mobile navigation menu',
     'footer.tagline': 'Better seeds, growing together.', 'footer.description': 'Certified plant and vegetable seeds for home growers, communities, and farming businesses.',
     'footer.trust': 'No account required at checkout. Your data is used to process orders.', 'footer.explore': 'Explore', 'footer.business': 'Business opportunity',
     'footer.company': 'About the company', 'footer.promo': '5-pack promotion', 'footer.faq': 'Frequently asked questions', 'footer.privacy': 'Privacy policy',

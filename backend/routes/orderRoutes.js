@@ -7,6 +7,7 @@ import { localOrderStore } from '../data/localOrderStore.js';
 const router = Router();
 const ORDER_STATUSES = new Set(['PENDING_PAYMENT', 'PAYMENT_REPORTED', 'PAID', 'PROCESSED', 'SHIPPED', 'COMPLETED', 'DONE']);
 const PAYMENT_METHODS = new Set(['QRIS', 'BSI', 'BNI', 'BRI']);
+const SHIPPING_TYPES = new Set(['JNE', 'Ambil di kantor']);
 const text = (value, max = 160) => typeof value === 'string' ? value.trim().slice(0, max) : '';
 const allowLocalStore = process.env.NODE_ENV !== 'production';
 const ordersCollection = () => {
@@ -20,16 +21,22 @@ const ordersCollection = () => {
 export function buildOrder(body, catalogProducts = []) {
   const rawItems = body?.cart?.items;
   const buyer = body?.buyer || {};
+  const shippingType = text(body?.shippingType, 32);
   const shippingFee = Number(body?.shippingService?.totalFee || 0);
-  const requiredBuyerFields = ['name', 'whatsapp', 'address', 'city', 'village', 'district', 'province', 'postal'];
+  const requiredBuyerFields = shippingType === 'JNE'
+    ? ['name', 'whatsapp', 'address', 'city', 'village', 'district', 'province', 'postal']
+    : ['name', 'whatsapp'];
 
   if (!/^BTS-\d{8}-[A-Z0-9]{6}$/.test(text(body?.orderNumber, 32))) throw new Error('Nomor pesanan tidak valid.');
   if (!Array.isArray(rawItems) || rawItems.length < 1 || rawItems.length > 50) throw new Error('Isi keranjang tidak valid.');
+  if (!SHIPPING_TYPES.has(shippingType)) throw new Error('Metode pengiriman tidak valid.');
   if (!requiredBuyerFields.every((field) => text(buyer[field]))) throw new Error('Data pembeli belum lengkap.');
   if (!/^\+?\d{9,15}$/.test(text(buyer.whatsapp).replace(/[\s-]/g, ''))) throw new Error('Nomor WhatsApp tidak valid.');
-  if (!/^\d{5}$/.test(text(buyer.postal))) throw new Error('Kode pos tidak valid.');
+  if (shippingType === 'JNE' && !/^\d{5}$/.test(text(buyer.postal))) throw new Error('Kode pos tidak valid.');
   if (buyer.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text(buyer.email))) throw new Error('Email tidak valid.');
   if (!PAYMENT_METHODS.has(body?.paymentMethod)) throw new Error('Metode pembayaran tidak valid.');
+  if (shippingType === 'JNE' && !body?.shippingService) throw new Error('Layanan pengiriman tidak valid.');
+  if (shippingType === 'Ambil di kantor' && body?.shippingService) throw new Error('Layanan pengiriman tidak valid.');
   if (!Number.isFinite(shippingFee) || shippingFee < 0 || shippingFee > 5_000_000) throw new Error('Ongkos kirim tidak valid.');
 
   const catalog = new Map([...DEFAULT_PRODUCTS, MAIN_PROMO_PRODUCT, ...catalogProducts].map((product) => [product.slug, product]));
@@ -62,6 +69,7 @@ export function buildOrder(body, catalogProducts = []) {
       district: text(buyer.district, 100), province: text(buyer.province, 100), postal: text(buyer.postal, 5), note: text(buyer.note, 300),
     },
     cart: { items, totalQty },
+    shippingType,
     shippingService: body.shippingService ? {
       code: text(body.shippingService.code, 8), name: text(body.shippingService.name, 80),
       totalFee: shippingTotal, eta: text(body.shippingService.eta, 40),

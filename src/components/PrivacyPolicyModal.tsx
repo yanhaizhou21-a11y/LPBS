@@ -53,7 +53,6 @@ export function PrivacyPolicyModal({ isOpen, onClose }: PrivacyPolicyModalProps)
             <ul className="list-disc list-inside mt-1 space-y-0.5 text-slate-400 pl-2">
               <li>Nama lengkap pembeli</li>
               <li>Nomor WhatsApp aktif (untuk konfirmasi pengiriman pesanan)</li>
-              <li>Alamat email (opsional)</li>
               <li>Alamat lengkap tujuan (Jalan, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten, Kode Pos)</li>
               <li>Pilihan kurir dan catatan pesanan</li>
             </ul>

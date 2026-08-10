@@ -12,7 +12,7 @@ import {
 const ADMIN_WHATSAPP_NUMBER = '6281299450708';
 const BUYER_STORAGE_KEY = 'botani_buyer_session';
 const EMPTY_BUYER: BuyerForm = {
-  name: '', whatsapp: '', email: '', address: '', city: '', village: '', district: '', province: '', postal: '', note: ''
+  name: '', whatsapp: '', address: '', city: '', village: '', district: '', province: '', postal: '', note: ''
 };
 
 export function useCheckout(items: CartItem[], totalQty: number, subtotalProduct: number) {
@@ -41,6 +41,20 @@ export function useCheckout(items: CartItem[], totalQty: number, subtotalProduct
   const [selectedDestination, setSelectedDestination] = useState<JNEDestination | null>(null);
   const [selectedService, setSelectedService] = useState<ShippingServiceOption | null>(null);
   const [shippingValidationError, setShippingValidationError] = useState<string | null>(null);
+
+  const resolvedBuyer = useMemo<BuyerForm>(() => shippingType === 'JNE' && selectedDestination
+    ? {
+        ...buyerForm,
+        city: selectedDestination.regencyName,
+        village: selectedDestination.village,
+        district: selectedDestination.district,
+        province: selectedDestination.province,
+        postal: selectedDestination.postalCode,
+      }
+    : {
+        ...buyerForm,
+        address: '', city: '', village: '', district: '', province: '', postal: '',
+      }, [buyerForm, selectedDestination, shippingType]);
 
   // Weight Calculation
   // 1-10 pcs = 1kg, 11-20 pcs = 2kg, etc.
@@ -193,32 +207,16 @@ export function useCheckout(items: CartItem[], totalQty: number, subtotalProduct
   const updateBuyerForm = (field: keyof BuyerForm, value: string) => {
     setBuyerForm(prev => ({ ...prev, [field]: value }));
     setBuyerFormError(null);
+    setShippingValidationError(null);
   };
 
   const validateStep1 = (): boolean => {
-    if (
-      !buyerForm.name.trim() ||
-      !buyerForm.whatsapp.trim() ||
-      !buyerForm.address.trim() ||
-      !buyerForm.city.trim() ||
-      !buyerForm.village.trim() ||
-      !buyerForm.district.trim() ||
-      !buyerForm.province.trim() ||
-      !buyerForm.postal.trim()
-    ) {
-      setBuyerFormError('Lengkapi seluruh data yang wajib diisi (*).');
+    if (!buyerForm.name.trim() || !buyerForm.whatsapp.trim()) {
+      setBuyerFormError('Isi nama dan nomor WhatsApp untuk melanjutkan.');
       return false;
     }
     if (!/^\+?\d{9,15}$/.test(buyerForm.whatsapp.replace(/[\s-]/g, ''))) {
       setBuyerFormError('Masukkan nomor WhatsApp aktif, 9–15 digit.');
-      return false;
-    }
-    if (!/^\d{5}$/.test(buyerForm.postal)) {
-      setBuyerFormError('Kode pos harus terdiri dari 5 digit.');
-      return false;
-    }
-    if (buyerForm.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyerForm.email)) {
-      setBuyerFormError('Format email belum benar.');
       return false;
     }
     return true;
@@ -232,6 +230,10 @@ export function useCheckout(items: CartItem[], totalQty: number, subtotalProduct
 
   const validateStep2 = (): boolean => {
     if (shippingType === 'JNE') {
+      if (!buyerForm.address.trim()) {
+        setShippingValidationError('Isi alamat jalan, RT/RW, dan nomor rumah.');
+        return false;
+      }
       if (!selectedDestination || !selectedService) {
         setShippingValidationError('Pilih tujuan dan layanan JNE terlebih dahulu.');
         return false;
@@ -295,15 +297,14 @@ Saya ingin mengonfirmasi pembayaran pesanan:
 
 *DETAIL PESANAN*
 • Nomor pesanan: ${paymentSession.orderNumber}
-• Nama: ${buyerForm.name}
-• WhatsApp: ${buyerForm.whatsapp}
-${buyerForm.email ? `• Email: ${buyerForm.email}\n` : ''}• Alamat: ${buyerForm.address}
-• Kelurahan/Desa: ${buyerForm.village}
-• Kecamatan: ${buyerForm.district}
-• Kota/Kabupaten: ${buyerForm.city}
-• Provinsi: ${buyerForm.province}
-• Kode pos: ${buyerForm.postal}
-${buyerForm.note ? `• Catatan: ${buyerForm.note}\n` : ''}
+• Nama: ${resolvedBuyer.name}
+• WhatsApp: ${resolvedBuyer.whatsapp}
+${shippingType === 'JNE' ? `• Alamat: ${resolvedBuyer.address}
+• Kelurahan/Desa: ${resolvedBuyer.village}
+• Kecamatan: ${resolvedBuyer.district}
+• Kota/Kabupaten: ${resolvedBuyer.city}
+• Provinsi: ${resolvedBuyer.province}
+• Kode pos: ${resolvedBuyer.postal}\n` : '• Pengambilan: Kantor Botani Seed\n'}${resolvedBuyer.note ? `• Catatan: ${resolvedBuyer.note}\n` : ''}
 *PRODUK*
 ${productLines}
 
@@ -329,8 +330,9 @@ Bukti transfer telah saya siapkan. Mohon pesanan saya segera diproses. Terima ka
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           orderNumber: paymentSession.orderNumber,
-          buyer: buyerForm,
+          buyer: resolvedBuyer,
           cart: { items: items.map(({ id, qty }) => ({ id, qty })) },
+          shippingType,
           shippingService: shippingType === 'JNE' ? selectedService : null,
           paymentMethod,
         }),
@@ -357,6 +359,7 @@ Bukti transfer telah saya siapkan. Mohon pesanan saya segera diproses. Terima ka
     currentStep,
     setCurrentStep,
     buyerForm,
+    resolvedBuyer,
     updateBuyerForm,
     buyerFormError,
     goToStep2,

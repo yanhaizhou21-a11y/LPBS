@@ -10,7 +10,6 @@ export interface CartItem {
 export interface BuyerForm {
   name: string;
   whatsapp: string;
-  email: string;
   address: string;
   city: string;
   village: string;
