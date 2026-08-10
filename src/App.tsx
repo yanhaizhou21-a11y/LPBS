@@ -17,15 +17,21 @@ import { BotaniDashboard } from './components/BotaniDashboard';
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { CookieConsentBanner } from './components/CookieConsentBanner';
 import { ProductsPage } from './components/ProductsPage';
+import { KendalaSection } from './components/KendalaSection';
+import { SolusiSection } from './components/SolusiSection';
+import { PaketIsiSection } from './components/PaketIsiSection';
+import { TestimonialSection } from './components/TestimonialSection';
+import { BottomCTASection } from './components/BottomCTASection';
 
 const CheckoutModal = lazy(() => import('./components/CheckoutModal').then((module) => ({ default: module.CheckoutModal })));
-type View = 'landing' | 'products' | 'admin-login' | 'admin-dashboard' | 'dashboard';
+type View = 'landing' | 'landing2' | 'products' | 'admin-login' | 'admin-dashboard' | 'dashboard';
 
 function viewFromPath(): View {
   if (window.location.pathname === '/dashboard') return 'dashboard';
   if (window.location.pathname === '/admin/dashboard') return 'admin-dashboard';
   if (window.location.pathname === '/secret-admin-login') return 'admin-login';
   if (window.location.pathname === '/products') return 'products';
+  if (window.location.pathname === '/home2') return 'landing2';
   return 'landing';
 }
 
@@ -35,7 +41,7 @@ export function App() {
   const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(window.location.pathname === '/kebijakan-privasi');
   const [view, setView] = useState<View>(viewFromPath);
   const [adminName, setAdminName] = useState('Admin PT Botani Seed');
-  const [authChecked, setAuthChecked] = useState(['landing', 'products', 'dashboard'].includes(viewFromPath()));
+  const [authChecked, setAuthChecked] = useState(['landing', 'landing2', 'products', 'dashboard'].includes(viewFromPath()));
   const [accessDenied, setAccessDenied] = useState(window.location.pathname === '/admin/dashboard');
 
   const navigate = (nextView: View, path: string, replace = false) => {
@@ -53,7 +59,7 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    if (view === 'landing' || view === 'products' || view === 'dashboard') return;
+    if (view === 'landing' || view === 'landing2' || view === 'products' || view === 'dashboard') return;
     let active = true;
     const requestedDashboard = window.location.pathname === '/admin/dashboard';
     fetch('/api/auth/session')
@@ -111,9 +117,23 @@ export function App() {
   return (
     <div className="app-root">
       <Navbar onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
-      {view === 'products' ? <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} /> : (
+      {view === 'landing2' ? (
         <main>
-          <HeroSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          <KendalaSection />
+          <SolusiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          <PaketIsiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          <CompanyProfile />
+          <TestimonialSection />
+          <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          <BottomCTASection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+        </main>
+      ) : view === 'products' ? (
+        <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
+      ) : (
+        <main>
+          <HeroSection variant={1} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
           <PeluangSection /><StorySection /><CompanyProfile />
           <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
           <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => setIsCheckoutOpen(true)} />

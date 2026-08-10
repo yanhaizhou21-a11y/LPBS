@@ -15,9 +15,16 @@ export function Navbar({ onOpenCheckout }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [visible, setVisible] = useState(true);
   const lastScrollY = useRef(0);
-  const links = [
+  const isHome2 = typeof window !== 'undefined' && window.location.pathname === '/home2';
+  const links = isHome2 ? [
+    { label: t('nav.home'), href: '/home2#top', icon: Home },
+    { label: 'Kendala', href: '/home2#kendala', icon: Sprout },
+    { label: 'Solusi', href: '/home2#solusi', icon: BookOpenText },
+    { label: t('nav.about'), href: '/home2#profil', icon: Building2 },
+  ] : [
     { label: t('nav.home'), href: '/', icon: Home },
-    { label: t('nav.opportunity'), href: '/#peluang', icon: Sprout }, { label: t('nav.stories'), href: '/#kisah', icon: BookOpenText },
+    { label: t('nav.opportunity'), href: '/#peluang', icon: Sprout },
+    { label: t('nav.stories'), href: '/#kisah', icon: BookOpenText },
     { label: t('nav.about'), href: '/#profil', icon: Building2 },
   ];
 
