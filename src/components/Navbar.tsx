@@ -8,7 +8,7 @@ export interface NavbarProps {
   onOpenCheckout: () => void;
 }
 
-export function Navbar({ onOpenCheckout }: NavbarProps) {
+export function Navbar({ cartQty, onOpenCheckout }: NavbarProps) {
   const { t } = useLanguage();
 
   return (
@@ -16,6 +16,7 @@ export function Navbar({ onOpenCheckout }: NavbarProps) {
       brandName="Botani Seed"
       brandHref="/"
       onOpenCheckout={onOpenCheckout}
+      cartQty={cartQty}
       ctaLabel={t('nav.order') || "Pesan Sekarang"}
     />
   );

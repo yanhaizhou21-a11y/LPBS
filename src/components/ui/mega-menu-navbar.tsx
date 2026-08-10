@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   BookOpen,
   Briefcase,
-  Building2,
   ChevronDown,
   FileText,
   GraduationCap,
+  Home,
   Layers,
   Leaf,
   Menu,
@@ -53,19 +53,19 @@ export interface MegaMenuNavbarProps
   useCases?: MegaMenuItem[];
   resourceGroups?: MegaMenuResourceGroup[];
   onOpenCheckout?: () => void;
+  cartQty?: number;
   ctaHref?: string;
   ctaLabel?: string;
 }
 
 type DesktopMenu = "pages" | "features" | "use-cases" | "resources" | null;
-type MobileSection = Exclude<DesktopMenu, null>;
 
 const DEFAULT_PAGES: MegaMenuItem[] = [
   {
     title: "Home 1: Peluang Usaha",
     description: "Kisah sukses petani muda Diyah & potensi omzet bisnis rumahan.",
     href: "/",
-    icon: Rocket,
+    icon: Home,
     badge: "Utama",
   },
   {
@@ -86,7 +86,7 @@ const DEFAULT_PAGES: MegaMenuItem[] = [
     description: "Portal pengadaan, manajemen stok, & kemitraan resmi.",
     href: "/dashboard",
     icon: Layers,
-    badge: "Portal B2B",
+    badge: "B2B",
   },
 ];
 
@@ -147,13 +147,13 @@ const DEFAULT_USE_CASES: MegaMenuItem[] = [
     title: "Budidaya Hidroponik & Polybag",
     description: "Solusi hemat lahan dengan rotasi panen cepat 25-30 hari.",
     href: "/home2#solusi",
-    icon: Building2,
+    icon: Sprout,
   },
 ];
 
 const DEFAULT_RESOURCE_GROUPS: MegaMenuResourceGroup[] = [
   {
-    title: "Eksplorasi",
+    title: "Eksplorasi Cepat",
     links: [
       { title: "Katalog Benih Sayuran", href: "/products", icon: Package },
       { title: "Paket Promo Hemat 20%", href: "/#promo", icon: Sparkles },
@@ -161,7 +161,7 @@ const DEFAULT_RESOURCE_GROUPS: MegaMenuResourceGroup[] = [
     ],
   },
   {
-    title: "Informasi & Bantuan",
+    title: "Informasi & Layanan",
     links: [
       { title: "Tentang Botani Seed (IPB)", href: "/#profil", icon: GraduationCap },
       { title: "Tanya Jawab (FAQ)", href: "/#faq", icon: FileText },
@@ -185,7 +185,7 @@ function Brand({
     <a
       href={brandHref}
       onClick={onNavigate}
-      className="relative z-10 flex shrink-0 items-center gap-2.5 text-base font-extrabold tracking-tight text-zinc-900 transition-opacity hover:opacity-90 dark:text-zinc-50"
+      className="relative z-10 flex shrink-0 items-center gap-2.5 text-base font-black tracking-tight text-zinc-900 transition-opacity hover:opacity-90 dark:text-zinc-50"
     >
       {logo ?? (
         <img
@@ -195,7 +195,7 @@ function Brand({
         />
       )}
       <div className="flex flex-col">
-        <span className="leading-tight text-emerald-800 dark:text-emerald-400 font-black">
+        <span className="leading-tight text-emerald-800 dark:text-emerald-400 font-extrabold text-sm sm:text-base">
           {brandName}
         </span>
         <span className="text-[10px] font-semibold tracking-wider uppercase text-zinc-500 dark:text-zinc-400 leading-none">
@@ -244,52 +244,6 @@ function MenuTrigger({
   );
 }
 
-function FeatureGrid({ items }: { items: MegaMenuItem[] }) {
-  return (
-    <div className="grid grid-cols-2 gap-2">
-      {items.map((item) => {
-        const Icon = item.icon;
-
-        return (
-          <a
-            key={item.title}
-            href={item.href}
-            className={cn(
-              "group/item flex items-start gap-3 rounded-2xl p-3 transition-all",
-              "hover:bg-emerald-50/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400",
-              "dark:hover:bg-emerald-950/30 dark:focus-visible:ring-emerald-700",
-            )}
-          >
-            {Icon ? (
-              <span className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-zinc-200/90 bg-white transition-colors group-hover/item:border-emerald-300 group-hover/item:bg-emerald-50 dark:border-zinc-800 dark:bg-zinc-900 dark:group-hover/item:bg-emerald-950/50">
-                <Icon className={cn("size-4.5", item.iconClassName ?? "text-emerald-700 dark:text-emerald-400")} />
-              </span>
-            ) : null}
-
-            <span className="min-w-0">
-              <span className="flex items-center gap-2">
-                <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover/item:text-emerald-700 dark:group-hover/item:text-emerald-400">
-                  {item.title}
-                </span>
-                {item.badge ? (
-                  <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
-                    {item.badge}
-                  </span>
-                ) : null}
-              </span>
-              {item.description ? (
-                <span className="mt-1 block text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-                  {item.description}
-                </span>
-              ) : null}
-            </span>
-          </a>
-        );
-      })}
-    </div>
-  );
-}
-
 function DesktopDropdown({
   id,
   open,
@@ -327,6 +281,7 @@ export function MegaMenuNavbar({
   useCases = DEFAULT_USE_CASES,
   resourceGroups = DEFAULT_RESOURCE_GROUPS,
   onOpenCheckout,
+  cartQty,
   ctaHref = "/#promo",
   ctaLabel = "Pesan Sekarang",
   className,
@@ -334,9 +289,15 @@ export function MegaMenuNavbar({
 }: MegaMenuNavbarProps) {
   const [openMenu, setOpenMenu] = React.useState<DesktopMenu>(null);
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [mobileSection, setMobileSection] = React.useState<MobileSection | null>("pages");
+  const [activePath, setActivePath] = React.useState("/");
   const navRef = React.useRef<HTMLElement>(null);
-  const closeButtonRef = React.useRef<HTMLButtonElement>(null);
+
+  React.useEffect(() => {
+    setActivePath(window.location.pathname);
+    const updatePath = () => setActivePath(window.location.pathname);
+    window.addEventListener("popstate", updatePath);
+    return () => window.removeEventListener("popstate", updatePath);
+  }, []);
 
   React.useEffect(() => {
     const onPointerDown = (event: PointerEvent) => {
@@ -346,9 +307,10 @@ export function MegaMenuNavbar({
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Escape") return;
-      setOpenMenu(null);
-      setMobileOpen(false);
+      if (event.key === "Escape") {
+        setOpenMenu(null);
+        setMobileOpen(false);
+      }
     };
 
     document.addEventListener("pointerdown", onPointerDown);
@@ -361,28 +323,22 @@ export function MegaMenuNavbar({
   }, []);
 
   React.useEffect(() => {
-    if (!mobileOpen) return;
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    closeButtonRef.current?.focus();
-
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
     return () => {
-      document.body.style.overflow = previousOverflow;
+      document.body.style.overflow = "";
     };
   }, [mobileOpen]);
 
   const closeMobile = () => {
     setMobileOpen(false);
-    setMobileSection(null);
   };
 
   const toggleDesktopMenu = (menu: Exclude<DesktopMenu, null>) => {
     setOpenMenu((current) => (current === menu ? null : menu));
-  };
-
-  const toggleMobileSection = (section: MobileSection) => {
-    setMobileSection((current) => (current === section ? null : section));
   };
 
   return (
@@ -400,13 +356,14 @@ export function MegaMenuNavbar({
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex h-16 items-center justify-between">
+          {/* BRAND LOGO */}
           <div className="flex items-center gap-6">
             <Brand brandName={brandName} brandHref={brandHref} logo={logo} />
 
             {/* DESKTOP NAVIGATION */}
             <nav aria-label="Primary navigation" className="hidden items-center lg:flex">
               <ul className="flex items-center gap-1">
-                {/* 1. HALAMAN / PAGES PARENT DROPDOWN */}
+                {/* 1. HALAMAN / PAGES */}
                 <li className="relative" onMouseEnter={() => setOpenMenu("pages")}>
                   <MenuTrigger
                     id="pages-mega-menu"
@@ -418,7 +375,7 @@ export function MegaMenuNavbar({
                   <DesktopDropdown id="pages-mega-menu" open={openMenu === "pages"} className="w-[430px]">
                     <div className="rounded-3xl border border-zinc-200/90 bg-white p-3.5 shadow-2xl dark:border-zinc-800 dark:bg-zinc-950">
                       <div className="mb-2 px-3 pt-1 text-[11px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
-                        Pilih Rute Halaman
+                        Pilih Halaman
                       </div>
                       <div className="flex flex-col gap-1">
                         {pages.map((item) => {
@@ -459,7 +416,7 @@ export function MegaMenuNavbar({
                   </DesktopDropdown>
                 </li>
 
-                {/* 2. PRODUK & PAKET (FEATURES) */}
+                {/* 2. PRODUK & PAKET */}
                 <li className="relative" onMouseEnter={() => setOpenMenu("features")}>
                   <MenuTrigger
                     id="features-mega-menu"
@@ -470,7 +427,41 @@ export function MegaMenuNavbar({
                   />
                   <DesktopDropdown id="features-mega-menu" open={openMenu === "features"} className="w-[660px]">
                     <div className="rounded-3xl border border-zinc-200/90 bg-white p-4 shadow-2xl dark:border-zinc-800 dark:bg-zinc-950">
-                      <FeatureGrid items={features} />
+                      <div className="grid grid-cols-2 gap-2">
+                        {features.map((item) => {
+                          const Icon = item.icon;
+                          return (
+                            <a
+                              key={item.title}
+                              href={item.href}
+                              className="group/item flex items-start gap-3 rounded-2xl p-3 transition-all hover:bg-emerald-50/80 dark:hover:bg-emerald-950/30"
+                            >
+                              {Icon && (
+                                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-zinc-200/90 bg-white transition-colors group-hover/item:border-emerald-300 group-hover/item:bg-emerald-50 dark:border-zinc-800 dark:bg-zinc-900 dark:group-hover/item:bg-emerald-950/50">
+                                  <Icon className={cn("size-4.5", item.iconClassName ?? "text-emerald-700 dark:text-emerald-400")} />
+                                </span>
+                              )}
+                              <span className="min-w-0">
+                                <span className="flex items-center gap-2">
+                                  <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover/item:text-emerald-700 dark:group-hover/item:text-emerald-400">
+                                    {item.title}
+                                  </span>
+                                  {item.badge && (
+                                    <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300">
+                                      {item.badge}
+                                    </span>
+                                  )}
+                                </span>
+                                {item.description && (
+                                  <span className="mt-1 block text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+                                    {item.description}
+                                  </span>
+                                )}
+                              </span>
+                            </a>
+                          );
+                        })}
+                      </div>
                       <div className="mt-3.5 flex items-center justify-between border-t border-zinc-100 px-3 pt-3.5 dark:border-zinc-800">
                         <span className="text-xs text-zinc-500 dark:text-zinc-400">
                           Butuh pasokan benih dalam jumlah besar?
@@ -487,7 +478,7 @@ export function MegaMenuNavbar({
                   </DesktopDropdown>
                 </li>
 
-                {/* 3. PELUANG & SOLUSI (USE CASES) */}
+                {/* 3. PELUANG & SOLUSI */}
                 <li className="relative" onMouseEnter={() => setOpenMenu("use-cases")}>
                   <MenuTrigger
                     id="use-cases-mega-menu"
@@ -501,33 +492,31 @@ export function MegaMenuNavbar({
                       <div className="flex flex-col gap-1">
                         {useCases.map((item) => {
                           const Icon = item.icon;
-
                           return (
                             <a
                               key={item.title}
                               href={item.href}
                               className="group flex items-start gap-3 rounded-2xl p-3 transition-colors hover:bg-emerald-50/80 dark:hover:bg-emerald-950/30"
                             >
-                              {Icon ? (
+                              {Icon && (
                                 <span className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-zinc-200/90 bg-white dark:border-zinc-800 dark:bg-zinc-900">
                                   <Icon className="size-4.5 text-emerald-700 dark:text-emerald-400" />
                                 </span>
-                              ) : null}
+                              )}
                               <span>
                                 <span className="block text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-emerald-700 dark:group-hover:text-emerald-400">
                                   {item.title}
                                 </span>
-                                {item.description ? (
+                                {item.description && (
                                   <span className="mt-0.5 block text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
                                     {item.description}
                                   </span>
-                                ) : null}
+                                )}
                               </span>
                             </a>
                           );
                         })}
                       </div>
-
                       <div className="mt-2.5 rounded-2xl border border-emerald-100 bg-emerald-50/70 p-3.5 dark:border-emerald-950/60 dark:bg-emerald-950/20">
                         <p className="text-xs font-bold text-emerald-900 dark:text-emerald-300">
                           🌱 Garansi Daya Tumbuh Tinggi
@@ -540,7 +529,7 @@ export function MegaMenuNavbar({
                   </DesktopDropdown>
                 </li>
 
-                {/* 4. TENTANG & SUMBER DAYA (RESOURCES) */}
+                {/* 4. TENTANG & PANDUAN */}
                 <li className="relative" onMouseEnter={() => setOpenMenu("resources")}>
                   <MenuTrigger
                     id="resources-mega-menu"
@@ -584,14 +573,13 @@ export function MegaMenuNavbar({
                             </h4>
                             {group.links.map((item) => {
                               const Icon = item.icon;
-
                               return (
                                 <a
                                   key={item.title}
                                   href={item.href}
                                   className="flex items-center gap-2 rounded-xl p-2 text-sm text-zinc-700 transition-colors hover:bg-emerald-50 hover:text-emerald-800 dark:text-zinc-300 dark:hover:bg-emerald-950/40 dark:hover:text-emerald-300"
                                 >
-                                  {Icon ? <Icon className="size-4 text-emerald-600 dark:text-emerald-400" /> : null}
+                                  {Icon && <Icon className="size-4 text-emerald-600 dark:text-emerald-400" />}
                                   <span className="font-medium">{item.title}</span>
                                 </a>
                               );
@@ -606,345 +594,240 @@ export function MegaMenuNavbar({
             </nav>
           </div>
 
-          {/* RIGHT ACTIONS: LANGUAGE, THEME, ORDER CTA */}
-          <div className="flex items-center gap-2.5">
+          {/* RIGHT ACTIONS: CTA, THEME, LANGUAGE, MOBILE HAMBURGER */}
+          <div className="flex items-center gap-2">
             <div className="hidden items-center gap-2 md:flex">
               <LanguageToggle />
               <ThemeToggleButton />
             </div>
 
+            {/* DIRECT ORDER BUTTON ON HEADER */}
             {onOpenCheckout ? (
               <button
                 type="button"
                 onClick={onOpenCheckout}
-                className="hidden sm:inline-flex h-10 items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-5 text-xs font-bold text-white shadow-sm transition-all hover:bg-emerald-700 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 active:scale-95"
+                className="flex h-9 sm:h-10 items-center justify-center gap-1.5 sm:gap-2 rounded-xl sm:rounded-2xl bg-emerald-600 px-3 sm:px-5 text-xs font-bold text-white shadow-xs transition-all hover:bg-emerald-700 hover:shadow-md active:scale-95"
               >
                 <ShoppingBag className="size-3.5" />
-                <span>{ctaLabel}</span>
+                <span className="hidden xs:inline">{ctaLabel}</span>
+                <span className="xs:hidden">Pesan</span>
+                {typeof cartQty === 'number' && cartQty > 0 && (
+                  <span className="ml-0.5 rounded-full bg-white px-1.5 py-0.2 text-[10px] font-black text-emerald-800">
+                    {cartQty}
+                  </span>
+                )}
               </button>
             ) : (
               <a
                 href={ctaHref}
-                className="hidden sm:inline-flex h-10 items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-5 text-xs font-bold text-white shadow-sm transition-all hover:bg-emerald-700 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 active:scale-95"
+                className="flex h-9 sm:h-10 items-center justify-center gap-1.5 sm:gap-2 rounded-xl sm:rounded-2xl bg-emerald-600 px-3 sm:px-5 text-xs font-bold text-white shadow-xs transition-all hover:bg-emerald-700 hover:shadow-md active:scale-95"
               >
                 <ShoppingBag className="size-3.5" />
-                <span>{ctaLabel}</span>
+                <span className="hidden xs:inline">{ctaLabel}</span>
+                <span className="xs:hidden">Pesan</span>
               </a>
             )}
 
-            {/* MOBILE MENU TOGGLE BUTTON */}
+            {/* MOBILE MENU TOGGLE (HAMBURGER / X) */}
             <button
               type="button"
-              aria-label="Buka navigasi menu"
+              aria-label={mobileOpen ? "Tutup menu" : "Buka menu navigasi"}
               aria-expanded={mobileOpen}
-              onClick={() => setMobileOpen(true)}
-              className="flex size-11 items-center justify-center rounded-2xl border border-zinc-200/90 bg-white text-zinc-800 shadow-xs transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 lg:hidden"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="flex size-10 items-center justify-center rounded-xl border border-zinc-200/90 bg-white text-zinc-800 shadow-xs transition-colors hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 lg:hidden"
             >
-              <Menu className="size-5.5 text-emerald-700 dark:text-emerald-400" />
+              {mobileOpen ? (
+                <X className="size-5 text-zinc-800 dark:text-zinc-200" />
+              ) : (
+                <Menu className="size-5 text-emerald-700 dark:text-emerald-400" />
+              )}
             </button>
           </div>
         </div>
       </div>
 
       {/* MOBILE BACKDROP OVERLAY */}
-      <div
-        aria-hidden={!mobileOpen}
-        onClick={closeMobile}
-        className={cn(
-          "fixed inset-0 z-[90] bg-black/75 backdrop-blur-sm transition-opacity duration-300 lg:hidden",
-          mobileOpen ? "opacity-100" : "pointer-events-none opacity-0",
-        )}
-      />
-
-      {/* MOBILE SLIDE-IN DRAWER */}
-      <aside
-        role="dialog"
-        aria-modal="true"
-        aria-hidden={!mobileOpen}
-        aria-label="Navigasi Menu Mobile"
-        className={cn(
-          "fixed inset-y-0 right-0 z-[100] flex w-[88vw] max-w-sm flex-col bg-white p-5 sm:p-6 shadow-2xl transition-transform duration-300 ease-out dark:bg-zinc-950 border-l border-zinc-200 dark:border-zinc-800 lg:hidden",
-          mobileOpen ? "translate-x-0" : "translate-x-full",
-        )}
-      >
-        {/* DRAWER HEADER */}
-        <div className="mb-5 flex items-center justify-between border-b border-zinc-100 pb-4 dark:border-zinc-800/80">
-          <Brand brandName={brandName} brandHref={brandHref} logo={logo} onNavigate={closeMobile} />
-          <button
-            ref={closeButtonRef}
-            type="button"
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             onClick={closeMobile}
-            aria-label="Tutup menu navigasi"
-            className="flex size-9 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 transition-colors hover:bg-zinc-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+            className="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* MOBILE SLIDE-OVER DRAWER */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.aside
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigasi Menu Mobile"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", stiffness: 320, damping: 30 }}
+            className="fixed inset-y-0 right-0 z-[100] flex w-[88vw] max-w-sm flex-col bg-white p-5 shadow-2xl dark:bg-zinc-950 border-l border-zinc-200 dark:border-zinc-800 lg:hidden"
           >
-            <X className="size-5" />
-          </button>
-        </div>
-
-        {/* DRAWER NAVIGATION ACCORDIONS */}
-        <nav aria-label="Mobile navigation" className="-mx-5 flex-1 overflow-y-auto px-5 py-1 space-y-2">
-          {/* SECTION 1: HALAMAN / RUTE */}
-          <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/50 p-2 dark:border-zinc-800/80 dark:bg-zinc-900/40">
-            <button
-              type="button"
-              onClick={() => toggleMobileSection("pages")}
-              className="flex w-full items-center justify-between p-2 text-sm font-extrabold text-zinc-900 dark:text-zinc-100"
-            >
-              <span className="flex items-center gap-2">
-                <Rocket className="size-4 text-emerald-600 dark:text-emerald-400" />
-                <span>Pilih Halaman</span>
-              </span>
-              <ChevronDown
-                className={cn(
-                  "size-4 text-zinc-400 transition-transform duration-200",
-                  mobileSection === "pages" && "rotate-180 text-emerald-600 dark:text-emerald-400",
-                )}
-              />
-            </button>
-
-            <AnimatePresence initial={false}>
-              {mobileSection === "pages" && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="overflow-hidden"
-                >
-                  <div className="flex flex-col gap-1 pt-1">
-                    {pages.map((item) => {
-                      const Icon = item.icon;
-                      return (
-                        <a
-                          key={item.title}
-                          href={item.href}
-                          onClick={closeMobile}
-                          className="flex items-center justify-between rounded-xl bg-white p-2.5 text-xs font-semibold text-zinc-800 shadow-xs transition-colors hover:bg-emerald-50 hover:text-emerald-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-emerald-950/60"
-                        >
-                          <span className="flex items-center gap-2">
-                            {Icon && <Icon className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />}
-                            <span>{item.title}</span>
-                          </span>
-                          {item.badge && (
-                            <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                              {item.badge}
-                            </span>
-                          )}
-                        </a>
-                      );
-                    })}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* SECTION 2: PRODUK & PAKET */}
-          <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/50 p-2 dark:border-zinc-800/80 dark:bg-zinc-900/40">
-            <button
-              type="button"
-              onClick={() => toggleMobileSection("features")}
-              className="flex w-full items-center justify-between p-2 text-sm font-extrabold text-zinc-900 dark:text-zinc-100"
-            >
-              <span className="flex items-center gap-2">
-                <Package className="size-4 text-emerald-600 dark:text-emerald-400" />
-                <span>Produk & Paket Benih</span>
-              </span>
-              <ChevronDown
-                className={cn(
-                  "size-4 text-zinc-400 transition-transform duration-200",
-                  mobileSection === "features" && "rotate-180 text-emerald-600 dark:text-emerald-400",
-                )}
-              />
-            </button>
-
-            <AnimatePresence initial={false}>
-              {mobileSection === "features" && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="overflow-hidden"
-                >
-                  <div className="flex flex-col gap-1 pt-1">
-                    {features.map((item) => {
-                      const Icon = item.icon;
-                      return (
-                        <a
-                          key={item.title}
-                          href={item.href}
-                          onClick={closeMobile}
-                          className="flex items-center justify-between rounded-xl bg-white p-2.5 text-xs font-semibold text-zinc-800 shadow-xs transition-colors hover:bg-emerald-50 hover:text-emerald-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-emerald-950/60"
-                        >
-                          <span className="flex items-center gap-2">
-                            {Icon && <Icon className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />}
-                            <span>{item.title}</span>
-                          </span>
-                          {item.badge && (
-                            <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
-                              {item.badge}
-                            </span>
-                          )}
-                        </a>
-                      );
-                    })}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* SECTION 3: PELUANG & SOLUSI */}
-          <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/50 p-2 dark:border-zinc-800/80 dark:bg-zinc-900/40">
-            <button
-              type="button"
-              onClick={() => toggleMobileSection("use-cases")}
-              className="flex w-full items-center justify-between p-2 text-sm font-extrabold text-zinc-900 dark:text-zinc-100"
-            >
-              <span className="flex items-center gap-2">
-                <Sprout className="size-4 text-emerald-600 dark:text-emerald-400" />
-                <span>Peluang & Solusi Tanam</span>
-              </span>
-              <ChevronDown
-                className={cn(
-                  "size-4 text-zinc-400 transition-transform duration-200",
-                  mobileSection === "use-cases" && "rotate-180 text-emerald-600 dark:text-emerald-400",
-                )}
-              />
-            </button>
-
-            <AnimatePresence initial={false}>
-              {mobileSection === "use-cases" && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="overflow-hidden"
-                >
-                  <div className="flex flex-col gap-1 pt-1">
-                    {useCases.map((item) => {
-                      const Icon = item.icon;
-                      return (
-                        <a
-                          key={item.title}
-                          href={item.href}
-                          onClick={closeMobile}
-                          className="flex items-center justify-between rounded-xl bg-white p-2.5 text-xs font-semibold text-zinc-800 shadow-xs transition-colors hover:bg-emerald-50 hover:text-emerald-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-emerald-950/60"
-                        >
-                          <span className="flex items-center gap-2">
-                            {Icon && <Icon className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />}
-                            <span>{item.title}</span>
-                          </span>
-                        </a>
-                      );
-                    })}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* SECTION 4: TENTANG & PANDUAN */}
-          <div className="rounded-2xl border border-zinc-200/80 bg-zinc-50/50 p-2 dark:border-zinc-800/80 dark:bg-zinc-900/40">
-            <button
-              type="button"
-              onClick={() => toggleMobileSection("resources")}
-              className="flex w-full items-center justify-between p-2 text-sm font-extrabold text-zinc-900 dark:text-zinc-100"
-            >
-              <span className="flex items-center gap-2">
-                <GraduationCap className="size-4 text-emerald-600 dark:text-emerald-400" />
-                <span>Tentang & Bantuan</span>
-              </span>
-              <ChevronDown
-                className={cn(
-                  "size-4 text-zinc-400 transition-transform duration-200",
-                  mobileSection === "resources" && "rotate-180 text-emerald-600 dark:text-emerald-400",
-                )}
-              />
-            </button>
-
-            <AnimatePresence initial={false}>
-              {mobileSection === "resources" && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="overflow-hidden"
-                >
-                  <div className="flex flex-col gap-1 pt-1">
-                    {resourceGroups.flatMap((group) =>
-                      group.links.map((item) => {
-                        const Icon = item.icon;
-                        return (
-                          <a
-                            key={`${group.title}-${item.title}`}
-                            href={item.href}
-                            onClick={closeMobile}
-                            className="flex items-center justify-between rounded-xl bg-white p-2.5 text-xs font-semibold text-zinc-800 shadow-xs transition-colors hover:bg-emerald-50 hover:text-emerald-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-emerald-950/60"
-                          >
-                            <span className="flex items-center gap-2">
-                              {Icon && <Icon className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />}
-                              <span>{item.title}</span>
-                            </span>
-                          </a>
-                        );
-                      }),
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </nav>
-
-        {/* DRAWER BOTTOM ACTION CONTROLS */}
-        <div className="mt-auto border-t border-zinc-100 pt-4 dark:border-zinc-800/80 space-y-3">
-          <div className="flex items-center justify-between rounded-2xl bg-zinc-100/80 p-2.5 dark:bg-zinc-900">
-            <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300">Pengaturan Tampilan</span>
-            <div className="flex items-center gap-2">
-              <LanguageToggle />
-              <ThemeToggleButton />
+            {/* DRAWER HEADER */}
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-3.5 dark:border-zinc-800">
+              <Brand brandName={brandName} brandHref={brandHref} logo={logo} onNavigate={closeMobile} />
+              <button
+                type="button"
+                onClick={closeMobile}
+                aria-label="Tutup menu navigasi"
+                className="flex size-9 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 transition hover:bg-zinc-200 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              >
+                <X className="size-4.5" />
+              </button>
             </div>
-          </div>
 
-          <a
-            href="https://wa.me/6281299450708?text=Halo%20Botani%20Seed%2C%20saya%20ingin%20tanya%20dan%20pesan%20paket%20benih."
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={closeMobile}
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-2xl border border-emerald-300 bg-emerald-50 text-xs font-bold text-emerald-800 transition hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300"
-          >
-            <MessageCircle className="size-4" />
-            <span>Chat WhatsApp Agronomi</span>
-          </a>
+            {/* DRAWER BODY (SCROLLABLE) */}
+            <div className="-mx-5 flex-1 overflow-y-auto px-5 py-3 space-y-4">
+              {/* SECTION 1: PILIHAN HALAMAN (DIRECT BUTTONS) */}
+              <div>
+                <div className="mb-2 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                  Halaman Utama
+                </div>
+                <div className="grid grid-cols-1 gap-1.5">
+                  {pages.map((p) => {
+                    const Icon = p.icon || Home;
+                    const isCurrent = activePath === p.href || (p.href === "/" && activePath === "");
+                    return (
+                      <a
+                        key={p.title}
+                        href={p.href}
+                        onClick={closeMobile}
+                        className={cn(
+                          "flex items-center justify-between rounded-xl p-2.5 transition-all text-xs font-bold",
+                          isCurrent
+                            ? "bg-emerald-600 text-white shadow-sm"
+                            : "bg-zinc-50 text-zinc-800 hover:bg-emerald-50 hover:text-emerald-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-emerald-950/60",
+                        )}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Icon className={cn("size-4", isCurrent ? "text-white" : "text-emerald-600 dark:text-emerald-400")} />
+                          <span>{p.title}</span>
+                        </div>
+                        {p.badge && (
+                          <span
+                            className={cn(
+                              "rounded-full px-2 py-0.5 text-[9px] font-extrabold",
+                              isCurrent
+                                ? "bg-white/20 text-white"
+                                : "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300",
+                            )}
+                          >
+                            {p.badge}
+                          </span>
+                        )}
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
 
-          {onOpenCheckout ? (
-            <button
-              type="button"
-              onClick={() => {
-                closeMobile();
-                onOpenCheckout();
-              }}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 text-sm font-bold text-white shadow-md transition hover:bg-emerald-700 active:scale-98"
-            >
-              <ShoppingBag className="size-4" />
-              <span>{ctaLabel}</span>
-            </button>
-          ) : (
-            <a
-              href={ctaHref}
-              onClick={closeMobile}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 text-sm font-bold text-white shadow-md transition hover:bg-emerald-700 active:scale-98"
-            >
-              <ShoppingBag className="size-4" />
-              <span>{ctaLabel}</span>
-            </a>
-          )}
-        </div>
-      </aside>
+              {/* SECTION 2: MENU CEPAT & FITUR */}
+              <div>
+                <div className="mb-2 text-[11px] font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                  Akses Cepat
+                </div>
+                <div className="grid grid-cols-1 gap-1">
+                  <a
+                    href="/#promo"
+                    onClick={closeMobile}
+                    className="flex items-center gap-2.5 rounded-xl p-2 text-xs font-semibold text-zinc-700 hover:bg-emerald-50 hover:text-emerald-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
+                  >
+                    <Sparkles className="size-4 text-amber-500 shrink-0" />
+                    <span>Paket Promo Hemat 20% (10 Benih)</span>
+                  </a>
+                  <a
+                    href="/#kisah"
+                    onClick={closeMobile}
+                    className="flex items-center gap-2.5 rounded-xl p-2 text-xs font-semibold text-zinc-700 hover:bg-emerald-50 hover:text-emerald-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
+                  >
+                    <Users className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span>Kisah Sukses Petani Mitra IPB</span>
+                  </a>
+                  <a
+                    href="/#cara-mulai"
+                    onClick={closeMobile}
+                    className="flex items-center gap-2.5 rounded-xl p-2 text-xs font-semibold text-zinc-700 hover:bg-emerald-50 hover:text-emerald-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
+                  >
+                    <BookOpen className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span>Panduan Tanam 5 Langkah Mudah</span>
+                  </a>
+                  <a
+                    href="/#faq"
+                    onClick={closeMobile}
+                    className="flex items-center gap-2.5 rounded-xl p-2 text-xs font-semibold text-zinc-700 hover:bg-emerald-50 hover:text-emerald-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
+                  >
+                    <FileText className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span>Tanya Jawab Seputar Benih (FAQ)</span>
+                  </a>
+                  <a
+                    href="/#profil"
+                    onClick={closeMobile}
+                    className="flex items-center gap-2.5 rounded-xl p-2 text-xs font-semibold text-zinc-700 hover:bg-emerald-50 hover:text-emerald-800 dark:text-zinc-300 dark:hover:bg-zinc-900"
+                  >
+                    <GraduationCap className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span>Profil PT Botani Seed Indonesia</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* DRAWER FOOTER (CONTROLS & ACTION BUTTONS) */}
+            <div className="border-t border-zinc-100 pt-3.5 dark:border-zinc-800 space-y-2.5">
+              <div className="flex items-center justify-between rounded-xl bg-zinc-100/90 px-3 py-2 dark:bg-zinc-900">
+                <span className="text-xs font-bold text-zinc-700 dark:text-zinc-300">Tampilan & Bahasa</span>
+                <div className="flex items-center gap-2">
+                  <LanguageToggle />
+                  <ThemeToggleButton />
+                </div>
+              </div>
+
+              <a
+                href="https://wa.me/6281299450708?text=Halo%20Botani%20Seed%2C%20saya%20ingin%20tanya%20dan%20pesan%20paket%20benih."
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closeMobile}
+                className="flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-emerald-300 bg-emerald-50 text-xs font-bold text-emerald-800 transition hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300"
+              >
+                <MessageCircle className="size-4 text-emerald-600" />
+                <span>Konsultasi WhatsApp Agronomi</span>
+              </a>
+
+              {onOpenCheckout ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    closeMobile();
+                    onOpenCheckout();
+                  }}
+                  className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 text-xs font-extrabold text-white shadow-md transition hover:bg-emerald-700 active:scale-98"
+                >
+                  <ShoppingBag className="size-4" />
+                  <span>{ctaLabel} (COD / Bebas Ongkir)</span>
+                </button>
+              ) : (
+                <a
+                  href={ctaHref}
+                  onClick={closeMobile}
+                  className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 text-xs font-extrabold text-white shadow-md transition hover:bg-emerald-700 active:scale-98"
+                >
+                  <ShoppingBag className="size-4" />
+                  <span>{ctaLabel} (COD / Bebas Ongkir)</span>
+                </a>
+              )}
+            </div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

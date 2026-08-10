@@ -152,7 +152,7 @@ export function App() {
 
   return (
     <div className="app-root">
-      <Navbar onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
+      <Navbar cartQty={cart.totalItems} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
       {view === 'landing2' ? (
         <main>
           <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
