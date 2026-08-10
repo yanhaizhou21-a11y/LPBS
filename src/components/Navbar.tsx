@@ -25,6 +25,7 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
   const [visible, setVisible] = useState(true);
   const lastScrollY = useRef(0);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const homeButtonRef = useRef<HTMLButtonElement>(null);
   const mobileSheetRef = useRef<HTMLElement>(null);
   const homeMenuRef = useRef<HTMLDivElement>(null);
   const pathname = currentPath.split('#')[0] || '/';
@@ -92,11 +93,20 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
   useEffect(() => {
     if (!homeMenuOpen) return;
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setHomeMenuOpen(false);
+      if (event.key !== 'Escape') return;
+      setHomeMenuOpen(false);
+      requestAnimationFrame(() => homeButtonRef.current?.focus());
     };
     window.addEventListener('keydown', closeOnEscape);
     return () => window.removeEventListener('keydown', closeOnEscape);
   }, [homeMenuOpen]);
+
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 901px)');
+    const closeOnDesktop = () => desktop.matches && setMenuOpen(false);
+    desktop.addEventListener('change', closeOnDesktop);
+    return () => desktop.removeEventListener('change', closeOnDesktop);
+  }, []);
 
   const closeMobileMenu = (restoreFocus = false) => {
     setMenuOpen(false);
@@ -148,6 +158,7 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
         <nav className="site-nav" aria-label={t('nav.primary')}>
           <div className="homepage-menu" ref={homeMenuRef}>
             <button
+              ref={homeButtonRef}
               type="button"
               className={`site-nav-link${homeGroupActive ? ' active' : ''}`}
               aria-expanded={homeMenuOpen}

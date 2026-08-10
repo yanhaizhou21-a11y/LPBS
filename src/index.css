@@ -2963,104 +2963,7 @@
     }
   }
 
-  /* Prompt-adapted notch navigation */
-  .notch-navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    height: 64px;
-    display: flex;
-    align-items: flex-start;
-    color: var(--color-text-dark);
-    will-change: transform;
-  }
-
-  .notch-side {
-    flex: 1;
-    min-width: 0;
-    height: 40px;
-    background: color-mix(in srgb, var(--color-bg-card) 94%, transparent);
-    backdrop-filter: blur(18px);
-    position: relative;
-  }
-
-  .notch-side::before,
-  .notch-side::after {
-    content: '';
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    height: 1px;
-    background: color-mix(in srgb, var(--color-text-dark) 7%, transparent);
-  }
-
-  .notch-side::after {
-    bottom: 3px;
-    opacity: 0.7;
-  }
-
-  .notch-shell {
-    width: min(1180px, calc(100vw - 24px));
-    height: 64px;
-    display: flex;
-    filter: drop-shadow(0 12px 20px rgba(13, 62, 33, 0.08));
-  }
-
-  .notch-content {
-    flex: 1;
-    min-width: 0;
-    height: 64px;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: 24px;
-    padding: 8px 18px 10px;
-    background: color-mix(in srgb, var(--color-bg-card) 96%, transparent);
-    border-bottom: 1px solid var(--color-border);
-    backdrop-filter: blur(18px);
-  }
-
-  .notch-curve {
-    position: relative;
-    flex: 0 0 50px;
-    width: 50px;
-    height: 64px;
-    background: color-mix(in srgb, var(--color-bg-card) 96%, transparent);
-    backdrop-filter: blur(18px);
-  }
-
-  .notch-curve-left {
-    clip-path: path('M0 0 H50 V64 C25 64 25 40 0 40 Z');
-  }
-
-  .notch-curve-right {
-    clip-path: path('M0 0 H50 V40 C25 40 25 64 0 64 Z');
-  }
-
-  .notch-curve svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    fill: none;
-    stroke: var(--color-text-dark);
-    stroke-opacity: 0.08;
-    stroke-width: 0.6;
-    pointer-events: none;
-  }
-
-  .notch-links {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .notch-links-right {
-    justify-content: flex-end;
-  }
-
+  /* Shared navigation controls */
   .language-toggle {
     min-height: 34px;
     display: inline-flex;
@@ -3091,175 +2994,27 @@
     color: #fff;
   }
 
-  .notch-language-toggle svg {
-    display: none;
-  }
-
-  .notch-links a,
-  .notch-icon-button,
-  .theme-toggle-button,
-  .notch-cart {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    color: var(--color-text-muted);
-    font-size: 0.84rem;
-    font-weight: 700;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
-  }
-
-  .notch-links a:hover,
-  .notch-icon-button:hover,
-  .theme-toggle-button:hover,
-  .notch-cart:hover {
-    color: var(--color-primary);
-  }
-
-  .notch-icon-button,
-  .theme-toggle-button,
-  .notch-cart {
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-  }
-
-  .notch-icon-button,
   .theme-toggle-button {
     width: 44px;
     height: 44px;
     display: inline-grid;
     place-items: center;
     justify-content: center;
-    border-radius: 999px;
-  }
-
-  .notch-icon-button:hover,
-  .theme-toggle-button:hover {
-    background: var(--color-primary-light);
-  }
-
-  .notch-icon-button>span,
-  .theme-toggle-button>span {
-    display: inline-flex;
-  }
-
-  .notch-brand {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: var(--color-text-dark);
-    font-family: var(--font-display);
-    font-size: 0.78rem;
-    line-height: 1;
-    text-decoration: none;
-  }
-
-  .notch-brand img {
-    width: 34px;
-    height: 34px;
-    object-fit: contain;
-  }
-
-  .notch-cart {
-    position: relative;
-    min-height: 44px;
-    padding: 8px 10px;
-    border-radius: 999px;
-  }
-
-  .notch-cart-badge {
-    min-width: 20px;
-    height: 20px;
-    display: grid;
-    place-items: center;
-    padding: 0 5px;
-    border-radius: 999px;
-    background: var(--color-primary);
-    color: #fff;
-    font-size: 0.7rem;
-  }
-
-  .notch-order {
-    height: 44px;
-    padding: 0 18px;
     border: 0;
-    border-radius: var(--radius-md);
-    background: var(--color-primary-hover);
-    color: var(--color-bg-card);
-    font-weight: 800;
-    cursor: pointer;
-    transition: transform 0.2s ease, opacity 0.2s ease;
-  }
-
-  .notch-order:hover {
-    transform: translateY(-2px);
-    opacity: 0.92;
-  }
-
-  .mobile-menu-trigger {
-    display: none;
-  }
-
-  .mobile-cart-trigger {
-    display: none;
-  }
-
-  .notch-spacer {
-    height: 64px;
-  }
-
-  .mobile-navigation {
-    position: fixed;
-    top: 68px;
-    left: 16px;
-    right: 16px;
-    z-index: 99;
-    display: none;
-    padding: 12px;
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .mobile-navigation>a,
-  .mobile-nav-actions button {
-    min-height: 48px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 0 12px;
-    color: var(--color-text-body);
+    border-radius: 999px;
     background: transparent;
-    border: 0;
-    border-radius: var(--radius-sm);
-    font-weight: 700;
-    text-decoration: none;
+    color: var(--color-text-muted);
     cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease;
   }
 
-  .mobile-navigation>a:hover,
-  .mobile-nav-actions button:hover {
+  .theme-toggle-button:hover {
     background: var(--color-primary-light);
     color: var(--color-primary);
   }
 
-  .mobile-nav-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .mobile-nav-actions .mobile-order {
-    grid-column: 1 / -1;
-    justify-content: center;
-    background: var(--color-primary-hover);
-    color: var(--color-bg-card);
+  .theme-toggle-button>span {
+    display: inline-flex;
   }
 
   /* Shared public navigation */
@@ -3921,86 +3676,8 @@
     color: var(--color-text-muted);
   }
 
-  @media (max-width: 1180px) {
-    .notch-links {
-      gap: 12px;
-    }
-
-    .notch-links a {
-      min-width: 44px;
-      min-height: 44px;
-      justify-content: center;
-      font-size: 0;
-      gap: 0;
-    }
-
-    .notch-links a svg {
-      width: 19px;
-      height: 19px;
-    }
-
-    .notch-cart-label {
-      display: none;
-    }
-  }
 
   @media (max-width: 760px) {
-    .notch-navbar {
-      height: 64px;
-    }
-
-    .notch-side {
-      height: 38px;
-    }
-
-    .notch-shell {
-      height: 64px;
-      width: calc(100vw - 12px);
-    }
-
-    .notch-content {
-      height: 64px;
-      grid-template-columns: 1fr auto 1fr;
-      padding-inline: 8px;
-    }
-
-    .notch-curve {
-      flex-basis: 24px;
-      width: 24px;
-      height: 64px;
-    }
-
-    .notch-curve-left {
-      clip-path: polygon(0 0, 100% 0, 100% 100%, 70% 94%, 45% 76%, 25% 62%, 0 62%);
-    }
-
-    .notch-curve-right {
-      clip-path: polygon(0 0, 100% 0, 100% 62%, 75% 62%, 55% 76%, 30% 94%, 0 100%);
-    }
-
-    .notch-links {
-      display: none;
-    }
-
-    .mobile-menu-trigger {
-      display: inline-flex;
-    }
-
-    .mobile-cart-trigger {
-      display: inline-grid;
-      grid-column: 3;
-      justify-self: end;
-      min-width: 44px;
-      padding: 8px;
-    }
-
-    .notch-brand {
-      grid-column: 2;
-    }
-
-    .mobile-navigation {
-      display: block;
-    }
 
     .hero-section {
       min-height: auto;
