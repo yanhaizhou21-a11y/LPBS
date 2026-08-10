@@ -2,6 +2,8 @@ import { Router } from 'express';
 import { getDB } from '../config/db.js';
 import { requireAdmin } from './authRoutes.js';
 
+import { DEFAULT_PRODUCTS } from '../data/defaultProducts.js';
+
 const router = Router();
 export const PRODUCT_CATEGORIES = new Set(['hortikultura', 'pangan', 'bibit-tanaman', 'distributorship']);
 const text = (value, max = 180) => typeof value === 'string' ? value.trim().slice(0, max) : '';
@@ -39,6 +41,10 @@ router.get('/', async (req, res) => {
     const products = await getDB().collection('products').find({ active: true, ...(category ? { category } : {}) }).sort({ createdAt: -1 }).limit(200).toArray();
     return res.json({ success: true, products });
   } catch (error) {
+    if (process.env.NODE_ENV !== 'production') {
+      const filtered = category ? DEFAULT_PRODUCTS.filter((p) => p.category === category) : DEFAULT_PRODUCTS;
+      return res.json({ success: true, products: filtered });
+    }
     console.error('Error fetching products:', error instanceof Error ? error.message : error);
     return res.status(503).json({ success: false, message: 'Katalog produk belum dapat dimuat.' });
   }
