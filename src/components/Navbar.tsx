@@ -17,7 +17,6 @@ export function Navbar({ onOpenCheckout }: NavbarProps) {
       brandHref="/"
       onOpenCheckout={onOpenCheckout}
       ctaLabel={t('nav.order') || "Pesan Sekarang"}
-      className="notch-navbar-replacement"
     />
   );
 }
