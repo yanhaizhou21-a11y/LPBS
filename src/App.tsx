@@ -55,7 +55,43 @@ export function App() {
       setIsPrivacyModalOpen(window.location.pathname === '/kebijakan-privasi');
     };
     window.addEventListener('popstate', syncRoute);
-    return () => window.removeEventListener('popstate', syncRoute);
+
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest('a');
+      if (!target) return;
+      const href = target.getAttribute('href');
+      if (
+        href &&
+        href.startsWith('/') &&
+        !href.startsWith('//') &&
+        !href.includes(':') &&
+        !target.hasAttribute('download') &&
+        target.getAttribute('target') !== '_blank'
+      ) {
+        const [path, hash] = href.split('#');
+        const currentPath = window.location.pathname;
+
+        if (path && (path !== currentPath || hash)) {
+          e.preventDefault();
+          window.history.pushState({}, '', href);
+          setView(viewFromPath());
+          if (hash) {
+            setTimeout(() => {
+              const el = document.getElementById(hash);
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 60);
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }
+      }
+    };
+
+    document.addEventListener('click', handleAnchorClick);
+    return () => {
+      window.removeEventListener('popstate', syncRoute);
+      document.removeEventListener('click', handleAnchorClick);
+    };
   }, []);
 
   useEffect(() => {
