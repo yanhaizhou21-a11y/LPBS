@@ -92,7 +92,9 @@ router.post('/', async (req, res) => {
     return res.status(201).json({ success: true, message: 'Pesanan berhasil dibuat.', orderId: result.insertedId || order.orderNumber, orderNumber: order.orderNumber });
   } catch (error) {
     if (error?.code === 11000) return res.status(409).json({ success: false, message: 'Nomor pesanan sudah digunakan. Silakan ulangi.' });
-    if (error instanceof Error && /valid|lengkap|tersedia|stok/i.test(error.message)) return res.status(400).json({ success: false, message: error.message });
+    if (error instanceof Error && typeof error.message === 'string' && error.message.length > 0 && !error.message.includes('MONGODB_URI') && !error.message.includes('connection')) {
+      return res.status(400).json({ success: false, message: error.message });
+    }
     console.error('Error creating order:', error instanceof Error ? error.message : error);
     return res.status(500).json({ success: false, message: 'Pesanan belum dapat disimpan.' });
   }
