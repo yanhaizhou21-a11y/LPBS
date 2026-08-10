@@ -70,10 +70,13 @@
     background-color: var(--color-bg-light);
     line-height: 1.6;
     font-weight: 400;
+    overflow-x: clip;
+    max-width: 100vw;
   }
 
   body {
-    overflow-x: hidden;
+    overflow-x: clip;
+    max-width: 100vw;
     background: var(--color-bg-light);
     color: var(--color-text-body);
     font-family: var(--font-main);
@@ -81,10 +84,17 @@
     transition: background-color 0.2s ease, color 0.2s ease;
   }
 
+  .app-root {
+    overflow-x: clip;
+    max-width: 100vw;
+    width: 100%;
+  }
+
   .container {
     max-width: 1240px;
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 1.25rem;
+    box-sizing: border-box;
   }
 
   /* Typography Utilities */
@@ -3123,9 +3133,11 @@
 
   .hero-title {
     max-width: 720px;
-    font-size: clamp(2.7rem, 5.4vw, 4.8rem);
-    letter-spacing: -0.045em;
-    line-height: 0.98;
+    font-size: clamp(1.85rem, 4vw, 3.25rem);
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   .hero-lead {
@@ -3374,7 +3386,11 @@
     }
 
     .hero-title {
-      font-size: clamp(2.55rem, 12vw, 4rem);
+      font-size: clamp(1.65rem, 5.5vw, 2.25rem);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      word-break: break-word;
+      overflow-wrap: break-word;
     }
 
     .hero-actions {
@@ -4163,11 +4179,13 @@
 }
 
 .hero-title {
-  font-size: clamp(2.2rem, 4vw, 3.5rem);
-  line-height: 1.1;
+  font-size: clamp(1.75rem, 3.5vw, 3rem);
+  line-height: 1.2;
   margin: 16px 0 20px;
   font-weight: 800;
   color: #10291b;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .hero-text-highlight {

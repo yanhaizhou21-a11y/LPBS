@@ -341,12 +341,34 @@ export function MegaMenuNavbar({
     setOpenMenu((current) => (current === menu ? null : menu));
   };
 
+  const [isScrolledDown, setIsScrolledDown] = React.useState(false);
+  const lastScrollY = React.useRef(0);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY <= 40) {
+        setIsScrolledDown(false);
+      } else if (currentScrollY > lastScrollY.current + 8 && currentScrollY > 100) {
+        setIsScrolledDown(true);
+        setOpenMenu(null);
+      } else if (currentScrollY < lastScrollY.current - 8) {
+        setIsScrolledDown(false);
+      }
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <header
       {...props}
       ref={navRef}
       className={cn(
-        "sticky top-0 z-40 w-full border-b border-zinc-200/90 bg-white/95 backdrop-blur-xl shadow-xs dark:border-zinc-800/90 dark:bg-zinc-950/95",
+        "sticky top-0 z-40 w-full border-b border-zinc-200/90 bg-white/95 backdrop-blur-xl shadow-xs dark:border-zinc-800/90 dark:bg-zinc-950/95 transition-transform duration-300 ease-out",
+        isScrolledDown && !mobileOpen ? "-translate-y-full shadow-none" : "translate-y-0",
         className,
       )}
       onMouseLeave={(event) => {
