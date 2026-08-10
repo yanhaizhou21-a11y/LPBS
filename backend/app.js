@@ -13,6 +13,16 @@ const allowedOrigins = new Set(
     .split(',').map((origin) => origin.trim()).filter(Boolean)
 );
 
+function isAllowedOrigin(origin) {
+  if (!origin) return true;
+  if (allowedOrigins.has(origin)) return true;
+  // Allow all vercel.app domains (including preview and production)
+  if (/^https:\/\/([a-zA-Z0-9_-]+\.)*vercel\.app$/.test(origin)) return true;
+  // Allow localhost / 127.0.0.1 on any port
+  if (/^https?:\/\/localhost(:\d+)?$/.test(origin) || /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin)) return true;
+  return false;
+}
+
 app.disable('x-powered-by');
 app.use((_, res, next) => {
   res.setHeader('X-Frame-Options', 'DENY');
@@ -28,7 +38,7 @@ app.use((_, res, next) => {
 app.use(cors({
   credentials: true,
   origin(origin, callback) {
-    callback(origin && !allowedOrigins.has(origin) ? new Error('Origin tidak diizinkan.') : null, true);
+    callback(null, isAllowedOrigin(origin));
   },
 }));
 
