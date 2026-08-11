@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
-import Lenis from 'lenis';
+'use client';
+import React, { useEffect, useRef } from 'react';
+import { ReactLenis, type LenisRef } from 'lenis/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -10,42 +11,37 @@ interface SmoothScrollProps {
 }
 
 export function SmoothScroll({ children }: SmoothScrollProps) {
+  const lenisRef = useRef<LenisRef>(null);
+
   useEffect(() => {
-    // Respect user prefers-reduced-motion
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
+    function update(time: number) {
+      lenisRef.current?.lenis?.raf(time * 1000);
+    }
 
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.2,
-    });
-
-    // Synchronize Lenis with GSAP ScrollTrigger
-    lenis.on('scroll', ScrollTrigger.update);
-
-    const updateTicker = (time: number) => {
-      lenis.raf(time * 1000);
-    };
-
-    gsap.ticker.add(updateTicker);
+    gsap.ticker.add(update);
     gsap.ticker.lagSmoothing(0);
 
-    // Make lenis available globally for smooth hash link transitions if needed
-    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
-
     return () => {
-      gsap.ticker.remove(updateTicker);
-      lenis.destroy();
-      delete (window as unknown as { __lenis?: Lenis }).__lenis;
+      gsap.ticker.remove(update);
     };
   }, []);
 
-  return <>{children}</>;
+  return (
+    <ReactLenis
+      ref={lenisRef}
+      root
+      autoRaf={false}
+      options={{
+        duration: 1.2,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+      }}
+    >
+      {children}
+    </ReactLenis>
+  );
 }
 
 export default SmoothScroll;

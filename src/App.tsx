@@ -163,25 +163,68 @@ export function App() {
         <Navbar currentPath={currentPath} cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
         {view === 'landing2' ? (
           <main>
-            <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-            <KendalaSection />
-            <SolusiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-            <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-            <PaketIsiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-            <CompanyProfile />
-            <TestimonialSection />
-            <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-            <BottomCTASection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            <article className="stack-scroll-article">
+              <section className="relative z-10 w-full">
+                <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              </section>
+              <section className="stack-card-layer is-sticky z-20 bg-white dark:bg-zinc-900">
+                <div className="stack-grid-bg" aria-hidden="true" />
+                <KendalaSection />
+              </section>
+              <section className="stack-card-layer is-sticky z-30 bg-emerald-950/95 text-white">
+                <div className="stack-grid-bg" aria-hidden="true" />
+                <SolusiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              </section>
+              <section className="stack-card-layer is-sticky z-40 bg-zinc-950 text-white">
+                <div className="stack-grid-bg" aria-hidden="true" />
+                <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              </section>
+              <section className="stack-card-layer is-sticky z-50 bg-white dark:bg-zinc-900">
+                <div className="stack-grid-bg" aria-hidden="true" />
+                <PaketIsiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+                <CompanyProfile />
+              </section>
+              <section className="stack-card-layer is-sticky z-60 bg-emerald-900/95 text-white">
+                <div className="stack-grid-bg" aria-hidden="true" />
+                <TestimonialSection />
+              </section>
+              <section className="stack-card-layer is-sticky z-70 bg-white dark:bg-zinc-950">
+                <div className="stack-grid-bg" aria-hidden="true" />
+                <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+                <BottomCTASection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              </section>
+            </article>
           </main>
         ) : view === 'products' ? (
           <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
         ) : (
           <main>
-            <HeroSection variant={1} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-            <PeluangSection /><StorySection /><CompanyProfile />
-            <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-            <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-            <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            <article className="stack-scroll-article">
+              <section className="relative z-10 w-full">
+                <HeroSection variant={1} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              </section>
+              <section className="stack-card-layer is-sticky z-20 bg-white dark:bg-zinc-900">
+                <div className="stack-grid-bg" aria-hidden="true" />
+                <PeluangSection />
+              </section>
+              <section className="stack-card-layer is-sticky z-30 bg-emerald-950/95 text-white">
+                <div className="stack-grid-bg" aria-hidden="true" />
+                <StorySection />
+                <CompanyProfile />
+              </section>
+              <section className="stack-card-layer is-sticky z-40 bg-zinc-950 text-white">
+                <div className="stack-grid-bg" aria-hidden="true" />
+                <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              </section>
+              <section className="stack-card-layer is-sticky z-50 bg-white dark:bg-zinc-900">
+                <div className="stack-grid-bg" aria-hidden="true" />
+                <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              </section>
+              <section className="stack-card-layer is-sticky z-60 bg-emerald-50/70 dark:bg-zinc-950">
+                <div className="stack-grid-bg" aria-hidden="true" />
+                <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              </section>
+            </article>
           </main>
         )}
         <Footer onOpenPrivacyPolicy={openPrivacy} />
