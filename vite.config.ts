@@ -10,7 +10,7 @@ function apiServerPlugin(): Plugin {
       const { default: app } = await import('./backend/app.js');
       const { connectDB } = await import('./backend/config/db.js');
       connectDB().catch((err) => console.warn('[Vite API] DB connection note:', err?.message || err));
-      server.middlewares.use(app);
+      server.middlewares.use((req, res, next) => app(req, res, next));
     },
   };
 }
