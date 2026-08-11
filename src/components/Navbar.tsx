@@ -102,7 +102,7 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
   }, [homeMenuOpen]);
 
   useEffect(() => {
-    const desktop = window.matchMedia('(min-width: 901px)');
+    const desktop = window.matchMedia('(min-width: 1025px)');
     const closeOnDesktop = () => desktop.matches && setMenuOpen(false);
     desktop.addEventListener('change', closeOnDesktop);
     return () => desktop.removeEventListener('change', closeOnDesktop);
