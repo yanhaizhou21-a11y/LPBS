@@ -14,7 +14,7 @@ import { CartToast } from './components/CartToast';
 import { SecretAdminLogin } from './components/SecretAdminLogin';
 import { AdminDashboard } from './components/AdminDashboard';
 import { BotaniDashboard } from './components/BotaniDashboard';
-<<<<<<< HEAD
+import { LanguageProvider as DashboardLanguageProvider } from './context/LanguageContext';
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { CookieConsentBanner } from './components/CookieConsentBanner';
 import { ProductsPage } from './components/ProductsPage';
@@ -146,7 +146,11 @@ export function App() {
   if (!authChecked) return <div className="route-loading" role="status">Memverifikasi sesi admin…</div>;
 
   if (view === 'dashboard') {
-    return <BotaniDashboard />;
+    return (
+      <DashboardLanguageProvider>
+        <BotaniDashboard />
+      </DashboardLanguageProvider>
+    );
   }
 
   if (view === 'admin-login') {
@@ -157,34 +161,42 @@ export function App() {
     return <AdminDashboard adminName={adminName} onLogout={handleAdminLogout} onGoHome={() => navigate('landing', '/')} onUnauthorized={() => { setAccessDenied(true); navigate('admin-login', '/secret-admin-login', true); }} />;
   }
 
+  const handleOpenCheckout = (defaultQty = 1) => {
+    cart.closeCart();
+    if (cart.totalQty === 0) {
+      cart.addToCart(defaultQty);
+    }
+    setIsCheckoutOpen(true);
+  };
+
   return (
     <div className="app-root">
-      <Navbar currentPath={currentPath} cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
+      <Navbar currentPath={currentPath} cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => handleOpenCheckout(1)} />
       {view === 'landing2' ? (
         <main>
-          <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => handleOpenCheckout(1)} />
           <KendalaSection />
-          <SolusiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-          <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-          <PaketIsiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          <SolusiSection onOpenCheckout={() => handleOpenCheckout(1)} />
+          <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => handleOpenCheckout(5)} />
+          <PaketIsiSection onOpenCheckout={() => handleOpenCheckout(1)} />
           <CompanyProfile />
           <TestimonialSection />
-          <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-          <BottomCTASection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          <FAQSection onOpenCheckout={() => handleOpenCheckout(1)} />
+          <BottomCTASection onOpenCheckout={() => handleOpenCheckout(1)} />
         </main>
       ) : view === 'products' ? (
-        <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
+        <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCheckout={() => handleOpenCheckout(1)} />
       ) : (
         <main>
-          <HeroSection variant={1} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          <HeroSection variant={1} onAddToCart={cart.addToCart} onOpenCheckout={() => handleOpenCheckout(1)} />
           <PeluangSection /><StorySection /><CompanyProfile />
-          <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-          <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-          <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => handleOpenCheckout(5)} />
+          <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => handleOpenCheckout(1)} />
+          <FAQSection onOpenCheckout={() => handleOpenCheckout(1)} />
         </main>
       )}
       <Footer onOpenPrivacyPolicy={openPrivacy} />
-      <CartDrawer isOpen={cart.isCartOpen} onClose={cart.closeCart} items={cart.items} totalQty={cart.totalQty} normalTotal={cart.normalTotal} discountTotal={cart.discountTotal} subtotal={cart.subtotal} isPromoEligible={cart.isPromoEligible} onUpdateQty={cart.updateQty} onClearCart={cart.clearCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
+      <CartDrawer isOpen={cart.isCartOpen} onClose={cart.closeCart} items={cart.items} totalQty={cart.totalQty} normalTotal={cart.normalTotal} discountTotal={cart.discountTotal} subtotal={cart.subtotal} isPromoEligible={cart.isPromoEligible} onUpdateQty={cart.updateQty} onClearCart={cart.clearCart} onOpenCheckout={() => handleOpenCheckout(1)} />
       {isCheckoutOpen && (
         <Suspense fallback={<div className="checkout-loading" role="status">Menyiapkan checkout dan tarif pengiriman…</div>}>
           <CheckoutModal isOpen onClose={() => setIsCheckoutOpen(false)} items={cart.items} totalQty={cart.totalQty} subtotalProduct={cart.subtotal} normalTotalProduct={cart.normalTotal} discountTotalProduct={cart.discountTotal} onCartOpen={cart.openCart} />
@@ -194,15 +206,6 @@ export function App() {
       <CookieConsentBanner onOpenPrivacyPolicy={openPrivacy} />
       <CartToast message={cart.toastMessage} />
     </div>
-=======
-import { LanguageProvider } from './context/LanguageContext';
-
-export function App() {
-  return (
-    <LanguageProvider>
-      <BotaniDashboard />
-    </LanguageProvider>
->>>>>>> dashboard
   );
 }
 

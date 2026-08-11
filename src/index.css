@@ -136,7 +136,10 @@
     outline-offset: 3px;
   }
 
+  :root.dark,
+  html.dark,
   .dark {
+    color-scheme: dark;
     --color-primary: #4ade80;
     --color-primary-hover: #86efac;
     --color-primary-light: #064e3b;
@@ -158,55 +161,375 @@
   }
 
   /* Comprehensive High-Contrast Dark Mode Overrides */
+  .dark body,
+  .dark main,
+  .dark .app-root,
   .dark .peluang-section,
-  .dark .story-section {
-    background-color: var(--color-bg-light);
-  }
-
-  .dark .peluang-main-title,
-  .dark .story-main-title,
-  .dark .steps-main-title,
-  .dark .why-main-title,
-  .dark .gallery-main-title,
-  .dark .faq-main-title,
-  .dark .quick-title,
-  .dark .value-title,
-  .dark .promo-title,
-  .dark .opportunity-card .card-title,
-  .dark .story-card-title,
-  .dark .step-card-title,
-  .dark .why-card-title,
-  .dark .gallery-caption,
-  .dark .faq-question-btn {
-    color: var(--color-text-dark) !important;
-  }
-
-  .dark .peluang-main-subtitle,
-  .dark .story-main-subtitle,
-  .dark .steps-main-subtitle,
-  .dark .why-main-desc,
-  .dark .gallery-main-desc,
-  .dark .quick-subtitle,
-  .dark .value-desc,
-  .dark .promo-subtitle,
-  .dark .opportunity-card .card-desc,
-  .dark .story-card-desc,
-  .dark .step-card-desc,
-  .dark .why-card-desc,
-  .dark .faq-answer-content,
-  .dark .hero-disclaimer-note {
+  .dark .story-section,
+  .dark .company-profile,
+  .dark .company-profile-section,
+  .dark .kendala-section,
+  .dark .solusi-section,
+  .dark .paket-isi-section,
+  .dark .testimonial-section,
+  .dark .quick-order-section,
+  .dark .faq-section,
+  .dark .promo-section,
+  .dark .products-page {
+    background-color: var(--color-bg-light) !important;
     color: var(--color-text-body) !important;
   }
 
-  .dark .opportunity-card {
-    background-color: var(--color-bg-card);
-    border: 1px solid var(--color-border);
-    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+  .dark .site-header,
+  .dark .navbar-header {
+    background-color: rgba(15, 23, 42, 0.95) !important;
+    border-bottom: 1px solid var(--color-border) !important;
   }
 
-  .dark .card-corner-shape {
-    background-color: #334155;
-    opacity: 0.3;
+  .dark .site-brand span,
+  .dark .brand-name {
+    color: #4ade80 !important;
+  }
+
+  .dark .site-nav-link,
+  .dark .nav-link {
+    color: var(--color-text-body) !important;
+  }
+
+  .dark .site-nav-link:hover,
+  .dark .nav-link:hover {
+    color: #4ade80 !important;
+  }
+
+  .dark .site-cart,
+  .dark .cart-trigger-btn,
+  .dark .homepage-popover,
+  .dark .mobile-nav-sheet {
+    background-color: var(--color-bg-card) !important;
+    border-color: var(--color-border) !important;
+    color: var(--color-text-body) !important;
+  }
+
+  .dark .homepage-link {
+    color: var(--color-text-body) !important;
+  }
+
+  .dark .homepage-link:hover {
+    background-color: #334155 !important;
+  }
+
+  .dark .site-header-spacer {
+    background-color: var(--color-bg-light) !important;
+  }
+
+  .dark .hero-section,
+  .dark .products-hero {
+    background: linear-gradient(180deg, #064e3b 0%, #0f172a 100%) !important;
+  }
+
+  .dark .hero-title,
+  .dark .products-hero h1 {
+    color: #ffffff !important;
+  }
+
+  .dark .hero-lead,
+  .dark .products-hero p {
+    color: #cbd5e1 !important;
+  }
+
+  .dark .hero-poster-card {
+    background: var(--color-bg-card) !important;
+    border: 1px solid var(--color-border) !important;
+    box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6) !important;
+  }
+
+  .dark .company-profile-card,
+  .dark .profile-stat-card,
+  .dark .profile-value-card,
+  .dark .kendala-card,
+  .dark .solusi-point-item,
+  .dark .review-card-active,
+  .dark .paket-card,
+  .dark .testimonial-card,
+  .dark .quick-product-card,
+  .dark .faq-item-row,
+  .dark .promo-poster-card,
+  .dark .opportunity-card,
+  .dark .story-card-new,
+  .dark .step-card-new,
+  .dark .why-card,
+  .dark .gallery-card-item {
+    background-color: var(--color-bg-card) !important;
+    border: 1px solid var(--color-border) !important;
+    color: var(--color-text-body) !important;
+  }
+
+  .dark .eyebrow-badge-orange {
+    background: rgba(243, 111, 33, 0.15) !important;
+    color: #fb923c !important;
+    border: 1px solid rgba(251, 146, 60, 0.3) !important;
+  }
+
+  .dark .company-profile h2,
+  .dark .company-profile h3,
+  .dark .kendala-card h3,
+  .dark .solusi-title,
+  .dark .solusi-point-item strong,
+  .dark .paket-name,
+  .dark .promo-title,
+  .dark .value-title,
+  .dark .quick-title,
+  .dark .peluang-main-title,
+  .dark .story-main-title,
+  .dark .story-card-title,
+  .dark .why-main-title,
+  .dark .why-card-title,
+  .dark .company-main-title,
+  .dark .review-author strong,
+  .dark .faq-item-row h3,
+  .dark .faq-question-btn,
+  .dark .section-title h2,
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    color: var(--color-text-dark) !important;
+  }
+
+  .dark .kendala-card p,
+  .dark .solusi-content p,
+  .dark .solusi-point-item p,
+  .dark .promo-subtitle,
+  .dark .value-desc,
+  .dark .quick-subtitle,
+  .dark .peluang-main-subtitle,
+  .dark .opportunity-card .card-desc,
+  .dark .story-main-subtitle,
+  .dark .story-card-desc,
+  .dark .why-main-desc,
+  .dark .why-card-desc,
+  .dark .company-lead-desc,
+  .dark .brand-feature-item p,
+  .dark .review-text,
+  .dark .review-author span,
+  .dark .faq-answer-content,
+  .dark .section-title p {
+    color: var(--color-text-body) !important;
+  }
+
+  .dark .promo-notice-box {
+    background: rgba(234, 88, 12, 0.18) !important;
+    border: 1px solid rgba(251, 146, 60, 0.3) !important;
+    color: #ffedd5 !important;
+  }
+
+  .dark .price-item.normal {
+    background: #1e293b !important;
+    border: 1px solid #334155 !important;
+  }
+
+  .dark .price-item.normal span {
+    color: #94a3b8 !important;
+  }
+
+  .dark .price-item.normal strong {
+    color: #cbd5e1 !important;
+  }
+
+  .dark .site-footer {
+    background-color: #0b1329 !important;
+    border-top: 1px solid var(--color-border) !important;
+    color: var(--color-text-body) !important;
+  }
+
+  .dark .site-footer h3,
+  .dark .site-footer h4,
+  .dark .footer-brand span {
+    color: #ffffff !important;
+  }
+
+  .dark .site-footer p,
+  .dark .site-footer a {
+    color: #cbd5e1 !important;
+  }
+
+  .dark .cart-drawer,
+  .dark .checkout-modal,
+  .dark .checkout-main,
+  .dark .checkout-aside,
+  .dark .privacy-modal,
+  .dark .cookie-banner {
+    background-color: var(--color-bg-card) !important;
+    border-color: var(--color-border) !important;
+    color: var(--color-text-body) !important;
+  }
+
+  .dark .checkout-step-heading h2,
+  .dark .checkout-modal-header h2,
+  .dark .privacy-modal-header h2,
+  .dark .summary-title,
+  .dark .summary-row strong,
+  .dark .summary-total strong {
+    color: #ffffff !important;
+  }
+
+  .dark .checkout-step-heading p,
+  .dark .summary-row span,
+  .dark .summary-note {
+    color: #cbd5e1 !important;
+  }
+
+  .dark .cart-drawer-header,
+  .dark .cart-drawer-footer,
+  .dark .checkout-modal-header,
+  .dark .privacy-modal-header {
+    border-color: var(--color-border) !important;
+    background-color: var(--color-bg-card) !important;
+  }
+
+  .dark .cart-item-row,
+  .dark .option-card,
+  .dark .service-card,
+  .dark .selected-destination-card,
+  .dark .products-search input,
+  .dark .products-back,
+  .dark input[type="text"],
+  .dark input[type="tel"],
+  .dark input[type="email"],
+  .dark input[type="search"],
+  .dark textarea,
+  .dark select {
+    background-color: var(--color-bg-light) !important;
+    border-color: var(--color-border) !important;
+    color: #ffffff !important;
+  }
+
+  .dark .option-card.selected {
+    border-color: #22c55e !important;
+    background-color: rgba(34, 197, 94, 0.1) !important;
+  }
+
+  /* Floating Input Styling */
+  .floating-input {
+    position: relative;
+    width: 100%;
+  }
+
+  .floating-input-field {
+    width: 100%;
+    min-height: 52px;
+    padding: 20px 14px 6px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background-color: var(--color-bg-card);
+    color: var(--color-text-dark) !important;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .floating-input-field:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+  }
+
+  .floating-input-label {
+    position: absolute;
+    left: 14px;
+    top: 15px;
+    color: var(--color-text-muted) !important;
+    font-size: 0.9rem;
+    pointer-events: none;
+    transition: transform 0.2s ease, font-size 0.2s ease, color 0.2s ease;
+  }
+
+  .floating-input-field:focus ~ .floating-input-label,
+  .floating-input-field:not(:placeholder-shown) ~ .floating-input-label {
+    transform: translateY(-10px);
+    font-size: 0.72rem;
+    color: var(--color-primary) !important;
+  }
+
+  ::placeholder {
+    color: #94a3b8 !important;
+    opacity: 1;
+  }
+
+  .dark ::placeholder {
+    color: #64748b !important;
+    opacity: 1;
+  }
+
+  .dark .floating-input-field {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #ffffff !important;
+  }
+
+  .dark .floating-input-label {
+    color: #94a3b8 !important;
+  }
+
+  .dark .floating-input-field:focus ~ .floating-input-label,
+  .dark .floating-input-field:not(:placeholder-shown) ~ .floating-input-label {
+    color: #4ade80 !important;
+  }
+
+  .card-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    background: var(--color-orange-light, #fff5eb);
+    color: var(--color-orange, #f36f21);
+    border: 1px solid rgba(243, 111, 33, 0.25);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .dark .card-tag {
+    background: rgba(243, 111, 33, 0.15) !important;
+    color: #fb923c !important;
+    border: 1px solid rgba(251, 146, 60, 0.3) !important;
+  }
+
+  .promo-status-msg {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 0.88rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .promo-status-msg.success {
+    background: #dcfce7;
+    border: 1px solid #86efac;
+    color: #166534;
+  }
+
+  .promo-status-msg.info {
+    background: #fef3c7;
+    border: 1px solid #fde68a;
+    color: #92400e;
+  }
+
+  .dark .promo-status-msg.success {
+    background: rgba(34, 197, 94, 0.15) !important;
+    border-color: rgba(74, 222, 128, 0.3) !important;
+    color: #4ade80 !important;
+  }
+
+  .dark .promo-status-msg.info {
+    background: rgba(245, 158, 11, 0.15) !important;
+    border-color: rgba(251, 191, 36, 0.3) !important;
+    color: #fcd34d !important;
+  }
+
+  .dark .brand-card-logo {
+    background: #ffffff !important;
+    padding: 6px 12px !important;
+    border-radius: 10px !important;
   }
 
   .dark .story-card-new {
@@ -216,17 +539,77 @@
   }
 
   .dark .story-omzet-badge {
-    color: #4ade80;
-    background-color: #064e3b;
-    border: 1px solid #10b981;
+    color: #4ade80 !important;
+    background-color: #064e3b !important;
+    border: 1px solid #10b981 !important;
   }
 
   .dark .story-author-sub {
-    color: var(--color-text-muted);
+    color: var(--color-text-muted) !important;
   }
 
   .dark .story-link-btn {
-    color: #fb923c;
+    color: #fb923c !important;
+  }
+
+  .dark .brand-feature-item {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+  }
+
+  .dark .brand-feature-item strong {
+    color: #4ade80 !important;
+  }
+
+  .dark .brand-feature-item p {
+    color: #cbd5e1 !important;
+  }
+
+  .dark .solusi-alert-box {
+    background-color: #3b2a1a !important;
+    border-left-color: var(--color-orange, #f36f21) !important;
+    color: #fef08a !important;
+  }
+
+  .dark .solusi-point-icon,
+  .dark .feature-icon-circle,
+  .dark .paket-icon {
+    background-color: #064e3b !important;
+    color: #4ade80 !important;
+  }
+
+  .dark .paket-card {
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #f1f5f9 !important;
+  }
+
+  .dark .paket-name,
+  .dark .company-main-title {
+    color: #ffffff !important;
+  }
+
+  .dark .paket-sub,
+  .dark .company-lead-desc {
+    color: #cbd5e1 !important;
+  }
+
+  .dark .review-text {
+    color: #f1f5f9 !important;
+  }
+
+  .dark .review-author strong {
+    color: #4ade80 !important;
+  }
+
+  .dark .review-author span {
+    color: #cbd5e1 !important;
+  }
+
+  .dark .carousel-btn {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #4ade80 !important;
   }
 
   .dark .steps-section-wrapper {
@@ -1186,6 +1569,66 @@
     font-size: 1.6rem;
     color: #fff;
     font-weight: 800;
+  }
+
+  .promo-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  @media (min-width: 640px) {
+    .promo-card-actions {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  .promo-add-btn {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 24px;
+    border-radius: 14px;
+    background: #166534;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(22, 101, 52, 0.25);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  .promo-add-btn:hover {
+    transform: translateY(-2px);
+    background: #145e2d;
+  }
+
+  .promo-checkout-btn {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 24px;
+    border-radius: 14px;
+    background: #ea580c;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(234, 88, 12, 0.25);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  .promo-checkout-btn:hover {
+    transform: translateY(-2px);
+    background: #c2410c;
   }
 
   /* QUICK ORDER SECTION (Section 7) */
@@ -4375,6 +4818,40 @@
   }
 
   @media (max-width: 900px) {
+    .value-highlight-wrapper,
+    .promo-5-wrapper,
+    .quick-order-grid,
+    .opportunities-grid,
+    .stories-grid-new,
+    .why-cards-grid,
+    .trust-gallery-grid,
+    .footer-grid-simple,
+    .company-layout-grid,
+    .testimonial-layout,
+    .kendala-section .cards,
+    .offer-grid {
+      grid-template-columns: 1fr !important;
+      gap: 24px !important;
+    }
+
+    .steps-grid-new {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 16px !important;
+    }
+
+    .video-card-dark {
+      padding: 1.5rem 1.25rem !important;
+      min-height: auto !important;
+    }
+
+    .value-content-col {
+      padding-left: 0 !important;
+    }
+
+    .value-title {
+      font-size: 1.6rem !important;
+    }
+
     .product-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -4385,6 +4862,17 @@
   }
 
   @media (max-width: 640px) {
+    .steps-grid-new,
+    .promo-price-bar,
+    .quick-action-buttons {
+      grid-template-columns: 1fr !important;
+      gap: 12px !important;
+    }
+
+    .value-title {
+      font-size: 1.4rem !important;
+    }
+
     .products-hero {
       padding-block: 48px;
     }
@@ -4477,7 +4965,20 @@
   background-color: #fcfdfc;
 }
 
-<<<<<<< HEAD
+.kendala-section .cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 36px;
+}
+
+.offer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
 .kendala-card {
   background: #ffffff;
   border-radius: 20px;
@@ -4485,13 +4986,13 @@
   box-shadow: 0 10px 30px rgba(31, 63, 43, 0.08);
   border: 1px solid #e7ede9;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
-=======
+}
+
 .text-gradient {
   background: linear-gradient(135deg, #15803d 0%, #047857 50%, #166534 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
->>>>>>> dashboard
 }
 
 .kendala-card:hover {

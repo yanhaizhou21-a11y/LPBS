@@ -3,14 +3,9 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { Building2, Check, ChevronDown, Home, Menu, PackageSearch, ShoppingBag, X } from 'lucide-react';
 import { PUBLIC_PAGES } from '../config/public-pages';
 import { ASSETS } from '../data/assets';
-<<<<<<< HEAD
 import { useLanguage } from '../i18n';
 import { LanguageToggle } from './LanguageToggle';
 import { ThemeToggleButton } from './ThemeToggleButton';
-=======
-import { useLanguage } from '../context/LanguageContext';
-import { Globe } from 'lucide-react';
->>>>>>> dashboard
 
 export interface NavbarProps {
   cartQty?: number;
@@ -19,7 +14,6 @@ export interface NavbarProps {
   onOpenCheckout: () => void;
 }
 
-<<<<<<< HEAD
 const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }: NavbarProps) {
@@ -36,7 +30,7 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
   const homeMenuRef = useRef<HTMLDivElement>(null);
   const pathname = currentPath.split('#')[0] || '/';
   const homepageItems = PUBLIC_PAGES.filter((page) => page.navigationVisible && page.group === 'homepages');
-  const productPage = PUBLIC_PAGES.find((page) => page.id === 'products');
+  const productPage = PUBLIC_PAGES.find((page) => page.id === 'products' && page.navigationVisible);
   const homeGroupActive = homepageItems.some((page) => page.path === pathname);
   const directLinks = [
     productPage && { label: t(productPage.labelKey), href: productPage.path, icon: PackageSearch, active: pathname === productPage.path },
@@ -202,49 +196,10 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
             <ShoppingBag size={18} aria-hidden="true" />
             <span className="site-cart-label">{t('nav.cart')}</span>
             {cartQty > 0 && <span className="site-cart-badge">{cartQty}</span>}
-=======
-export const Navbar: React.FC<NavbarProps> = ({ cartQty, onOpenCart, onOpenCheckout }) => {
-  const { language, toggleLanguage, t } = useLanguage();
-
-  return (
-    <header className="navbar-header">
-      <div className="container nav-container">
-        <a href="#" className="nav-brand">
-          <img src={ASSETS.logo} alt="Logo Botani Seed" className="nav-logo-img" />
-          <div className="nav-brand-text">
-            <span className="brand-name">PT. Botani Seed Indonesia</span>
-            <span className="brand-tagline">Solusi Benih Sayuran Unggul</span>
-          </div>
-        </a>
-
-        <nav className="nav-menu">
-          <a href="#peluang" className="nav-link">{t('businessOpportunities')}</a>
-          <a href="#kisah" className="nav-link">{t('farmerStories')}</a>
-          <a href="#profil" className="nav-link">{t('companyProfile')}</a>
-          <a href="#promo" className="nav-link nav-link-highlight">{t('promo5Packs')}</a>
-          <a href="#faq" className="nav-link">{t('faq')}</a>
-        </nav>
-
-        <div className="nav-actions flex items-center gap-3">
-          <button
-            onClick={toggleLanguage}
-            title={language === 'id' ? 'Ganti ke Bahasa Inggris' : 'Switch to Indonesian'}
-            className="lang-switcher-btn flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border border-gray-200 hover:bg-gray-100 transition-colors"
-          >
-            <Globe className="w-4 h-4" />
-            <span>{language.toUpperCase()}</span>
-          </button>
-
-          <button className="cart-trigger-btn" onClick={onOpenCart} aria-label={t('cart')}>
-            <span className="cart-icon">🛒</span>
-            <span className="cart-text">{t('cart')}</span>
-            {cartQty > 0 && <span className="cart-badge">{cartQty}</span>}
->>>>>>> dashboard
           </button>
           <button type="button" className="site-order" onClick={openCheckout}>{t('nav.orderNow')}</button>
         </div>
 
-<<<<<<< HEAD
         <div className="mobile-header-actions">
           <button type="button" className="site-icon-button" onClick={openCart} aria-label={`${t('nav.cart')}: ${cartQty}`}>
             <ShoppingBag size={20} aria-hidden="true" />
@@ -260,10 +215,6 @@ export const Navbar: React.FC<NavbarProps> = ({ cartQty, onOpenCart, onOpenCheck
             aria-label={t('nav.openMenu')}
           >
             <Menu size={21} aria-hidden="true" />
-=======
-          <button className="nav-order-btn" onClick={onOpenCheckout}>
-            {t('orderNow')}
->>>>>>> dashboard
           </button>
         </div>
       </div>

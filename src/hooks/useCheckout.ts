@@ -322,6 +322,10 @@ Bukti transfer telah saya siapkan. Mohon pesanan saya segera diproses. Terima ka
 
   const confirmPaidAndOpenWhatsapp = async () => {
     if (!paymentSession || paymentSession.isExpired || !isPaymentConfirmedChecked) return;
+    if (!items || items.length === 0) {
+      setOrderSaveError('Keranjang Anda kosong. Silakan pilih paket benih terlebih dahulu.');
+      return;
+    }
     setIsSavingOrder(true);
     setOrderSaveError(null);
     const whatsappWindow = window.open('about:blank', '_blank');

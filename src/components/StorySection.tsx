@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { motion, useReducedMotion, AnimatePresence } from 'motion/react';
-import { Sparkles, Award, ArrowRight, Quote, CheckCircle2, TrendingUp, MapPin } from 'lucide-react';
+import React from 'react';
+import { motion, useReducedMotion } from 'motion/react';
+import { Sparkles, Award } from 'lucide-react';
 import { ExpandableProfileCard, type ProfileDetailInfo } from './ui/expandable-profile-card';
-import { CarouselNavigator, DEFAULT_BOTANI_THEMES } from './ui/carousel-navigator';
 
 interface StoryProfile {
   id: string;
@@ -15,9 +14,6 @@ interface StoryProfile {
 
 export const StorySection: React.FC = () => {
   const reduceMotion = useReducedMotion();
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const autoDelay = 6000;
 
   const profileStories: StoryProfile[] = [
     {
@@ -56,61 +52,10 @@ export const StorySection: React.FC = () => {
         tipsSukses: [
           'Pengolahan tanah yang matang dengan pupuk kompos dasar sebelum pindah tanam.',
           'Pemilihan benih tahan iklim tropis ekstrim (tahan hujan dan panas terik).',
-          'Rotasi tanam terencana antara sayur daun dan buah untuk memutus siklus hama.',
-        ],
-      },
-    },
-    {
-      id: 'syukur',
-      title: 'Prof. Dr. Ir. Muhamad Syukur',
-      subtitle: 'Guru Besar & Pemulia Benih IPB University',
-      badge: 'Riset Pemuliaan IPB',
-      imageSrc: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=1000',
-      details: {
-        omzet: 'Riset 30+ Varietas Nasional',
-        lokasi: 'Laboratorium Pemuliaan IPB, Baranangsiang',
-        komoditas: 'Formulasi Cabai Unggul, Tomat, Terong, Sayur Tropis',
-        dayaKecambah: '>88% Standard SNI / IPB',
-        quote: 'Benih adalah fondasi kedaulatan pangan. Kami merancang benih yang tidak hanya subur, tapi juga mudah ditumbuhkan oleh masyarakat awam di pekarangan rumah.',
-        fullBio: 'Pakar genetika dan pemuliaan tanaman hortikultura ternama Indonesia dari Departemen Agronomi dan Hortikultura IPB University. Berdedikasi menghasilkan benih unggul adaptif lokal yang kini diproduksi dan didistribusikan oleh PT Botani Seed Indonesia.',
-        tipsSukses: [
-          'Simpan kemasan benih yang belum dibuka di tempat sejuk dan kedap udara.',
-          'Pastikan media semai gembur dan tidak tergenang air berlebih saat persemaian 7 hari pertama.',
-          'Berikan pencahayaan matahari minimal 5-6 jam per hari untuk fotosintesis maksimal.',
-        ],
-      },
-    },
-    {
-      id: 'maryam',
-      title: 'Siti Maryam',
-      subtitle: 'Praktisi Urban Farming & Pegiat Hidroponik',
-      badge: 'Panen Mandiri Rumah',
-      imageSrc: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80&w=1000',
-      details: {
-        omzet: 'Hemat Belanja Rp1,8 Juta/Bln',
-        lokasi: 'Pekarangan Rumah, Tangerang Selatan',
-        komoditas: 'Kangkung, Bayam Merah & Hijau, Pakcoy, Selada',
-        dayaKecambah: '92% Tumbuh Subur di Polybag',
-        quote: 'Awalnya cuma coba-coba menanam di polybag dan talang air depan rumah. Ternyata hasilnya melimpah, sayuran lebih manis dan renyah karena tanpa pestisida kimia!',
-        fullBio: 'Ibu rumah tangga dan penggerak komunitas ketahanan pangan RT/RW. Memanfaatkan balkon lantai dua dan sudut pekarangan 10m² untuk menghasilkan panen sayur segar setiap akhir pekan.',
-        tipsSukses: [
-          'Mulai dari benih sayur daun yang cepat panen (kangkung 21 hari, bayam 25 hari).',
-          'Gunakan botol bekas atau polybag ramah lingkungan untuk menekan modal awal.',
-          'Ajak keluarga menyiram dan merawat tanaman sebagai sarana edukasi sehat.',
         ],
       },
     },
   ];
-
-  useEffect(() => {
-    if (isPaused) return;
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % profileStories.length);
-    }, autoDelay);
-    return () => clearInterval(timer);
-  }, [currentSlide, isPaused, profileStories.length]);
-
-  const currentProfile = profileStories[currentSlide];
 
   const steps = [
     {
@@ -168,100 +113,10 @@ export const StorySection: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* SPOTLIGHT FEATURED STORY (ACTIVE SLIDE FOCUS) */}
-        <div
-          className="mb-10"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentProfile.id}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent p-6 sm:p-8 dark:border-emerald-900/60 dark:from-emerald-950/40 shadow-sm"
-            >
-              <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center">
-                <div className="lg:col-span-4">
-                  <div className="relative h-64 sm:h-72 w-full overflow-hidden rounded-2xl shadow-md">
-                    <img
-                      src={currentProfile.imageSrc}
-                      alt={currentProfile.title}
-                      className="h-full w-full object-cover"
-                    />
-                    <div className="absolute top-3 left-3">
-                      <span className="rounded-full bg-emerald-600 px-3 py-1 text-xs font-bold text-white shadow-sm">
-                        {currentProfile.badge}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="lg:col-span-8 flex flex-col justify-between space-y-4">
-                  <div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                      {currentProfile.subtitle}
-                    </span>
-                    <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50 mt-1">
-                      {currentProfile.title}
-                    </h3>
-                  </div>
-
-                  <div className="flex items-start gap-3 rounded-2xl bg-white/80 dark:bg-zinc-900/80 p-4 border border-emerald-100 dark:border-emerald-900/40">
-                    <Quote className="size-5 shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />
-                    <p className="text-xs sm:text-sm italic text-zinc-700 dark:text-zinc-300 leading-relaxed">
-                      "{currentProfile.details.quote}"
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    {currentProfile.details.omzet && (
-                      <div className="rounded-xl bg-white/90 dark:bg-zinc-900/90 p-3 border border-zinc-200/80 dark:border-zinc-800">
-                        <span className="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
-                          <TrendingUp className="size-3" /> Hasil
-                        </span>
-                        <p className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate">
-                          {currentProfile.details.omzet}
-                        </p>
-                      </div>
-                    )}
-                    {currentProfile.details.dayaKecambah && (
-                      <div className="rounded-xl bg-white/90 dark:bg-zinc-900/90 p-3 border border-zinc-200/80 dark:border-zinc-800">
-                        <span className="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
-                          <Award className="size-3" /> Daya Tumbuh
-                        </span>
-                        <p className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate">
-                          {currentProfile.details.dayaKecambah}
-                        </p>
-                      </div>
-                    )}
-                    {currentProfile.details.lokasi && (
-                      <div className="col-span-2 sm:col-span-1 rounded-xl bg-white/90 dark:bg-zinc-900/90 p-3 border border-zinc-200/80 dark:border-zinc-800">
-                        <span className="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
-                          <MapPin className="size-3" /> Lokasi
-                        </span>
-                        <p className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate">
-                          {currentProfile.details.lokasi}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* 4 EXPANDABLE CARDS GRID */}
-        <div
-          className="mb-14"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {profileStories.map((story, idx) => (
+        {/* 2 EXPANDABLE CARDS GRID */}
+        <div className="mb-14">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2 max-w-4xl mx-auto">
+            {profileStories.map((story) => (
               <ExpandableProfileCard
                 key={story.id}
                 title={story.title}
@@ -269,21 +124,8 @@ export const StorySection: React.FC = () => {
                 badge={story.badge}
                 imageSrc={story.imageSrc}
                 details={story.details}
-                isActive={idx === currentSlide}
-                onSelect={() => setCurrentSlide(idx)}
               />
             ))}
-          </div>
-
-          {/* CAROUSEL CONTROLLER */}
-          <div className="mt-8 flex justify-center">
-            <CarouselNavigator
-              totalSlides={profileStories.length}
-              autoDelay={autoDelay}
-              themes={DEFAULT_BOTANI_THEMES}
-              currentIndex={currentSlide}
-              onIndexChange={setCurrentSlide}
-            />
           </div>
         </div>
 

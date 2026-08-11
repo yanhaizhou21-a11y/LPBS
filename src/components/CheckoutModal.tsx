@@ -2,12 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Check, FileText, Search, Sprout, X } from 'lucide-react';
 import { ASSETS } from '../data/assets';
 import { useCheckout } from '../hooks/useCheckout';
-<<<<<<< HEAD
 import { CartItem } from '../types';
 import { FloatingInput } from './ui/floating-input';
-=======
-import { useLanguage } from '../context/LanguageContext';
->>>>>>> dashboard
 
 interface CheckoutModalProps {
   isOpen: boolean;
@@ -30,12 +26,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   discountTotalProduct,
   onCartOpen
 }) => {
-<<<<<<< HEAD
   const checkout = useCheckout(items, totalQty, subtotalProduct);
-=======
-  const { t } = useLanguage();
-  const checkout = useCheckout(totalQty, subtotalProduct);
->>>>>>> dashboard
 
   const [copySuccess, setCopySuccess] = useState(false);
 
@@ -108,6 +99,25 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
           </div>
 
           <div className="checkout-layout">
+            {items.length === 0 ? (
+              <main className="checkout-main text-center py-12 px-4">
+                <Sprout size={48} className="mx-auto text-emerald-600 mb-4" />
+                <h2 className="text-xl font-extrabold text-zinc-900 dark:text-zinc-50">Keranjang Belanja Kosong</h2>
+                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300 max-w-md mx-auto">
+                  Silakan tambahkan paket benih sayuran ke keranjang terlebih dahulu sebelum melakukan pemesanan.
+                </p>
+                <button
+                  type="button"
+                  className="mt-6 checkout-primary-btn mx-auto"
+                  onClick={() => {
+                    onClose();
+                    onCartOpen();
+                  }}
+                >
+                  Lihat Paket Benih
+                </button>
+              </main>
+            ) : (
             <main className="checkout-main">
               {/* STEP 1: DATA PEMESAN */}
               {checkout.currentStep === 1 && (
@@ -119,7 +129,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
                   <form className="checkout-form" onSubmit={e => e.preventDefault()}>
                     <div className="form-grid">
-<<<<<<< HEAD
                       <FloatingInput
                         label="Nama lengkap *"
                         type="text"
@@ -142,116 +151,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                         aria-describedby={checkout.buyerFormError ? 'buyer-form-error' : undefined}
                         onChange={e => checkout.updateBuyerForm('whatsapp', e.target.value)}
                       />
-
-=======
-                      <label>
-                        <span>{t('fullName')} *</span>
-                        <input
-                          type="text"
-                          required
-                          value={checkout.buyerForm.name}
-                          onChange={e => checkout.updateBuyerForm('name', e.target.value)}
-                          placeholder={t('fullNamePlaceholder')}
-                        />
-                      </label>
-
-                      <label>
-                        <span>{t('whatsappNumber')} *</span>
-                        <input
-                          type="tel"
-                          required
-                          value={checkout.buyerForm.whatsapp}
-                          onChange={e => checkout.updateBuyerForm('whatsapp', e.target.value)}
-                          placeholder={t('whatsappPlaceholder')}
-                        />
-                      </label>
-
-                      <label className="full-field">
-                        <span>{t('emailOptional')}</span>
-                        <input
-                          type="email"
-                          value={checkout.buyerForm.email}
-                          onChange={e => checkout.updateBuyerForm('email', e.target.value)}
-                          placeholder={t('emailPlaceholder')}
-                        />
-                      </label>
-
-                      <label className="full-field">
-                        <span>{t('fullAddress')} *</span>
-                        <textarea
-                          rows={3}
-                          required
-                          value={checkout.buyerForm.address}
-                          onChange={e => checkout.updateBuyerForm('address', e.target.value)}
-                          placeholder={t('fullAddressPlaceholder')}
-                        ></textarea>
-                      </label>
-
-                      <label>
-                        <span>{t('cityRegency')} *</span>
-                        <input
-                          type="text"
-                          required
-                          value={checkout.buyerForm.city}
-                          onChange={e => checkout.updateBuyerForm('city', e.target.value)}
-                          placeholder={t('cityPlaceholder')}
-                        />
-                      </label>
-
-                      <label>
-                        <span>{t('district')} *</span>
-                        <input
-                          type="text"
-                          required
-                          value={checkout.buyerForm.district}
-                          onChange={e => checkout.updateBuyerForm('district', e.target.value)}
-                          placeholder={t('districtPlaceholder')}
-                        />
-                      </label>
-
-                      <label>
-                        <span>{t('village')} *</span>
-                        <input
-                          type="text"
-                          required
-                          value={checkout.buyerForm.village}
-                          onChange={e => checkout.updateBuyerForm('village', e.target.value)}
-                          placeholder={t('villagePlaceholder')}
-                        />
-                      </label>
-
-                      <label>
-                        <span>{t('province')} *</span>
-                        <input
-                          type="text"
-                          required
-                          value={checkout.buyerForm.province}
-                          onChange={e => checkout.updateBuyerForm('province', e.target.value)}
-                          placeholder={t('provincePlaceholder')}
-                        />
-                      </label>
-
-                      <label>
-                        <span>{t('postalCode')} *</span>
-                        <input
-                          type="text"
-                          required
-                          value={checkout.buyerForm.postal}
-                          onChange={e => checkout.updateBuyerForm('postal', e.target.value)}
-                          placeholder={t('postalPlaceholder')}
-                        />
-                      </label>
-
-                      <label className="full-field">
-                        <span>{t('orderNoteOptional')}</span>
-                        <input
-                          type="text"
-                          value={checkout.buyerForm.note}
-                          onChange={e => checkout.updateBuyerForm('note', e.target.value)}
-                          placeholder={t('notePlaceholder')}
-                        />
-                      </label>
->>>>>>> dashboard
                     </div>
 
                     {checkout.buyerFormError && (
@@ -835,6 +734,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 </div>
               )}
             </main>
+            )}
 
             {/* SIDEBAR SUMMARY PANEL */}
             <aside className="checkout-summary-panel">
