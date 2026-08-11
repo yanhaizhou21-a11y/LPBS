@@ -18,12 +18,12 @@ export const CompanyProfile: React.FC = () => {
               PT Botani Seed Indonesia
             </h2>
             <p className="company-lead-desc text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
-              PT Botani Seed Indonesia merupakan badan usaha milik IPB University yang bergerak di bidang perbenihan. Kami berkomitmen menyediakan benih tanaman dan sayuran unggul berkualitas tinggi yang mudah ditanam oleh siapa saja, dari pekarangan rumah hingga lahan pertanian.
+              PT Botani Seed Indonesia merupakan perusahaan agribisnis yang berdiri sejak tahun 2016 dan menjadi bagian dari PT Bogor Life Science and Technology (PT BLST), Holding Company of IPB University. Kami bergerak dalam produksi dan pemasaran benih unggul, pupuk, dan sarana pertanian berkualitas tinggi.
             </p>
 
             <div className="company-actions">
               <a
-                href="#top"
+                href="/about"
                 className="btn-fill-reveal inline-flex items-center justify-center px-6 py-3 rounded-2xl font-extrabold text-sm text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 transition-colors"
               >
                 Pelajari Selengkapnya tentang Botani Seed

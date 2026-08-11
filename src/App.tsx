@@ -16,6 +16,7 @@ import { AdminDashboard } from './components/AdminDashboard';
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { CookieConsentBanner } from './components/CookieConsentBanner';
 import { ProductsPage } from './components/ProductsPage';
+import { AboutPage } from './components/AboutPage';
 import { KendalaSection } from './components/KendalaSection';
 import { SolusiSection } from './components/SolusiSection';
 import { PaketIsiSection } from './components/PaketIsiSection';
@@ -28,7 +29,6 @@ import { FadeContent } from './components/ui/fade-content';
 
 const CheckoutModal = lazy(() => import('./components/CheckoutModal').then((module) => ({ default: module.CheckoutModal })));
 type View = PublicPageId | 'admin-login' | 'dashboard';
-
 function viewFromPath(): View {
   if (window.location.pathname === '/dashboard' || window.location.pathname === '/admin/dashboard') return 'dashboard';
   if (
@@ -223,6 +223,8 @@ export function App() {
           </main>
         ) : view === 'products' ? (
           <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCheckout={() => handleOpenCheckout(1)} />
+        ) : view === 'about' ? (
+          <AboutPage onGoHome={() => navigate('landing', '/')} onOpenCheckout={() => handleOpenCheckout(1)} />
         ) : (
           <main>
             <FadeContent blur={false} duration={700} direction="none">

@@ -147,7 +147,7 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
               </AnimatePresence>
             </div>
             {productPage && <a href={productPage.path} className={`botani-nav-link${pathname === productPage.path ? ' is-active' : ''}`} aria-current={pathname === productPage.path ? 'page' : undefined}>{t(productPage.labelKey)}</a>}
-            <a href="/#profil" className={`botani-nav-link${currentPath === '/#profil' ? ' is-active' : ''}`}>{t('nav.about')}</a>
+            <a href="/about" className={`botani-nav-link${pathname === '/about' || currentPath === '/about' ? ' is-active' : ''}`}>{t('nav.about')}</a>
           </nav>
 
           <div className="botani-desktop-actions">
@@ -188,7 +188,7 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
                 {homepageItems.map((page) => <a key={page.id} href={page.path} className={page.path === pathname ? 'is-active' : ''} onClick={closeMobileMenu}><Home size={19} /><span>{t(page.labelKey)}</span>{page.path === pathname && <Check size={18} />}</a>)}
                 <div className="botani-mobile-divider" />
                 {productPage && <a href={productPage.path} className={pathname === productPage.path ? 'is-active' : ''} onClick={closeMobileMenu}><PackageSearch size={19} /><span>{t(productPage.labelKey)}</span></a>}
-                <a href="/#profil" onClick={closeMobileMenu}><Building2 size={19} /><span>{t('nav.about')}</span></a>
+                <a href="/about" onClick={closeMobileMenu} className={pathname === '/about' ? 'is-active' : ''}><Building2 size={19} /><span>{t('nav.about')}</span></a>
               </nav>
               <div className="botani-mobile-footer">
                 <div><LanguageToggle className="botani-language" /><ThemeToggleButton className="botani-theme-toggle" /></div>
