@@ -31,7 +31,7 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
             <motion.div {...enter(0.05)}>
               <span className="premium-eyebrow">
                 {isV2 ? <Sparkles className="size-3.5 text-amber-500" /> : <Sprout className="size-3.5 text-emerald-600" />}
-                <span>{isV2 ? 'SOLUSI PANEN MAKSIMAL · IPB UNIVERSITY' : 'PELUANG USAHA SAYURAN RUMAHAN'}</span>
+                <span>{isV2 ? 'PAKET BENIH SAYURAN BERKUALITAS' : 'PELUANG USAHA SAYURAN RUMAHAN'}</span>
               </span>
             </motion.div>
 
@@ -42,9 +42,9 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
             >
               {isV2 ? (
                 <>
-                  Kenapa Sayuran Kebun Tetangga Bisa{' '}
+                  Kok Sayuran Tetangga Bisa{' '}
                   <span className="text-emerald-700 dark:text-emerald-400">
-                    Jauh Lebih Subur?
+                    Lebih Subur?
                   </span>
                 </>
               ) : (
@@ -63,7 +63,7 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
               className="premium-hero-lead"
             >
               {isV2
-                ? 'Kuncinya ada pada kemurnian benih unggul tropis dan panduan nutrisi seimbang. Dapatkan paket 10 varietas benih sayuran bersertifikat IPB untuk panen melimpah dari rumah.'
+                ? 'Padahal sama-sama ditanam di rumah dan sama-sama rajin disiram. Ternyata, hasil kebun bukan cuma ditentukan oleh pupuk. Kuncinya ada di pemilihan benih yang tepat sejak awal.'
                 : 'Kisah nyata 2 orang yang telah menggunakan produk kami membuktikan usaha sayur daun dan buah dapat berkembang konsisten. Dipandu modul SOP tanam praktis dengan garansi daya kecambah menjadi lebih besar.'}
             </motion.p>
 
@@ -73,7 +73,7 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
                 <>
                   <button type="button" onClick={onOpenCheckout} className="premium-button premium-button-primary">
                     <ShoppingBag size={18} />
-                    <span>Pesan Paket — Diskon 20%</span>
+                    <span>Tambah ke Keranjang</span>
                     <ArrowRight size={18} />
                   </button>
                   <a
@@ -83,7 +83,7 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
                     className="premium-button premium-button-secondary"
                   >
                     <MessageCircle className="size-4.5 text-emerald-600 dark:text-emerald-400" />
-                    <span>Chat WhatsApp</span>
+                    <span>Tanya via WhatsApp</span>
                   </a>
                 </>
               ) : (
@@ -111,21 +111,21 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
             >
               <div className="flex items-center gap-2 text-xs font-bold text-zinc-700 dark:text-zinc-300">
                 <ShieldCheck className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <span>Daya Tumbuh &gt;85%</span>
+                <span>Cocok untuk pemula</span>
               </div>
               <div className="flex items-center gap-2 text-xs font-bold text-zinc-700 dark:text-zinc-300">
                 <Award className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <span>Riset Resmi IPB</span>
+                <span>10 jenis benih</span>
               </div>
               <div className="col-span-2 sm:col-span-1 flex items-center gap-2 text-xs font-bold text-zinc-700 dark:text-zinc-300">
                 <Truck className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <span>COD Seluruh Indonesia</span>
+                <span>Bisa dari rumah</span>
               </div>
             </motion.div>
 
             <motion.p {...enter(0.45)} className="premium-hero-note">
               {isV2
-                ? '*Pengiriman kilat aman langsung dari gudang resmi IPB Dramaga Bogor.'
+                ? '*Hasil terbaik dimulai dari benih yang sehat dan cara tanam yang tepat.'
                 : '*Hasil panen dan omzet dipengaruhi luas lahan, ketekunan perawatan, dan manajemen pasar.'}
             </motion.p>
           </div>

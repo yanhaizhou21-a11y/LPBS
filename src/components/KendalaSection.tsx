@@ -1,5 +1,6 @@
+import React from 'react';
 import { motion, useReducedMotion } from 'motion/react';
-import { Sprout, Droplets, Box } from 'lucide-react';
+import { AlertCircle, Ban, TrendingDown } from 'lucide-react';
 
 export function KendalaSection() {
   const reduceMotion = useReducedMotion();
@@ -11,54 +12,59 @@ export function KendalaSection() {
 
   const kendalaList = [
     {
-      icon: Sprout,
-      colorClass: 'icon-daily',
-      title: 'Benih Kurang Berkualitas',
-      desc: 'Benih biasa seringkali gagal tumbuh atau rentan terhadap serangan hama dan penyakit.',
+      icon: Ban,
+      title: 'Benih Sulit Tumbuh',
+      desc: 'Sudah ditanam beberapa hari, tetapi belum terlihat tanda-tanda pertumbuhan.',
     },
     {
-      icon: Droplets,
-      colorClass: 'icon-market',
-      title: 'Nutrisi Tidak Seimbang',
-      desc: 'Takaran dan unsur hara tanah yang kurang tepat membuat pertumbuhan tanaman terhambat.',
+      icon: AlertCircle,
+      title: 'Tanaman Mudah Layu',
+      desc: 'Tanaman terlihat kurang sehat meskipun sudah disiram secara rutin.',
     },
     {
-      icon: Box,
-      colorClass: 'icon-growth',
-      title: 'Media Tanam Padat',
-      desc: 'Akar sulit berkembang karena sirkulasi udara dan resapan air di media tanam yang buruk.',
+      icon: TrendingDown,
+      title: 'Hasil Panen Sedikit',
+      desc: 'Hasilnya tidak banyak meskipun sudah dirawat dan diberi pupuk.',
     },
   ];
 
   return (
-    <section id="kendala" className="section kendala-section">
-      <div className="container">
-        <div className="section-title">
-          <motion.span className="eyebrow eyebrow-badge-orange" {...enter(0.05)}>
-            KENDALA DAUN DAN TANAMAN
-          </motion.span>
-          <motion.h2 {...enter(0.12)}>
-            Sudah Dirawat, Tapi Tanamanmu Masih Begitu-Begitu Saja?
-          </motion.h2>
-          <motion.p {...enter(0.2)}>
-            Tanaman kerdil, daun menguning, atau hasil panen tidak maksimal? Jangan-jangan…
-          </motion.p>
-        </div>
+    <section id="kendala" className="w-full py-16 md:py-24 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-50 border-t border-slate-100 dark:border-slate-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        {/* EYEBROW & TITLE */}
+        <motion.div className="max-w-3xl mx-auto mb-12" {...enter(0.05)}>
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-orange-100 text-orange-800 dark:bg-orange-950/80 dark:text-orange-300 mb-3">
+            MASALAH YANG SERING DIHADAPI
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight leading-tight">
+            Sudah Dirawat, Tapi Tanamannya Masih Begitu-Begitu Saja?
+          </h2>
+          <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
+            Menanam sayuran di rumah terlihat sederhana, tetapi hasilnya sering tidak sesuai harapan.
+          </p>
+        </motion.div>
 
-        <div className="cards">
+        {/* 3 EQUAL HEIGHT ICON CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 items-stretch text-left">
           {kendalaList.map((item, idx) => {
             const Icon = item.icon;
             return (
               <motion.div
                 key={item.title}
-                className="card kendala-card"
-                {...enter(0.2 + idx * 0.1)}
+                className="bg-slate-50 dark:bg-slate-800/80 rounded-2xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-700 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                {...enter(0.12 + idx * 0.08)}
               >
-                <div className={`icon ${item.colorClass}`}>
-                  <Icon size={32} />
+                <div>
+                  <div className="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 dark:bg-orange-950 dark:text-orange-400 flex items-center justify-center mb-5 shrink-0">
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-3 leading-snug">
+                    {item.title}
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
+                    {item.desc}
+                  </p>
                 </div>
-                <h3>{item.title}</h3>
-                <p>{item.desc}</p>
               </motion.div>
             );
           })}
@@ -67,3 +73,5 @@ export function KendalaSection() {
     </section>
   );
 }
+
+export default KendalaSection;

@@ -5,6 +5,7 @@ import { checkDBConnection } from './config/db.js';
 import orderRoutes from './routes/orderRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';
+import contentRoutes from './routes/contentRoutes.js';
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use(express.json({ limit: '32kb' }));
 app.use('/api/orders', orderRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api', contentRoutes);
 
 app.get('/api/health', (_req, res) => {
   const isConnected = checkDBConnection();

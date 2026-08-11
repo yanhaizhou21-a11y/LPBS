@@ -92,34 +92,74 @@
     background: transparent !important;
   }
 
-  /* Global Reset & Base Styles */
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  /*
+   * Keep element resets in Tailwind's base layer. Unlayered resets win over
+   * every Tailwind utility, which previously turned px-*, py-* and mx-auto
+   * into 0 throughout both landing pages.
+   */
+  @layer base {
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  html {
-    scroll-behavior: smooth;
-    font-family: var(--font-main);
-    color: var(--color-text-body);
-    background-color: var(--color-bg-light);
-    line-height: 1.6;
-    font-weight: 400;
-    overflow-x: clip;
-    max-width: 100vw;
-  }
+    html {
+      scroll-behavior: smooth;
+      font-family: var(--font-main);
+      color: var(--color-text-body);
+      background-color: var(--color-bg-light);
+      line-height: 1.6;
+      font-weight: 400;
+      overflow-x: clip;
+      max-width: 100vw;
+    }
 
-  body {
-    overflow-x: clip;
-    max-width: 100vw;
-    background: var(--color-bg-light);
-    color: var(--color-text-body);
-    font-family: var(--font-main);
-    font-weight: 400;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    body {
+      overflow-x: clip;
+      max-width: 100vw;
+      background: var(--color-bg-light);
+      color: var(--color-text-body);
+      font-family: var(--font-main);
+      font-weight: 400;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: var(--font-display);
+      color: var(--color-text-dark);
+      line-height: 1.25;
+      font-weight: 800;
+    }
+
+    p, span, li, label, td, th {
+      font-family: var(--font-main);
+      font-weight: 400;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :focus-visible {
+      outline: 3px solid #22c55e;
+      outline-offset: 3px;
+    }
   }
 
   .app-root {
@@ -136,42 +176,8 @@
   }
 
   /* Typography Utilities */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: var(--font-display);
-    color: var(--color-text-dark);
-    line-height: 1.25;
-    font-weight: 800;
-  }
-
-  p, span, li, label, td, th {
-    font-family: var(--font-main);
-    font-weight: 400;
-  }
-
   .lead, .hero-lead, .cta-sub, .section-title p {
     font-weight: 300;
-  }
-
-  button,
-  input,
-  textarea,
-  select {
-    font: inherit;
-  }
-
-  button,
-  a {
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  :focus-visible {
-    outline: 3px solid #22c55e;
-    outline-offset: 3px;
   }
 
   :root.dark,
@@ -6690,32 +6696,6 @@
   min-width: 0;
 }
 
-.app-root main {
-  overflow: clip;
-}
-
-.app-root main :is(h1, h2, h3) {
-  text-wrap: balance;
-  overflow-wrap: break-word;
-}
-
-.app-root main p {
-  text-wrap: pretty;
-  overflow-wrap: break-word;
-}
-
-.app-root main img,
-.app-root main iframe {
-  display: block;
-  max-width: 100%;
-}
-
-.app-root main .container {
-  width: min(calc(100% - 40px), 72rem);
-  margin-inline: auto;
-  padding-inline: 0;
-}
-
 .botani-navbar {
   position: fixed;
   inset: 0 0 auto;
@@ -6825,6 +6805,7 @@
   border-radius: 18px;
   box-shadow: 0 20px 54px rgba(15, 23, 42, 0.18);
   transform: translateX(-50%);
+  z-index: 100;
 }
 
 .dark .botani-home-popover { color: #e2e8f0; background: #0f1f17; border-color: #334155; }
@@ -6924,7 +6905,7 @@
 .dark .botani-icon-button { color: #e2e8f0; background: #1e293b; }
 .botani-icon-button b { position: absolute; top: -4px; right: -4px; }
 
-.botani-mobile-layer { position: fixed; inset: 0; z-index: 60; display: flex; justify-content: flex-end; }
+.botani-mobile-layer { position: fixed; inset: 0; z-index: 90; display: flex; justify-content: flex-end; }
 .botani-mobile-backdrop { position: absolute; inset: 0; width: 100%; border: 0; background: rgba(2, 6, 23, 0.64); backdrop-filter: blur(3px); cursor: pointer; }
 .botani-mobile-sheet { position: relative; z-index: 1; width: min(88vw, 380px); height: 100%; padding: 20px; display: flex; flex-direction: column; color: #1e293b; background: #fff; border-left: 1px solid #e2e8f0; box-shadow: -20px 0 50px rgba(15, 23, 42, 0.22); overflow-y: auto; }
 .dark .botani-mobile-sheet { color: #f8fafc; background: #0b1710; border-color: #334155; }
@@ -6945,18 +6926,8 @@
 .botani-mobile-footer > div { margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .botani-mobile-footer .botani-order-button { width: 100%; }
 
-.app-root .story-section p,
-.app-root .promo-section p,
-.app-root .company-profile p,
-.app-root .quick-order-section p {
-  font-size: max(0.875rem, 14px);
-  line-height: 1.65;
-}
-
-.app-root .story-section :is(.text-\[10px\], .text-\[11px\], .text-xs),
-.app-root #top .text-\[11px\] {
-  font-size: 12px;
-  line-height: 1.5;
+section[id] {
+  scroll-margin-top: 100px;
 }
 
 @media (max-width: 1120px) {
@@ -6975,12 +6946,6 @@
   .botani-brand img { width: 38px; height: 38px; }
   .botani-mobile-actions { gap: 6px; }
   .botani-icon-button { width: 44px; height: 44px; }
-  .app-root main .container { width: min(calc(100% - 32px), 72rem); }
-  .app-root #top { padding-top: 28px; }
-  .app-root #top h1 { font-size: clamp(1.75rem, 8vw, 2.25rem); line-height: 1.12; letter-spacing: -0.035em; }
-  .app-root #top p { font-size: 15px; line-height: 1.62; }
-  .app-root #top .grid.grid-cols-2 { gap: 10px 16px; }
-  .app-root #top .grid.grid-cols-2 > div { font-size: 12px; line-height: 1.4; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -7027,10 +6992,6 @@
 .faq-contact-card {
   margin-top: 32px;
   padding: 28px;
-}
-
-section[id] {
-  scroll-margin-top: 100px;
 }
 
 @media (max-width: 640px) {

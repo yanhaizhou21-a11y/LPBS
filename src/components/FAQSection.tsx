@@ -1,5 +1,5 @@
 import React from 'react';
-import { HelpCircle, MessageCircle, ShoppingBag } from 'lucide-react';
+import { HelpCircle } from 'lucide-react';
 import { MotionAccordion, type MotionAccordionItem } from './ui/motion-faqs-accordion';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 
@@ -71,7 +71,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenCheckout }) => {
             <span>TANYA JAWAB SEPUTAR BENIH</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Pertanyaan yang Sering Diajukan
+            Pertanyaan yang Sering Ditanyakan
           </h2>
           <p className="mt-3 text-base sm:text-lg text-zinc-600 dark:text-zinc-300 max-w-2xl mx-auto">
             Semua yang perlu Anda ketahui tentang kualitas benih bersertifikat IPB, panduan penanaman, dan kemudahan pengiriman.
@@ -83,40 +83,6 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenCheckout }) => {
           <MotionAccordion items={faqItems} gap={10} className="faq-accordion" />
         </div>
 
-        {/* BOTTOM QUICK ACTIONS BANNER */}
-        <div
-          data-reveal
-          className="faq-contact-card premium-faq-cta"
-        >
-          <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Masih butuh bantuan memilih paket?
-          </h3>
-          <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto">
-            Tim Botani Seed siap membantu memilih varietas dan menjelaskan proses pemesanan melalui WhatsApp.
-          </p>
-
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            {onOpenCheckout && (
-              <button
-                type="button"
-                onClick={onOpenCheckout}
-                className="premium-button premium-button-light"
-              >
-                <ShoppingBag className="size-4" />
-                <span>Pesan Paket Sekarang</span>
-              </button>
-            )}
-            <a
-              href="https://wa.me/6281299450708?text=Halo%20Admin%20Botani%20Seed%2C%20saya%20ingin%20konsultasi%20paket%20benih%20sayuran"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="premium-button premium-button-ghost-light"
-            >
-              <MessageCircle className="size-4 text-emerald-600 dark:text-emerald-400" />
-              <span>Konsultasi WhatsApp Gratis</span>
-            </a>
-          </div>
-        </div>
       </div>
     </section>
   );

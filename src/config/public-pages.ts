@@ -19,6 +19,8 @@ export const PUBLIC_PAGES: readonly PublicPageDefinition[] = [
 ];
 
 export const publicPageFromPath = (pathname: string): PublicPageId | null => {
+  if (pathname === '/home2') return 'landing2';
+  if (pathname === '/home' || pathname === '/') return 'landing';
   if (pathname === '/about' || pathname === '/tentang-kami') return 'about';
   return PUBLIC_PAGES.find((page) => page.path === pathname)?.id ?? null;
 };

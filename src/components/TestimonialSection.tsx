@@ -1,104 +1,77 @@
-import { motion, useReducedMotion } from 'motion/react';
-import { Star, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
+import { ChevronLeft, ChevronRight, Users } from 'lucide-react';
+
+const customerStories = [
+  { image: '/images/warehouse.jpg', title: 'Gudang penyimpanan produk' },
+  { image: '/images/product-display.jpg', title: 'Display Produk Botani Seed Indonesia' },
+  { image: '/images/promo-event.jpg', title: 'Pelanggan dan mitra Botani Seed' },
+  { image: '/images/shipping.jpg', title: 'Pengiriman pesanan pelanggan' },
+];
 
 export function TestimonialSection() {
   const reduceMotion = useReducedMotion();
-  const enter = (delay: number) => ({
-    initial: reduceMotion ? false : { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6, delay: reduceMotion ? 0 : delay },
-  });
-
-  const reviews = [
-    {
-      name: 'Ibu Rahmawati',
-      city: 'Bogor',
-      text: 'Paket benihnya sangat bagus! Sawi dan bayam tumbuh lebat dalam 3 minggu. Keluarga senang sekali bisa panen dari pekarangan rumah.',
-      rating: 5,
-    },
-    {
-      name: 'Pak Hery',
-      city: 'Bandung',
-      text: 'Daya tumbuh tinggi sekali. Dari 10 jenis benih, hampir semuanya tumbuh maksimal. Sangat direkomendasikan untuk yang suka berkebun.',
-      rating: 5,
-    },
-    {
-      name: 'Ibu Susanti',
-      city: 'Jakarta',
-      text: 'Pengiriman cepat, kemasan rapi, dan instruksinya mudah diikuti. Anak-anak jadi senang ikut merawat tanaman di rumah.',
-      rating: 5,
-    },
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const shown = [
+    customerStories[currentIndex],
+    customerStories[(currentIndex + 1) % customerStories.length],
   ];
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const prevReview = () => {
-    setCurrentIndex((prev) => (prev === 0 ? reviews.length - 1 : prev - 1));
-  };
-
-  const nextReview = () => {
-    setCurrentIndex((prev) => (prev === reviews.length - 1 ? 0 : prev + 1));
+  const move = (direction: number) => {
+    setCurrentIndex((current) => (current + direction + customerStories.length) % customerStories.length);
   };
 
   return (
-    <section id="ulasan" className="section soft testimonial-section">
-      <div className="container">
-        <div className="section-title text-center">
-          <motion.span className="eyebrow eyebrow-badge-orange" {...enter(0.05)}>
-            ULASAN PELANGGAN
-          </motion.span>
-          <motion.h2 {...enter(0.12)}>
+    <section id="ulasan" className="w-full py-16 md:py-24 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50 border-t border-slate-200/60 dark:border-slate-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto text-center mb-12">
+          <span className="inline-flex items-center px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-orange-100 text-orange-800 dark:bg-orange-950/80 dark:text-orange-300 mb-3">
+            REVIEW &amp; TESTIMONI
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight leading-tight">
             Dipercaya oleh Banyak Pelanggan
-          </motion.h2>
+          </h2>
         </div>
 
-        <div className="testimonial-layout">
-          <motion.div className="stat-card-green" {...enter(0.2)}>
-            <div className="stat-card-content">
-              <Users size={40} className="mb-3 opacity-90" />
-              <h3>10.000+</h3>
-              <p className="stat-card-title">Pelanggan</p>
-              <p className="stat-card-sub">
-                Telah mempercayakan kebutuhan benih sayuran mereka kepada Botani Seed
-              </p>
-            </div>
-          </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+          <motion.article
+            initial={reduceMotion ? false : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            className="bg-[#12643a] text-white rounded-3xl p-7 sm:p-8 shadow-xl min-h-72 flex flex-col justify-center"
+          >
+            <Users className="w-9 h-9 text-emerald-200 mb-8" />
+            <strong className="text-4xl sm:text-5xl font-black tracking-tight">10.000+</strong>
+            <span className="font-extrabold mt-1">pelanggan</span>
+            <p className="text-sm leading-relaxed text-emerald-100 mt-5">
+              Terima kasih kepada pelanggan yang telah memilih Paket Benih Sayuran dari Botani Seed.
+            </p>
+          </motion.article>
 
-          <motion.div className="review-carousel-container" {...enter(0.3)}>
-            <button
-              type="button"
-              onClick={prevReview}
-              className="carousel-btn prev-btn"
-              aria-label="Ulasan sebelumnya"
+          {shown.map((story, index) => (
+            <motion.article
+              key={`${story.title}-${currentIndex}-${index}`}
+              initial={reduceMotion ? false : { opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="bg-white dark:bg-slate-800 rounded-3xl overflow-hidden shadow-xl border border-slate-100 dark:border-slate-700 min-h-72 flex flex-col"
             >
-              <ChevronLeft size={20} />
-            </button>
+              <img src={story.image} alt={story.title} className="w-full h-56 md:h-64 object-cover" loading="lazy" />
+              <strong className="p-5 text-sm sm:text-base text-slate-900 dark:text-slate-100">{story.title}</strong>
+            </motion.article>
+          ))}
+        </div>
 
-            <div className="review-card-active">
-              <div className="review-stars">
-                {[...Array(reviews[currentIndex].rating)].map((_, i) => (
-                  <Star key={i} size={18} fill="#f7b928" color="#f7b928" />
-                ))}
-              </div>
-              <p className="review-text">"{reviews[currentIndex].text}"</p>
-              <div className="review-author">
-                <strong>{reviews[currentIndex].name}</strong>
-                <span> - {reviews[currentIndex].city}</span>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={nextReview}
-              className="carousel-btn next-btn"
-              aria-label="Ulasan selanjutnya"
-            >
-              <ChevronRight size={20} />
-            </button>
-          </motion.div>
+        <div className="flex items-center justify-center gap-3 mt-7">
+          <button type="button" onClick={() => move(-1)} aria-label="Cerita sebelumnya" className="w-11 h-11 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-emerald-700 dark:text-emerald-300 shadow-sm flex items-center justify-center hover:bg-emerald-50 dark:hover:bg-slate-700 transition-colors">
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button type="button" onClick={() => move(1)} aria-label="Cerita berikutnya" className="w-11 h-11 rounded-full bg-emerald-700 text-white shadow-sm flex items-center justify-center hover:bg-emerald-600 transition-colors">
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
       </div>
     </section>
   );
 }
+
+export default TestimonialSection;

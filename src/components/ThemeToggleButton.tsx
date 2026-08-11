@@ -14,7 +14,7 @@ export function ThemeToggleButton({ className = '' }: { className?: string }) {
   const reduceMotion = useReducedMotion();
   const [isDark, setIsDark] = useState(() => {
     const saved = localStorage.getItem('botani_theme');
-    return saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return saved ? saved === 'dark' : false;
   });
 
   useEffect(() => {

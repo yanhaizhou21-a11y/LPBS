@@ -22,6 +22,20 @@ import { SolusiSection } from './components/SolusiSection';
 import { PaketIsiSection } from './components/PaketIsiSection';
 import { TestimonialSection } from './components/TestimonialSection';
 import { BottomCTASection } from './components/BottomCTASection';
+
+// Home Page (landing - 12 sections)
+import { Hero } from './components/Hero';
+import { WhyOpportunity } from './components/WhyOpportunity';
+import { SuccessStories } from './components/SuccessStories';
+import { HowToStart } from './components/HowToStart';
+import { VideoPromo } from './components/VideoPromo';
+import { BundlePromo } from './components/BundlePromo';
+import { ProductMain } from './components/ProductMain';
+import { WhyChooseUs } from './components/WhyChooseUs';
+import { Gallery } from './components/Gallery';
+import { FAQ } from './components/FAQ';
+import { CTAFooter } from './components/CTAFooter';
+
 import { isPublicPage, publicPageFromPath, type PublicPageId } from './config/public-pages';
 import { readJsonResponse } from './lib/http';
 import { SmoothScroll } from './components/SmoothScroll';
@@ -29,6 +43,7 @@ import { FadeContent } from './components/ui/fade-content';
 
 const CheckoutModal = lazy(() => import('./components/CheckoutModal').then((module) => ({ default: module.CheckoutModal })));
 type View = PublicPageId | 'admin-login' | 'dashboard';
+
 function viewFromPath(): View {
   if (window.location.pathname === '/dashboard' || window.location.pathname === '/admin/dashboard') return 'dashboard';
   if (
@@ -192,6 +207,7 @@ export function App() {
       <div className="app-root">
         <Navbar currentPath={currentPath} cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => handleOpenCheckout(1)} />
         {view === 'landing2' ? (
+          /* HOME 2 (10 Sections: "Kok Sayuran Tetangga Bisa Lebih Subur?") */
           <main>
             <FadeContent blur={false} duration={700} direction="none">
               <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => handleOpenCheckout(1)} />
@@ -226,28 +242,46 @@ export function App() {
         ) : view === 'about' ? (
           <AboutPage onGoHome={() => navigate('landing', '/')} onOpenCheckout={() => handleOpenCheckout(1)} />
         ) : (
-          <main>
-            <FadeContent blur={false} duration={700} direction="none">
-              <HeroSection variant={1} onAddToCart={cart.addToCart} onOpenCheckout={() => handleOpenCheckout(1)} />
-            </FadeContent>
-            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <PeluangSection />
-            </FadeContent>
-            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <CompanyProfile />
-            </FadeContent>
-            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <StorySection />
-            </FadeContent>
-            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => handleOpenCheckout(5)} />
-            </FadeContent>
-            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => handleOpenCheckout(1)} />
-            </FadeContent>
-            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <FAQSection onOpenCheckout={() => handleOpenCheckout(1)} />
-            </FadeContent>
+          /* HOME 1 (12 Sections: "Hanya dari jualan sayuran bisa menghasilkan 2 digit?") */
+          <main className="w-full overflow-x-hidden min-h-screen">
+            {/* 1. HERO */}
+            <Hero onOpenCheckout={() => handleOpenCheckout(1)} />
+
+            {/* 2. "Kenapa jualan sayur punya peluang?" */}
+            <WhyOpportunity />
+
+            {/* 3. "Dua kisah nyata petani sayuran yang berkembang" */}
+            <SuccessStories />
+
+            {/* 4. "Bagaimana cara memulainya?" */}
+            <HowToStart />
+
+            {/* 5. Video Promo */}
+            <VideoPromo onOpenCheckout={() => handleOpenCheckout(1)} />
+
+            {/* 6. Promo Bundling */}
+            <BundlePromo
+              onAddToCart={(qty) => cart.addToCart(qty)}
+              onOpenCheckout={(qty) => handleOpenCheckout(qty)}
+            />
+
+            {/* 7. Produk Utama "Paket Benih Sayur Botani Seed" */}
+            <ProductMain
+              onAddToCart={(qty) => cart.addToCart(qty)}
+              onOpenCheckout={(qty) => handleOpenCheckout(qty)}
+            />
+
+            {/* 8. "Kenapa harus memilih Paket Benih Sayur Botani Seed" */}
+            <WhyChooseUs />
+
+            {/* 9. "Dokumentasi Kegiatan" */}
+            <Gallery />
+
+            {/* 10. FAQ accordion */}
+            <FAQ />
+
+            {/* 11. CTA penutup */}
+            <CTAFooter onOpenCheckout={() => handleOpenCheckout(1)} />
           </main>
         )}
         <Footer onOpenPrivacyPolicy={openPrivacy} />
@@ -266,5 +300,3 @@ export function App() {
 }
 
 export default App;
-
-

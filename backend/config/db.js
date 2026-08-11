@@ -1,6 +1,7 @@
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 import { DEFAULT_PRODUCTS } from '../data/defaultProducts.js';
+import { DEFAULT_TESTIMONIALS, DEFAULT_FAQS, DEFAULT_GALLERY } from '../data/defaultContent.js';
 
 dotenv.config();
 
@@ -45,6 +46,18 @@ export async function connectDB() {
         } }],
       },
     })));
+
+    // Seed Testimonials, FAQs, and Gallery
+    await db.collection('testimonials').bulkWrite(DEFAULT_TESTIMONIALS.map((item) => ({
+      updateOne: { filter: { id: item.id }, update: { $set: item }, upsert: true },
+    })));
+    await db.collection('faq').bulkWrite(DEFAULT_FAQS.map((item) => ({
+      updateOne: { filter: { id: item.id }, update: { $set: item }, upsert: true },
+    })));
+    await db.collection('gallery').bulkWrite(DEFAULT_GALLERY.map((item) => ({
+      updateOne: { filter: { id: item.id }, update: { $set: item }, upsert: true },
+    })));
+
     isConnected = true;
     console.log(`[MongoDB] Connected successfully to database: "${dbName}"`);
     return db;
