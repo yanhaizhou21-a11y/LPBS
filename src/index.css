@@ -75,6 +75,23 @@
     }
   }
 
+  /* Hide scrollbars across all browsers while keeping scroll functionality */
+  html,
+  body,
+  * {
+    -ms-overflow-style: none !important; /* IE and Edge */
+    scrollbar-width: none !important; /* Firefox */
+  }
+
+  *::-webkit-scrollbar,
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+  }
+
   /* Global Reset & Base Styles */
   *,
   *::before,
