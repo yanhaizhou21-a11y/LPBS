@@ -60,7 +60,6 @@ export const StorySection: React.FC = () => {
   ];
 
   const currentProfile = profileStories[currentSlide];
-
   const steps = [
     {
       num: '1',

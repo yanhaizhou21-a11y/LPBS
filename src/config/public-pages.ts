@@ -14,7 +14,7 @@ export type PublicPageDefinition = {
 export const PUBLIC_PAGES: readonly PublicPageDefinition[] = [
   { id: 'landing', path: '/', labelKey: 'nav.homeOne', descriptionKey: 'nav.homeOneDescription', group: 'homepages', navigationVisible: true },
   { id: 'landing2', path: '/home2', labelKey: 'nav.homeTwo', descriptionKey: 'nav.homeTwoDescription', group: 'homepages', navigationVisible: true },
-  { id: 'products', path: '/products', labelKey: 'nav.products', group: 'primary', navigationVisible: true },
+  { id: 'products', path: '/products', labelKey: 'nav.products', group: 'primary', navigationVisible: false },
 ];
 
 export const publicPageFromPath = (pathname: string): PublicPageId | null =>

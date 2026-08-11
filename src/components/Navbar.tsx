@@ -29,7 +29,7 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
   const homeMenuRef = useRef<HTMLDivElement>(null);
   const pathname = currentPath.split('#')[0] || '/';
   const homepageItems = PUBLIC_PAGES.filter((page) => page.navigationVisible && page.group === 'homepages');
-  const productPage = PUBLIC_PAGES.find((page) => page.id === 'products');
+  const productPage = PUBLIC_PAGES.find((page) => page.id === 'products' && page.navigationVisible);
   const homeGroupActive = homepageItems.some((page) => page.path === pathname);
 
   useEffect(() => {

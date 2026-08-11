@@ -99,6 +99,25 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
           </div>
 
           <div className="checkout-layout">
+            {items.length === 0 ? (
+              <main className="checkout-main text-center py-12 px-4">
+                <Sprout size={48} className="mx-auto text-emerald-600 mb-4" />
+                <h2 className="text-xl font-extrabold text-zinc-900 dark:text-zinc-50">Keranjang Belanja Kosong</h2>
+                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300 max-w-md mx-auto">
+                  Silakan tambahkan paket benih sayuran ke keranjang terlebih dahulu sebelum melakukan pemesanan.
+                </p>
+                <button
+                  type="button"
+                  className="mt-6 checkout-primary-btn mx-auto"
+                  onClick={() => {
+                    onClose();
+                    onCartOpen();
+                  }}
+                >
+                  Lihat Paket Benih
+                </button>
+              </main>
+            ) : (
             <main className="checkout-main">
               {/* STEP 1: DATA PEMESAN */}
               {checkout.currentStep === 1 && (
@@ -132,7 +151,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                         aria-describedby={checkout.buyerFormError ? 'buyer-form-error' : undefined}
                         onChange={e => checkout.updateBuyerForm('whatsapp', e.target.value)}
                       />
-
                     </div>
 
                     {checkout.buyerFormError && (
@@ -723,6 +741,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 </div>
               )}
             </main>
+            )}
 
             {/* SIDEBAR SUMMARY PANEL */}
             <aside className="checkout-summary-panel">

@@ -12,7 +12,8 @@ import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { CartToast } from './components/CartToast';
 import { SecretAdminLogin } from './components/SecretAdminLogin';
-import { AdminDashboard } from './components/AdminDashboard';
+import { BotaniDashboard } from './components/BotaniDashboard';
+import { LanguageProvider as DashboardLanguageProvider } from './context/LanguageContext';
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { CookieConsentBanner } from './components/CookieConsentBanner';
 import { ProductsPage } from './components/ProductsPage';
@@ -27,11 +28,17 @@ import { SmoothScroll } from './components/SmoothScroll';
 import { FadeContent } from './components/ui/fade-content';
 
 const CheckoutModal = lazy(() => import('./components/CheckoutModal').then((module) => ({ default: module.CheckoutModal })));
-type View = PublicPageId | 'admin-login' | 'admin-dashboard';
+type View = PublicPageId | 'admin-login' | 'dashboard';
 
 function viewFromPath(): View {
-  if (window.location.pathname === '/dashboard' || window.location.pathname === '/admin/dashboard') return 'admin-dashboard';
-  if (window.location.pathname === '/secret-admin-login') return 'admin-login';
+  if (window.location.pathname === '/dashboard' || window.location.pathname === '/admin/dashboard') return 'dashboard';
+  if (
+    window.location.pathname === '/login' ||
+    window.location.pathname === '/admin/login' ||
+    window.location.pathname === '/secret-admin-login'
+  ) {
+    return 'admin-login';
+  }
   return publicPageFromPath(window.location.pathname) ?? 'landing';
 }
 
@@ -42,8 +49,8 @@ export function App() {
   const [view, setView] = useState<View>(viewFromPath);
   const [currentPath, setCurrentPath] = useState(() => `${window.location.pathname}${window.location.hash}`);
   const [adminName, setAdminName] = useState('Admin PT Botani Seed');
-  const [authChecked, setAuthChecked] = useState(isPublicPage(viewFromPath()));
-  const [accessDenied, setAccessDenied] = useState(viewFromPath() === 'admin-dashboard');
+  const [authChecked, setAuthChecked] = useState(isPublicPage(viewFromPath()) && viewFromPath() !== 'dashboard');
+  const [accessDenied, setAccessDenied] = useState(window.location.pathname === '/admin/dashboard');
 
   const navigate = (nextView: View, path: string, replace = false) => {
     window.history[replace ? 'replaceState' : 'pushState']({}, '', path);
@@ -99,9 +106,17 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    if (isPublicPage(view)) return;
+    const isDashboard = view === 'dashboard' || window.location.pathname === '/dashboard' || window.location.pathname === '/admin/dashboard';
+    const isLogin = view === 'admin-login' || window.location.pathname === '/login' || window.location.pathname === '/admin/login' || window.location.pathname === '/secret-admin-login';
+
+    if (!isDashboard && !isLogin) {
+      setAuthChecked(true);
+      return;
+    }
+
     let active = true;
-    const requestedDashboard = viewFromPath() === 'admin-dashboard';
+    setAuthChecked(false);
+    const requestedDashboard = window.location.pathname === '/admin/dashboard' || isDashboard;
     fetch('/api/auth/session')
       .then(async (response) => ({ response, data: await readJsonResponse(response, 'Respons sesi admin tidak valid.') }))
       .then(({ response, data }) => {
@@ -109,7 +124,9 @@ export function App() {
         if (response.ok && data.success) {
           setAdminName(data.admin.name);
           setAccessDenied(false);
-          navigate('admin-dashboard', '/admin/dashboard', true);
+          if (view !== 'dashboard') {
+            navigate('dashboard', '/dashboard', true);
+          }
         } else {
           setAccessDenied(requestedDashboard);
           navigate('admin-login', '/secret-admin-login', true);
@@ -120,9 +137,14 @@ export function App() {
         setAccessDenied(requestedDashboard);
         navigate('admin-login', '/secret-admin-login', true);
       })
-      .finally(() => active && setAuthChecked(true));
-    return () => { active = false; };
-  }, []);
+      .finally(() => {
+        if (active) setAuthChecked(true);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [view]);
 
   const handleAdminLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' }).catch(() => undefined);
@@ -144,34 +166,50 @@ export function App() {
 
   if (!authChecked) return <div className="route-loading" role="status">Memverifikasi sesi admin…</div>;
 
+  if (view === 'dashboard') {
+    return (
+      <DashboardLanguageProvider>
+        <BotaniDashboard
+          adminName={adminName}
+          onLogout={handleAdminLogout}
+          onGoHome={() => navigate('landing', '/')}
+          onUnauthorized={() => { setAccessDenied(true); navigate('admin-login', '/secret-admin-login', true); }}
+        />
+      </DashboardLanguageProvider>
+    );
+  }
   if (view === 'admin-login') {
-    return <SecretAdminLogin accessDenied={accessDenied} onLoginSuccess={(name) => { setAdminName(name); navigate('admin-dashboard', '/admin/dashboard', true); }} onBackToHome={() => navigate('landing', '/')} />;
+    return <SecretAdminLogin accessDenied={accessDenied} onLoginSuccess={(name) => { setAdminName(name); navigate('dashboard', '/dashboard', true); }} onBackToHome={() => navigate('landing', '/')} />;
   }
 
-  if (view === 'admin-dashboard') {
-    return <AdminDashboard adminName={adminName} onLogout={handleAdminLogout} onGoHome={() => navigate('landing', '/')} onUnauthorized={() => { setAccessDenied(true); navigate('admin-login', '/secret-admin-login', true); }} />;
-  }
+  const handleOpenCheckout = (defaultQty = 1) => {
+    cart.closeCart();
+    if (cart.totalQty === 0) {
+      cart.addToCart(defaultQty);
+    }
+    setIsCheckoutOpen(true);
+  };
 
   return (
     <SmoothScroll>
       <div className="app-root">
-        <Navbar currentPath={currentPath} cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
+        <Navbar currentPath={currentPath} cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => handleOpenCheckout(1)} />
         {view === 'landing2' ? (
           <main>
             <FadeContent blur={false} duration={700}>
-              <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => handleOpenCheckout(1)} />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
               <KendalaSection />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <SolusiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              <SolusiSection onOpenCheckout={() => handleOpenCheckout(1)} />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => handleOpenCheckout(5)} />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <PaketIsiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              <PaketIsiSection onOpenCheckout={() => handleOpenCheckout(1)} />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
               <CompanyProfile />
@@ -180,18 +218,18 @@ export function App() {
               <TestimonialSection />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              <FAQSection onOpenCheckout={() => handleOpenCheckout(1)} />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <BottomCTASection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              <BottomCTASection onOpenCheckout={() => handleOpenCheckout(1)} />
             </FadeContent>
           </main>
         ) : view === 'products' ? (
-          <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
+          <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCheckout={() => handleOpenCheckout(1)} />
         ) : (
           <main>
             <FadeContent blur={false} duration={700}>
-              <HeroSection variant={1} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              <HeroSection variant={1} onAddToCart={cart.addToCart} onOpenCheckout={() => handleOpenCheckout(1)} />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
               <PeluangSection />
@@ -203,18 +241,18 @@ export function App() {
               <CompanyProfile />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => handleOpenCheckout(5)} />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => handleOpenCheckout(1)} />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+              <FAQSection onOpenCheckout={() => handleOpenCheckout(1)} />
             </FadeContent>
           </main>
         )}
         <Footer onOpenPrivacyPolicy={openPrivacy} />
-        <CartDrawer isOpen={cart.isCartOpen} onClose={cart.closeCart} items={cart.items} totalQty={cart.totalQty} normalTotal={cart.normalTotal} discountTotal={cart.discountTotal} subtotal={cart.subtotal} isPromoEligible={cart.isPromoEligible} onUpdateQty={cart.updateQty} onClearCart={cart.clearCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
+        <CartDrawer isOpen={cart.isCartOpen} onClose={cart.closeCart} items={cart.items} totalQty={cart.totalQty} normalTotal={cart.normalTotal} discountTotal={cart.discountTotal} subtotal={cart.subtotal} isPromoEligible={cart.isPromoEligible} onUpdateQty={cart.updateQty} onClearCart={cart.clearCart} onOpenCheckout={() => handleOpenCheckout(1)} />
         {isCheckoutOpen && (
           <Suspense fallback={<div className="checkout-loading" role="status">Menyiapkan checkout dan tarif pengiriman…</div>}>
             <CheckoutModal isOpen onClose={() => setIsCheckoutOpen(false)} items={cart.items} totalQty={cart.totalQty} subtotalProduct={cart.subtotal} normalTotalProduct={cart.normalTotal} discountTotalProduct={cart.discountTotal} onCartOpen={cart.openCart} />
