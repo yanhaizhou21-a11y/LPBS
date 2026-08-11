@@ -14,6 +14,7 @@ import { CartToast } from './components/CartToast';
 import { SecretAdminLogin } from './components/SecretAdminLogin';
 import { AdminDashboard } from './components/AdminDashboard';
 import { BotaniDashboard } from './components/BotaniDashboard';
+<<<<<<< HEAD
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { CookieConsentBanner } from './components/CookieConsentBanner';
 import { ProductsPage } from './components/ProductsPage';
@@ -193,6 +194,15 @@ export function App() {
       <CookieConsentBanner onOpenPrivacyPolicy={openPrivacy} />
       <CartToast message={cart.toastMessage} />
     </div>
+=======
+import { LanguageProvider } from './context/LanguageContext';
+
+export function App() {
+  return (
+    <LanguageProvider>
+      <BotaniDashboard />
+    </LanguageProvider>
+>>>>>>> dashboard
   );
 }
 

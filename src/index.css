@@ -4477,6 +4477,7 @@
   background-color: #fcfdfc;
 }
 
+<<<<<<< HEAD
 .kendala-card {
   background: #ffffff;
   border-radius: 20px;
@@ -4484,6 +4485,13 @@
   box-shadow: 0 10px 30px rgba(31, 63, 43, 0.08);
   border: 1px solid #e7ede9;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+=======
+.text-gradient {
+  background: linear-gradient(135deg, #15803d 0%, #047857 50%, #166534 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+>>>>>>> dashboard
 }
 
 .kendala-card:hover {
