@@ -12,8 +12,7 @@ import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { CartToast } from './components/CartToast';
 import { SecretAdminLogin } from './components/SecretAdminLogin';
-import { BotaniDashboard } from './components/BotaniDashboard';
-import { LanguageProvider as DashboardLanguageProvider } from './context/LanguageContext';
+import { AdminDashboard } from './components/AdminDashboard';
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { CookieConsentBanner } from './components/CookieConsentBanner';
 import { ProductsPage } from './components/ProductsPage';
@@ -168,14 +167,12 @@ export function App() {
 
   if (view === 'dashboard') {
     return (
-      <DashboardLanguageProvider>
-        <BotaniDashboard
-          adminName={adminName}
-          onLogout={handleAdminLogout}
-          onGoHome={() => navigate('landing', '/')}
-          onUnauthorized={() => { setAccessDenied(true); navigate('admin-login', '/secret-admin-login', true); }}
-        />
-      </DashboardLanguageProvider>
+      <AdminDashboard
+        adminName={adminName}
+        onLogout={handleAdminLogout}
+        onGoHome={() => navigate('landing', '/')}
+        onUnauthorized={() => { setAccessDenied(true); navigate('admin-login', '/secret-admin-login', true); }}
+      />
     );
   }
   if (view === 'admin-login') {
