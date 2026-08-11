@@ -64,7 +64,7 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
             >
               {isV2
                 ? 'Kuncinya ada pada kemurnian benih unggul tropis dan panduan nutrisi seimbang. Dapatkan paket 10 varietas benih sayuran bersertifikat IPB untuk panen melimpah dari rumah.'
-                : 'Kisah nyata 2 orang yang telah menggunakan product kami membuktikan usaha sayur daun dan buah dapat berkembang konsisten. Dipandu modul SOP tanam praktis dengan garansi daya kecambah menjadi lebih besar.'}
+                : 'Kisah nyata 2 orang yang telah menggunakan produk kami membuktikan usaha sayur daun dan buah dapat berkembang konsisten. Dipandu modul SOP tanam praktis dengan garansi daya kecambah menjadi lebih besar.'}
             </motion.p>
 
             {/* ACTION BUTTONS */}
