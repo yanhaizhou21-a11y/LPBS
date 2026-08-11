@@ -24,6 +24,7 @@ import { TestimonialSection } from './components/TestimonialSection';
 import { BottomCTASection } from './components/BottomCTASection';
 import { isPublicPage, publicPageFromPath, type PublicPageId } from './config/public-pages';
 import { readJsonResponse } from './lib/http';
+import { SmoothScroll } from './components/SmoothScroll';
 
 const CheckoutModal = lazy(() => import('./components/CheckoutModal').then((module) => ({ default: module.CheckoutModal })));
 type View = PublicPageId | 'admin-login' | 'admin-dashboard' | 'dashboard';
@@ -157,44 +158,47 @@ export function App() {
   }
 
   return (
-    <div className="app-root">
-      <Navbar currentPath={currentPath} cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
-      {view === 'landing2' ? (
-        <main>
-          <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-          <KendalaSection />
-          <SolusiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-          <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-          <PaketIsiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-          <CompanyProfile />
-          <TestimonialSection />
-          <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-          <BottomCTASection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-        </main>
-      ) : view === 'products' ? (
-        <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
-      ) : (
-        <main>
-          <HeroSection variant={1} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-          <PeluangSection /><StorySection /><CompanyProfile />
-          <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-          <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-          <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-        </main>
-      )}
-      <Footer onOpenPrivacyPolicy={openPrivacy} />
-      <CartDrawer isOpen={cart.isCartOpen} onClose={cart.closeCart} items={cart.items} totalQty={cart.totalQty} normalTotal={cart.normalTotal} discountTotal={cart.discountTotal} subtotal={cart.subtotal} isPromoEligible={cart.isPromoEligible} onUpdateQty={cart.updateQty} onClearCart={cart.clearCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
-      {isCheckoutOpen && (
-        <Suspense fallback={<div className="checkout-loading" role="status">Menyiapkan checkout dan tarif pengiriman…</div>}>
-          <CheckoutModal isOpen onClose={() => setIsCheckoutOpen(false)} items={cart.items} totalQty={cart.totalQty} subtotalProduct={cart.subtotal} normalTotalProduct={cart.normalTotal} discountTotalProduct={cart.discountTotal} onCartOpen={cart.openCart} />
-        </Suspense>
-      )}
-      <PrivacyPolicyModal isOpen={isPrivacyModalOpen} onClose={closePrivacy} />
-      <CookieConsentBanner onOpenPrivacyPolicy={openPrivacy} />
-      <CartToast message={cart.toastMessage} />
-    </div>
+    <SmoothScroll>
+      <div className="app-root">
+        <Navbar currentPath={currentPath} cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
+        {view === 'landing2' ? (
+          <main>
+            <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            <KendalaSection />
+            <SolusiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            <PaketIsiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            <CompanyProfile />
+            <TestimonialSection />
+            <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            <BottomCTASection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          </main>
+        ) : view === 'products' ? (
+          <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
+        ) : (
+          <main>
+            <HeroSection variant={1} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            <PeluangSection /><StorySection /><CompanyProfile />
+            <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+          </main>
+        )}
+        <Footer onOpenPrivacyPolicy={openPrivacy} />
+        <CartDrawer isOpen={cart.isCartOpen} onClose={cart.closeCart} items={cart.items} totalQty={cart.totalQty} normalTotal={cart.normalTotal} discountTotal={cart.discountTotal} subtotal={cart.subtotal} isPromoEligible={cart.isPromoEligible} onUpdateQty={cart.updateQty} onClearCart={cart.clearCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
+        {isCheckoutOpen && (
+          <Suspense fallback={<div className="checkout-loading" role="status">Menyiapkan checkout dan tarif pengiriman…</div>}>
+            <CheckoutModal isOpen onClose={() => setIsCheckoutOpen(false)} items={cart.items} totalQty={cart.totalQty} subtotalProduct={cart.subtotal} normalTotalProduct={cart.normalTotal} discountTotalProduct={cart.discountTotal} onCartOpen={cart.openCart} />
+          </Suspense>
+        )}
+        <PrivacyPolicyModal isOpen={isPrivacyModalOpen} onClose={closePrivacy} />
+        <CookieConsentBanner onOpenPrivacyPolicy={openPrivacy} />
+        <CartToast message={cart.toastMessage} />
+      </div>
+    </SmoothScroll>
   );
 }
 
 export default App;
+
 

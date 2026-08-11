@@ -46,14 +46,14 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
               {isV2 ? (
                 <>
                   Kenapa Sayuran Kebun Tetangga Bisa{' '}
-                  <span className="bg-gradient-to-r from-emerald-700 to-emerald-600 bg-clip-text text-transparent dark:from-emerald-400 dark:to-emerald-300">
+                  <span className="text-emerald-700 dark:text-emerald-400">
                     Jauh Lebih Subur?
                   </span>
                 </>
               ) : (
                 <>
                   Dari Budidaya Sayuran Rumahan, Bisa Hasilkan Omzet{' '}
-                  <span className="bg-gradient-to-r from-emerald-700 to-emerald-600 bg-clip-text text-transparent dark:from-emerald-400 dark:to-emerald-300">
+                  <span className="text-emerald-700 dark:text-emerald-400">
                     2 Digit/Bulan?
                   </span>
                 </>

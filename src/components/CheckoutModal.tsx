@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Check, FileText, Search, Sprout, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, FileText, MessageCircle, Search, Sprout, X } from 'lucide-react';
 import { ASSETS } from '../data/assets';
 import { useCheckout } from '../hooks/useCheckout';
 import { CartItem } from '../types';
@@ -149,14 +149,16 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                         onCartOpen();
                       }}
                     >
-                      Kembali ke Keranjang
+                      <ArrowLeft size={16} aria-hidden="true" />
+                      <span>Kembali ke Keranjang</span>
                     </button>
                     <button
                       type="button"
                       className="checkout-primary-btn"
                       onClick={checkout.goToStep2}
                     >
-                      Pilih pengiriman
+                      <span>Pilih pengiriman</span>
+                      <ArrowRight size={16} aria-hidden="true" />
                     </button>
                   </div>
                 </div>
@@ -390,14 +392,16 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                       className="checkout-secondary-btn"
                       onClick={() => checkout.setCurrentStep(1)}
                     >
-                      Kembali
+                      <ArrowLeft size={16} aria-hidden="true" />
+                      <span>Kembali</span>
                     </button>
                     <button
                       type="button"
                       className="checkout-primary-btn"
                       onClick={checkout.goToStep3}
                     >
-                      Pilih pembayaran
+                      <span>Pilih pembayaran</span>
+                      <ArrowRight size={16} aria-hidden="true" />
                     </button>
                   </div>
                 </div>
@@ -490,7 +494,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                       className="start-payment-btn"
                       onClick={checkout.startPaymentSession}
                     >
-                      Lihat detail pembayaran
+                      <span>Lihat detail pembayaran</span>
+                      <ArrowRight size={16} aria-hidden="true" />
                     </button>
                   </div>
                   <div className="checkout-nav">
@@ -499,7 +504,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                       className="checkout-secondary-btn"
                       onClick={() => checkout.setCurrentStep(2)}
                     >
-                      Kembali
+                      <ArrowLeft size={16} aria-hidden="true" />
+                      <span>Kembali</span>
                     </button>
                   </div>
                 </div>
@@ -642,7 +648,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                           disabled={!checkout.isPaymentConfirmedChecked || checkout.isSavingOrder}
                           onClick={checkout.confirmPaidAndOpenWhatsapp}
                         >
-                          {checkout.isSavingOrder ? 'Menyimpan invoice…' : 'Konfirmasi via WhatsApp'}
+                          <MessageCircle size={18} aria-hidden="true" />
+                          <span>{checkout.isSavingOrder ? 'Menyimpan invoice…' : 'Konfirmasi via WhatsApp'}</span>
                         </button>
 
                         {checkout.orderSaveError && <p className="form-error" role="alert">{checkout.orderSaveError}</p>}
