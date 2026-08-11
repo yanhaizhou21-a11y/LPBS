@@ -102,7 +102,7 @@ const defaultBlog4Data: Blog4Data = {
       href: '#',
       accent: 'green',
       imageSrc:
-        'https://images.unsplash.com/photo-1592417817098-8f3d6eb22657?w=800&q=80',
+        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&q=80',
       icon: UsersRound,
       imageAlt: 'Penyemaian benih sayuran unggul di media tanam',
     },

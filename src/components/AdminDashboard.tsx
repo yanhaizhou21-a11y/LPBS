@@ -8,7 +8,9 @@ import {
   RefreshCw,
   Search,
   Truck,
-  ShieldCheck
+  ShieldCheck,
+  Home,
+  ExternalLink
 } from 'lucide-react';
 import { AdminProductsPanel } from './AdminProductsPanel';
 import { LanguageToggle } from './LanguageToggle';
@@ -142,123 +144,89 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
   });
 
   return (
-    <div className="admin-dashboard min-h-screen font-sans">
-      {/* Top Navbar */}
-      <header className="admin-header px-4 md:px-6 py-4 flex items-center justify-between sticky top-0 z-30">
-        <div className="flex items-center gap-3">
-          <LanguageToggle />
-          <ThemeToggleButton />
-          <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
-            <LayoutDashboard className="w-5 h-5" />
-          </div>
+    <div className="admin-dashboard admin-portal">
+      <aside className="admin-sidebar">
+        <a href="#overview" className="admin-sidebar-brand" aria-label="Dashboard Botani Seed">
+          <span><LayoutDashboard size={20} aria-hidden="true" /></span>
+          <div><strong>Botani Seed</strong><small>Admin Portal</small></div>
+        </a>
+        <nav aria-label="Navigasi dashboard admin">
+          <p>Workspace</p>
+          <a href="#overview" className="active"><Home size={19} aria-hidden="true" /><span>Ringkasan</span></a>
+          <a href="#catalog"><PackageCheck size={19} aria-hidden="true" /><span>Katalog produk</span></a>
+          <a href="#orders"><Truck size={19} aria-hidden="true" /><span>Daftar pesanan</span></a>
+        </nav>
+        <div className="admin-sidebar-footer">
+          <div className="admin-sidebar-account"><ShieldCheck size={18} aria-hidden="true" /><div><strong>{adminName}</strong><small>Super Admin</small></div></div>
+          <button type="button" onClick={onLogout}><LogOut size={18} aria-hidden="true" /> Keluar</button>
+        </div>
+      </aside>
+
+      <div className="admin-workspace">
+        <header className="admin-header">
           <div>
-            <h1 className="text-base font-bold leading-tight">Dashboard Admin Penjualan</h1>
-            <p className="text-xs text-slate-400">PT Botani Seed Indonesia</p>
+            <p>PT Botani Seed Indonesia</p>
+            <h1>Dashboard operasional</h1>
           </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onGoHome}
-            className="text-xs px-3 py-1.5 rounded-lg border border-slate-700 hover:bg-slate-800 text-slate-300 transition-colors"
-          >
-            Lihat Website
-          </button>
-          <div className="h-4 w-px bg-slate-800" />
-          <div className="flex items-center gap-2 text-xs text-slate-300">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>{adminName}</span>
+          <div className="admin-header-actions">
+            <LanguageToggle />
+            <ThemeToggleButton />
+            <button type="button" className="admin-website-button" onClick={onGoHome}><ExternalLink size={17} aria-hidden="true" /><span>Lihat website</span></button>
+            <button type="button" className="admin-logout-button" onClick={onLogout} aria-label="Keluar dari portal admin" title="Keluar Admin"><LogOut size={18} aria-hidden="true" /></button>
           </div>
-          <button
-            onClick={onLogout}
-            aria-label="Keluar dari portal admin"
-            className="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors"
-            title="Keluar Admin"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
-        </div>
-      </header>
+        </header>
 
-      <main className="max-w-7xl mx-auto p-6 space-y-6">
+        <nav className="admin-mobile-nav" aria-label="Navigasi dashboard mobile">
+          <a href="#overview"><Home size={17} aria-hidden="true" /> Ringkasan</a>
+          <a href="#catalog"><PackageCheck size={17} aria-hidden="true" /> Produk</a>
+          <a href="#orders"><Truck size={17} aria-hidden="true" /> Pesanan</a>
+        </nav>
+
+        <main>
+        <section id="overview" className="admin-page-heading">
+          <div><p>Overview</p><h2>Selamat datang, {adminName}</h2><span>Pantau aktivitas toko dan tindak lanjuti pesanan dari satu tempat.</span></div>
+          <button type="button" onClick={fetchData} disabled={isLoading}><RefreshCw className={isLoading ? 'animate-spin' : ''} size={18} aria-hidden="true" /> {isLoading ? 'Memuat...' : 'Perbarui data'}</button>
+        </section>
         {dataError && (
-          <div className="rounded-2xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-300" role="alert">
+          <div className="admin-data-error" role="alert">
             {dataError}
           </div>
         )}
-        {/* Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-            <div className="flex items-center justify-between text-slate-400 mb-2">
-              <span className="text-xs font-medium">Total Pesanan</span>
-              <PackageCheck className="w-4 h-4 text-emerald-400" />
-            </div>
-            <div className="text-2xl font-bold">{summary.totalOrders}</div>
-            <p className="text-[11px] text-slate-500 mt-1">Transaksi masuk di MongoDB</p>
-          </div>
+        <section className="admin-metrics" aria-label="Ringkasan penjualan">
+          <article className="admin-metric"><span><PackageCheck size={19} /></span><p>Total pesanan</p><strong>{summary.totalOrders}</strong><small>Transaksi tersimpan</small></article>
+          <article className="admin-metric"><span><TrendingUp size={19} /></span><p>Omzet bruto</p><strong>Rp {summary.totalRevenue.toLocaleString('id-ID')}</strong><small>Akumulasi pesanan</small></article>
+          <article className="admin-metric"><span><Truck size={19} /></span><p>Paket terjual</p><strong>{summary.totalPackages} pcs</strong><small>Total paket benih</small></article>
+          <article className="admin-metric"><span><Clock size={19} /></span><p>Perlu tindakan</p><strong>{summary.pendingCount}</strong><small>{summary.paidCount} pembayaran diterima</small></article>
+        </section>
 
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-            <div className="flex items-center justify-between text-slate-400 mb-2">
-              <span className="text-xs font-medium">Total Revenue</span>
-              <TrendingUp className="w-4 h-4 text-emerald-400" />
-            </div>
-            <div className="text-2xl font-bold text-emerald-400">
-              Rp {summary.totalRevenue.toLocaleString('id-ID')}
-            </div>
-            <p className="text-[11px] text-slate-500 mt-1">Estimasi nilai omset bruto</p>
-          </div>
-
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-            <div className="flex items-center justify-between text-slate-400 mb-2">
-              <span className="text-xs font-medium">Paket Terjual</span>
-              <Truck className="w-4 h-4 text-emerald-400" />
-            </div>
-            <div className="text-2xl font-bold">{summary.totalPackages} pcs</div>
-            <p className="text-[11px] text-slate-500 mt-1">Total kantong benih dipesan</p>
-          </div>
-
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
-            <div className="flex items-center justify-between text-slate-400 mb-2">
-              <span className="text-xs font-medium">Status Pesanan</span>
-              <Clock className="w-4 h-4 text-amber-400" />
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-amber-400">{summary.pendingCount}</span>
-              <span className="text-xs text-slate-400">Pending</span>
-              <span className="text-2xl font-bold text-emerald-400 ml-2">{summary.paidCount}</span>
-              <span className="text-xs text-slate-400">Paid</span>
-            </div>
-          </div>
+        <div id="catalog" className="admin-section-anchor">
+          <AdminProductsPanel onUnauthorized={onUnauthorized} />
         </div>
 
-        <AdminProductsPanel onUnauthorized={onUnauthorized} />
-
-        {/* Orders Table Section */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <section id="orders" className="admin-panel admin-orders-panel">
+          <div className="admin-orders-heading">
             <div>
-              <h2 className="text-lg font-bold text-white">Daftar Pesanan Benih</h2>
-              <p className="text-xs text-slate-400">Kelola dan perbarui status pesanan dari pembeli</p>
+              <p>Operasional</p>
+              <h2>Daftar pesanan</h2>
+              <span>Telusuri pembeli dan perbarui status pemenuhan pesanan.</span>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="relative">
-                <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-500" />
+            <div className="admin-order-tools">
+              <label className="admin-order-search">
+                <Search size={18} aria-hidden="true" />
                 <input
                   type="text"
                   aria-label="Cari pesanan"
-                  placeholder="Cari ID, Nama, Kota, WA..."
+                  placeholder="Cari ID, nama, kota, WA..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  className="bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 w-64"
                 />
-              </div>
+              </label>
 
               <select
                 aria-label="Filter status pesanan"
                 value={selectedStatusFilter}
                 onChange={e => setSelectedStatusFilter(e.target.value)}
-                className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-emerald-500"
               >
                 <option value="ALL">Semua Status</option>
                 <option value="PAYMENT_REPORTED">PAYMENT_REPORTED</option>
@@ -273,18 +241,16 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
               <button
                 onClick={fetchData}
                 aria-label="Muat ulang data pesanan"
-                className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition-colors"
                 title="Refresh Data"
               >
-                <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+                <RefreshCw className={isLoading ? 'animate-spin' : ''} size={18} aria-hidden="true" />
               </button>
             </div>
           </div>
 
-          {/* Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-950 text-slate-400 uppercase font-semibold border-b border-slate-800">
+          <div className="admin-orders-table-wrap">
+            <table className="admin-orders-table">
+              <thead>
                 <tr>
                   <th className="py-3 px-4">No. Pesanan</th>
                   <th className="py-3 px-4">Pembeli</th>
@@ -299,53 +265,52 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
               <tbody className="divide-y divide-slate-800/60">
                 {filteredOrders.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="py-8 text-center text-slate-500">
+                    <td colSpan={8} className="admin-orders-empty">
                       Tidak ada data pesanan yang sesuai.
                     </td>
                   </tr>
                 ) : (
                   filteredOrders.map(order => (
-                    <tr key={order.orderNumber} className="hover:bg-slate-800/30 transition-colors">
-                      <td className="py-3.5 px-4 font-mono font-medium text-emerald-400">
+                    <tr key={order.orderNumber}>
+                      <td className="admin-order-number">
                         {order.orderNumber}
                       </td>
-                      <td className="py-3.5 px-4">
-                        <div className="font-semibold text-white">{order.buyer.name}</div>
-                        <div className="text-[11px] text-slate-400">{order.buyer.whatsapp}</div>
+                      <td>
+                        <strong>{order.buyer.name}</strong>
+                        <small>{order.buyer.whatsapp}</small>
                       </td>
-                      <td className="py-3.5 px-4 max-w-xs truncate">
+                      <td className="admin-order-destination">
                         <div>{order.buyer.city}, {order.buyer.province}</div>
-                        <div className="text-[11px] text-slate-500 truncate">{order.buyer.address}</div>
+                        <small>{order.buyer.address}</small>
                       </td>
-                      <td className="py-3.5 px-4 font-semibold text-slate-200">
+                      <td>
                         {order.cart.totalQty} paket
                       </td>
-                      <td className="py-3.5 px-4 font-bold text-emerald-400">
+                      <td className="admin-order-total">
                         Rp {order.pricing.grandTotal.toLocaleString('id-ID')}
                       </td>
-                      <td className="py-3.5 px-4 font-mono text-slate-300">
+                      <td>
                         {order.paymentMethod}
                       </td>
-                      <td className="py-3.5 px-4">
+                      <td>
                         <span
-                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold ${
+                          className={`admin-order-status ${
                             order.status === 'PAID' || order.status === 'COMPLETED' || order.status === 'DONE'
-                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                              ? 'success'
                               : order.status === 'SHIPPED'
-                              ? 'bg-blue-500/10 text-blue-400 border border-blue-500/30'
-                              : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+                              ? 'info'
+                              : 'warning'
                           }`}
                         >
                           {order.status}
                         </span>
                       </td>
-                      <td className="py-3.5 px-4 text-right">
+                      <td>
                         <select
                           aria-label={`Ubah status pesanan ${order.orderNumber}`}
                           value={order.status}
                           disabled={updatingOrderNum === order.orderNumber}
                           onChange={e => handleStatusChange(order.orderNumber, e.target.value)}
-                          className="bg-slate-950 border border-slate-700 text-[11px] text-slate-200 rounded-lg px-2 py-1 focus:outline-none focus:border-emerald-500"
                         >
                           <option value="PAYMENT_REPORTED">PAYMENT_REPORTED</option>
                           <option value="PENDING_PAYMENT">PENDING_PAYMENT</option>
@@ -362,8 +327,9 @@ export function AdminDashboard({ adminName, onLogout, onGoHome, onUnauthorized }
               </tbody>
             </table>
           </div>
-        </div>
-      </main>
+        </section>
+        </main>
+      </div>
     </div>
   );
 }

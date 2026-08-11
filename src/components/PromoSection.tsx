@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { AlertTriangle, Play, ShoppingCart, Zap } from 'lucide-react';
+import React from 'react';
+import { AlertTriangle, ShoppingCart, Sparkles, Zap } from 'lucide-react';
 import { ASSETS } from '../data/assets';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 
@@ -9,7 +9,6 @@ interface PromoSectionProps {
 }
 
 export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenCheckout }) => {
-  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
   const containerRef = useScrollReveal<HTMLElement>({ stagger: 0.15, y: 35 });
 
   return (
@@ -19,40 +18,18 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
         <div data-reveal className="value-highlight-wrapper grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-16 md:mb-24">
           {/* VIDEO CARD */}
           <div className="lg:col-span-6 w-full">
-            <div className="video-card-dark bg-gradient-to-br from-emerald-900 via-emerald-950 to-slate-950 text-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-emerald-700/30 relative overflow-hidden flex flex-col justify-center min-h-[260px]">
-              {!isPlayingVideo ? (
-                <div
-                  className="video-thumb-overlay cursor-pointer flex flex-col items-start select-none group"
-                  onClick={() => setIsPlayingVideo(true)}
-                  onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setIsPlayingVideo(true)}
-                  role="button"
-                  tabIndex={0}
-                  aria-label="Putar video panduan dan informasi benih sayur"
-                >
-                  <div className="play-circle-btn w-14 h-14 rounded-full bg-white text-emerald-700 flex items-center justify-center mb-4 shadow-xl group-hover:scale-110 group-hover:bg-emerald-50 transition-all duration-300">
-                    <Play size={26} fill="currentColor" className="ml-1" />
-                  </div>
-                  <strong className="inline-block text-xs uppercase tracking-widest font-extrabold text-emerald-300 bg-emerald-900/80 px-3 py-1 rounded-full border border-emerald-500/30 mb-2">
-                    PUTAR VIDEO (1:45)
-                  </strong>
-                  <h4 className="text-xl sm:text-2xl font-extrabold text-white leading-snug mb-2">
-                    Panduan & Informasi Benih Sayur
-                  </h4>
-                  <p className="text-emerald-200/90 text-sm sm:text-base leading-relaxed">
-                    Perkenalan lengkap isian paket benih dan panduan tanam.
-                  </p>
-                </div>
-              ) : (
-                <div className="video-responsive w-full aspect-video rounded-2xl overflow-hidden shadow-2xl">
-                  <iframe
-                    src="https://www.youtube.com/embed/5aC8q20T52E?autoplay=1"
-                    title="Video Perkenalan & Budidaya Benih Sayur Botani Seed"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full border-0"
-                  ></iframe>
-                </div>
-              )}
+            <div className="video-card-dark bg-gradient-to-br from-emerald-900 via-emerald-950 to-slate-950 text-white rounded-3xl p-3 sm:p-4 shadow-2xl border border-emerald-700/30 relative overflow-hidden">
+              <div className="video-responsive w-full aspect-video rounded-2xl overflow-hidden bg-slate-950 shadow-2xl">
+                <iframe
+                  src="https://www.youtube-nocookie.com/embed/GKwGJthfKco?rel=0"
+                  title="Tips menanam kangkung, cabai, dan bayam di rumah"
+                  loading="lazy"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="w-full h-full border-0"
+                />
+              </div>
             </div>
           </div>
 
@@ -96,21 +73,22 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
 
           {/* PROMO DETAILS */}
           <div className="promo-details-card lg:col-span-7 w-full flex flex-col">
-            <span className="card-tag inline-flex items-center gap-1.5 self-start px-3.5 py-1 bg-orange-100 text-orange-700 font-extrabold text-xs tracking-wider uppercase rounded-full border border-orange-200 mb-3">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-orange-100 text-orange-800 dark:bg-orange-950/80 dark:text-orange-300 w-fit mb-3">
+              <Sparkles size={14} aria-hidden="true" />
               PROMO HEMAT TERBATAS
             </span>
 
-            <h2 className="promo-title text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 leading-tight mb-2">
+            <h2 className="promo-title text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-slate-50 leading-tight mb-2">
               Beli 5 Paket, Hemat 20%
             </h2>
 
-            <p className="promo-subtitle text-slate-600 text-sm sm:text-base leading-relaxed mb-5">
+            <p className="promo-subtitle text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed mb-5">
               Dari harga normal Rp100.000 menjadi hanya Rp80.000. Berlaku untuk kelipatan 5 paket benih.
             </p>
 
             {/* NOTICE BOX */}
-            <div className="promo-notice-box flex items-start gap-3 bg-orange-50 border border-orange-200 border-l-4 border-l-orange-500 p-3.5 sm:p-4 rounded-2xl text-orange-950 text-xs sm:text-sm leading-relaxed mb-6">
-              <AlertTriangle size={20} className="text-orange-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+            <div className="promo-notice-box flex items-start gap-3 bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800/80 border-l-4 border-l-orange-500 p-3.5 sm:p-4 rounded-2xl text-orange-950 dark:text-orange-200 text-xs sm:text-sm leading-relaxed mb-6">
+              <AlertTriangle size={20} className="text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
               <span>
                 <strong className="font-extrabold">PEMBERITAHUAN PENYESUAIAN HARGA PROMO:</strong> Promo diskon 20% ini berlaku sebelum penyesuaian tarif berikutnya.
               </span>
@@ -118,19 +96,26 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
 
             {/* PRICE COMPARISON BAR */}
             <div className="promo-price-bar grid grid-cols-2 gap-3 sm:gap-4 mb-6">
-              <div className="price-item normal bg-slate-50 border-2 border-dashed border-slate-300 p-3.5 sm:p-4 rounded-2xl flex flex-col justify-center">
-                <span className="text-xs uppercase tracking-wider font-bold text-slate-500 mb-1">
+              <div className="price-item normal bg-slate-50 dark:bg-slate-800/90 border-2 border-dashed border-slate-300 dark:border-slate-700 p-3.5 sm:p-4 rounded-2xl flex flex-col justify-center">
+                <span className="text-xs uppercase tracking-wider font-bold text-slate-500 dark:text-slate-400 mb-1">
                   Harga Normal
                 </span>
-                <strong className="text-lg sm:text-xl font-bold text-slate-400 line-through">
+                <strong className="text-lg sm:text-xl font-bold text-slate-400 dark:text-slate-500 line-through">
                   Rp 100.000
                 </strong>
               </div>
-              <div className="price-item promo bg-gradient-to-br from-orange-500 to-orange-600 text-white p-3.5 sm:p-4 rounded-2xl flex flex-col justify-center shadow-lg shadow-orange-500/25 border border-orange-400">
-                <span className="text-xs uppercase tracking-wider font-extrabold text-orange-100 mb-1">
+              <div
+                className="price-item promo p-3.5 sm:p-4 rounded-2xl flex flex-col justify-center shadow-lg shadow-orange-500/25 border border-orange-400"
+                style={{
+                  background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+                  backgroundColor: '#ea580c',
+                  color: '#ffffff',
+                }}
+              >
+                <span className="text-xs uppercase tracking-wider font-extrabold text-orange-100 mb-1" style={{ color: '#ffedd5' }}>
                   Harga Promo
                 </span>
-                <strong className="text-xl sm:text-2xl font-black text-white">
+                <strong className="text-xl sm:text-2xl font-black text-white" style={{ color: '#ffffff' }}>
                   Rp 80.000
                 </strong>
               </div>
@@ -139,7 +124,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
             {/* BUTTONS */}
             <div className="promo-card-actions grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <button
-                className="promo-add-btn w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] shadow-lg shadow-emerald-700/25 flex items-center justify-center gap-2 text-base transition-all"
+                className="promo-add-btn w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] shadow-lg shadow-emerald-700/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
                 onClick={() => {
                   onAddToCart(5);
                   onOpenCheckout();
@@ -148,7 +133,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
                 <ShoppingCart size={20} aria-hidden="true" /> Beli 5 Paket (Rp 80.000)
               </button>
               <button
-                className="promo-checkout-btn w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-orange-600 hover:bg-orange-500 active:scale-[0.98] shadow-lg shadow-orange-600/25 flex items-center justify-center gap-2 text-base transition-all"
+                className="promo-checkout-btn w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-orange-600 hover:bg-orange-500 active:scale-[0.98] shadow-lg shadow-orange-600/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
                 onClick={onOpenCheckout}
               >
                 <Zap size={20} aria-hidden="true" /> Pesan Langsung Sekarang
@@ -162,5 +147,4 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
 };
 
 export default PromoSection;
-
 

@@ -24,7 +24,7 @@ export const StorySection: React.FC = () => {
       title: 'Diyah Rahmawati',
       subtitle: 'Alumni SV IPB · Petani Muda & Pengusaha',
       badge: 'Omzet Rp60 Juta/Bln',
-      imageSrc: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb22657?auto=format&fit=crop&q=80&w=1000',
+      imageSrc: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=1000',
       details: {
         omzet: 'Rp60.000.000 / Bulan',
         lokasi: 'Dramaga, Bogor, Jawa Barat',
@@ -76,31 +76,31 @@ export const StorySection: React.FC = () => {
       num: '1',
       title: 'Pilih Benih Bersertifikat',
       desc: 'Dapatkan paket 10 varietas benih sayuran unggul siap tanam bersertifikat resmi IPB University.',
-      img: 'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800&auto=format&fit=crop&q=80',
+      img: '/images/product-display.jpg',
     },
     {
       num: '2',
       title: 'Semaikan Sesuai SOP',
       desc: 'Semaikan benih pada media tanah gembur atau rockwool hidroponik selama 7-10 hari hingga berkecambah seragam.',
-      img: 'https://images.unsplash.com/photo-1592417817098-8f3d6eb22657?w=800&auto=format&fit=crop&q=80',
+      img: '/images/qc-warehouse.jpg',
     },
     {
       num: '3',
       title: 'Pindah Tanam & Rawat',
       desc: 'Pindahkan bibit ke polybag atau bedengan, siram pagi-sore dan berikan nutrisi organik secara teratur.',
-      img: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800&auto=format&fit=crop&q=80',
+      img: '/images/warehouse.jpg',
     },
     {
       num: '4',
       title: 'Panen Sayur Segar',
       desc: 'Panen sayuran segar mulai hari ke-21 hingga 30 dengan daun hijau tebal, renyah, dan bernutrisi tinggi.',
-      img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&auto=format&fit=crop&q=80',
+      img: '/images/booth.jpg',
     },
     {
       num: '5',
       title: 'Konsumsi & Pasarkan',
       desc: 'Nikmati sayuran sehat untuk keluarga atau pasarkan ke tetangga, warung makan, dan pasar lokal.',
-      img: 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=800&auto=format&fit=crop&q=80',
+      img: '/images/shipping.jpg',
     },
   ];
 

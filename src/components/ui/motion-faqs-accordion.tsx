@@ -49,9 +49,7 @@ function AccordionItem({
         isOpen && "border-emerald-500/60 dark:border-emerald-500/60 shadow-md ring-1 ring-emerald-500/20"
       )}
       transition={{ type: "spring", stiffness: 280, damping: 28, mass: 0.9 }}
-      animate={{ scale: isOpen ? 1 : 0.99 }}
       initial={false}
-      style={{ originX: 0.5, originY: 0 }}
     >
       <button
         id={itemId}

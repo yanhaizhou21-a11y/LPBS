@@ -13,7 +13,6 @@ import { CartDrawer } from './components/CartDrawer';
 import { CartToast } from './components/CartToast';
 import { SecretAdminLogin } from './components/SecretAdminLogin';
 import { AdminDashboard } from './components/AdminDashboard';
-import { BotaniDashboard } from './components/BotaniDashboard';
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { CookieConsentBanner } from './components/CookieConsentBanner';
 import { ProductsPage } from './components/ProductsPage';
@@ -28,11 +27,10 @@ import { SmoothScroll } from './components/SmoothScroll';
 import { FadeContent } from './components/ui/fade-content';
 
 const CheckoutModal = lazy(() => import('./components/CheckoutModal').then((module) => ({ default: module.CheckoutModal })));
-type View = PublicPageId | 'admin-login' | 'admin-dashboard' | 'dashboard';
+type View = PublicPageId | 'admin-login' | 'admin-dashboard';
 
 function viewFromPath(): View {
-  if (window.location.pathname === '/dashboard') return 'dashboard';
-  if (window.location.pathname === '/admin/dashboard') return 'admin-dashboard';
+  if (window.location.pathname === '/dashboard' || window.location.pathname === '/admin/dashboard') return 'admin-dashboard';
   if (window.location.pathname === '/secret-admin-login') return 'admin-login';
   return publicPageFromPath(window.location.pathname) ?? 'landing';
 }
@@ -44,8 +42,8 @@ export function App() {
   const [view, setView] = useState<View>(viewFromPath);
   const [currentPath, setCurrentPath] = useState(() => `${window.location.pathname}${window.location.hash}`);
   const [adminName, setAdminName] = useState('Admin PT Botani Seed');
-  const [authChecked, setAuthChecked] = useState(isPublicPage(viewFromPath()) || viewFromPath() === 'dashboard');
-  const [accessDenied, setAccessDenied] = useState(window.location.pathname === '/admin/dashboard');
+  const [authChecked, setAuthChecked] = useState(isPublicPage(viewFromPath()));
+  const [accessDenied, setAccessDenied] = useState(viewFromPath() === 'admin-dashboard');
 
   const navigate = (nextView: View, path: string, replace = false) => {
     window.history[replace ? 'replaceState' : 'pushState']({}, '', path);
@@ -101,9 +99,9 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    if (view === 'landing' || view === 'landing2' || view === 'products' || view === 'dashboard') return;
+    if (isPublicPage(view)) return;
     let active = true;
-    const requestedDashboard = window.location.pathname === '/admin/dashboard';
+    const requestedDashboard = viewFromPath() === 'admin-dashboard';
     fetch('/api/auth/session')
       .then(async (response) => ({ response, data: await readJsonResponse(response, 'Respons sesi admin tidak valid.') }))
       .then(({ response, data }) => {
@@ -145,10 +143,6 @@ export function App() {
   };
 
   if (!authChecked) return <div className="route-loading" role="status">Memverifikasi sesi admin…</div>;
-
-  if (view === 'dashboard') {
-    return <BotaniDashboard />;
-  }
 
   if (view === 'admin-login') {
     return <SecretAdminLogin accessDenied={accessDenied} onLoginSuccess={(name) => { setAdminName(name); navigate('admin-dashboard', '/admin/dashboard', true); }} onBackToHome={() => navigate('landing', '/')} />;

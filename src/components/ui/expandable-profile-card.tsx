@@ -26,7 +26,7 @@ export interface ExpandableProfileCardProps {
 }
 
 export function ExpandableProfileCard({
-  imageSrc = "https://images.unsplash.com/photo-1592417817098-8f3d6eb22657?auto=format&fit=crop&q=80&w=1000",
+  imageSrc = "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=1000",
   title = "Diyah Rahmawati",
   subtitle = "Alumni SV IPB & Petani Muda",
   badge,
