@@ -26,9 +26,9 @@ export const CompanyProfile: React.FC = () => {
             <div className="company-actions">
               <a
                 href="#top"
-                className="hero-green-btn company-more-btn"
+                className="btn-fill-reveal"
               >
-                Pelajari Selengkapnya tentang Botani Seed →
+                Pelajari Selengkapnya tentang Botani Seed
               </a>
             </div>
           </motion.div>

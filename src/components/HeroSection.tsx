@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'motion/react';
-import { Sparkles, ShoppingBag, MessageCircle, ShieldCheck, Award, Truck, Sprout, ArrowRight } from 'lucide-react';
+import { Sparkles, ShoppingBag, MessageCircle, ShieldCheck, Award, Truck, Sprout } from 'lucide-react';
 import { ASSETS } from '../data/assets';
 
 interface HeroSectionProps {
@@ -74,13 +74,15 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
             <motion.div {...enter(0.3)} className="mt-6 sm:mt-8 flex flex-col sm:flex-row w-full sm:w-auto items-stretch sm:items-center gap-3">
               {isV2 ? (
                 <>
-                  <button
-                    type="button"
-                    onClick={onOpenCheckout}
-                    className="inline-flex h-12 sm:h-13 items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-6 sm:px-8 text-sm sm:text-base font-extrabold text-white shadow-md shadow-emerald-600/20 transition-all hover:bg-emerald-700 hover:shadow-lg active:scale-98"
-                  >
-                    <ShoppingBag className="size-4.5" />
-                    <span>Pesan Sekarang (Diskon 20%)</span>
+                  <button type="button" onClick={onOpenCheckout} className="btn-hero-cta">
+                    <svg viewBox="0 0 24 24" className="arr-2" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z" />
+                    </svg>
+                    <span className="text">Pesan Sekarang (Diskon 20%)</span>
+                    <span className="circle" />
+                    <svg viewBox="0 0 24 24" className="arr-1" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z" />
+                    </svg>
                   </button>
                   <a
                     href={waLink}
@@ -94,12 +96,15 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
                 </>
               ) : (
                 <>
-                  <a
-                    href="#kisah"
-                    className="inline-flex h-12 sm:h-13 items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-6 sm:px-8 text-sm sm:text-base font-extrabold text-white shadow-md shadow-emerald-600/20 transition-all hover:bg-emerald-700 hover:shadow-lg active:scale-98"
-                  >
-                    <span>Simak Kisah Sukses Mitra</span>
-                    <ArrowRight className="size-4.5" />
+                  <a href="#kisah" className="btn-hero-cta">
+                    <svg viewBox="0 0 24 24" className="arr-2" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z" />
+                    </svg>
+                    <span className="text">Simak Kisah Sukses Mitra</span>
+                    <span className="circle" />
+                    <svg viewBox="0 0 24 24" className="arr-1" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z" />
+                    </svg>
                   </a>
                   <button
                     type="button"
