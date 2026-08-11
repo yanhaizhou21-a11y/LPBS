@@ -73,6 +73,7 @@ export function SecretAdminLogin({ accessDenied = false, onLoginSuccess, onBackT
             required
             value={username}
             aria-invalid={Boolean(error)}
+            className="!bg-slate-900 !text-white !border-slate-600 focus:!border-emerald-500"
             onChange={(event) => setUsername(event.target.value)}
           />
           <FloatingInput
@@ -83,6 +84,7 @@ export function SecretAdminLogin({ accessDenied = false, onLoginSuccess, onBackT
             required
             value={password}
             aria-invalid={Boolean(error)}
+            className="!bg-slate-900 !text-white !border-slate-600 focus:!border-emerald-500"
             onChange={(event) => setPassword(event.target.value)}
           />
 

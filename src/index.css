@@ -9,6 +9,72 @@
 
 @layer components {
 
+  /* FLOATING INPUT COMPONENT STYLES */
+  .floating-input {
+    position: relative;
+    width: 100%;
+  }
+
+  .floating-input-field {
+    width: 100%;
+    min-height: 52px;
+    padding: 22px 14px 6px 14px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #0f172a;
+    background-color: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 12px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+
+  .dark .floating-input-field {
+    color: #f8fafc;
+    background-color: #1e293b;
+    border-color: #475569;
+  }
+
+  .floating-input-field:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+  }
+
+  .dark .floating-input-field:focus {
+    border-color: #34d399;
+    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25);
+  }
+
+  .floating-input-label {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    transform-origin: left top;
+  }
+
+  .dark .floating-input-label {
+    color: #94a3b8;
+  }
+
+  .floating-input-field:focus ~ .floating-input-label,
+  .floating-input-field:not(:placeholder-shown) ~ .floating-input-label {
+    top: 6px;
+    transform: translateY(0) scale(0.85);
+    color: #059669;
+    font-weight: 700;
+  }
+
+  .dark .floating-input-field:focus ~ .floating-input-label,
+  .dark .floating-input-field:not(:placeholder-shown) ~ .floating-input-label {
+    color: #34d399;
+  }
+
   /* Root Design System & Color Tokens */
   :root {
     --font-main: 'Roboto', sans-serif;

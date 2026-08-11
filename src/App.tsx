@@ -12,7 +12,6 @@ import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { CartToast } from './components/CartToast';
 import { SecretAdminLogin } from './components/SecretAdminLogin';
-import { AdminDashboard } from './components/AdminDashboard';
 import { BotaniDashboard } from './components/BotaniDashboard';
 import { LanguageProvider as DashboardLanguageProvider } from './context/LanguageContext';
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
@@ -27,12 +26,17 @@ import { isPublicPage, publicPageFromPath, type PublicPageId } from './config/pu
 import { readJsonResponse } from './lib/http';
 
 const CheckoutModal = lazy(() => import('./components/CheckoutModal').then((module) => ({ default: module.CheckoutModal })));
-type View = PublicPageId | 'admin-login' | 'admin-dashboard' | 'dashboard';
+type View = PublicPageId | 'admin-login' | 'dashboard';
 
 function viewFromPath(): View {
-  if (window.location.pathname === '/dashboard') return 'dashboard';
-  if (window.location.pathname === '/admin/dashboard') return 'admin-dashboard';
-  if (window.location.pathname === '/secret-admin-login') return 'admin-login';
+  if (window.location.pathname === '/dashboard' || window.location.pathname === '/admin/dashboard') return 'dashboard';
+  if (
+    window.location.pathname === '/login' ||
+    window.location.pathname === '/admin/login' ||
+    window.location.pathname === '/secret-admin-login'
+  ) {
+    return 'admin-login';
+  }
   return publicPageFromPath(window.location.pathname) ?? 'landing';
 }
 
@@ -110,7 +114,7 @@ export function App() {
         if (response.ok && data.success) {
           setAdminName(data.admin.name);
           setAccessDenied(false);
-          navigate('admin-dashboard', '/admin/dashboard', true);
+          navigate('dashboard', '/dashboard', true);
         } else {
           setAccessDenied(requestedDashboard);
           navigate('admin-login', '/secret-admin-login', true);
@@ -148,17 +152,18 @@ export function App() {
   if (view === 'dashboard') {
     return (
       <DashboardLanguageProvider>
-        <BotaniDashboard />
+        <BotaniDashboard
+          adminName={adminName}
+          onLogout={handleAdminLogout}
+          onGoHome={() => navigate('landing', '/')}
+          onUnauthorized={() => { setAccessDenied(true); navigate('admin-login', '/secret-admin-login', true); }}
+        />
       </DashboardLanguageProvider>
     );
   }
 
   if (view === 'admin-login') {
-    return <SecretAdminLogin accessDenied={accessDenied} onLoginSuccess={(name) => { setAdminName(name); navigate('admin-dashboard', '/admin/dashboard', true); }} onBackToHome={() => navigate('landing', '/')} />;
-  }
-
-  if (view === 'admin-dashboard') {
-    return <AdminDashboard adminName={adminName} onLogout={handleAdminLogout} onGoHome={() => navigate('landing', '/')} onUnauthorized={() => { setAccessDenied(true); navigate('admin-login', '/secret-admin-login', true); }} />;
+    return <SecretAdminLogin accessDenied={accessDenied} onLoginSuccess={(name) => { setAdminName(name); navigate('dashboard', '/dashboard', true); }} onBackToHome={() => navigate('landing', '/')} />;
   }
 
   const handleOpenCheckout = (defaultQty = 1) => {

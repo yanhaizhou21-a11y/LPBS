@@ -30,7 +30,7 @@ export function ProductsPage({ onGoHome, onAddToCart, onOpenCheckout }: { onGoHo
   return <main className="products-page">
     <section className="products-hero"><div className="container"><button className="products-back" onClick={onGoHome}><ArrowLeft size={18} /> {t('catalog.back')}</button><span className="section-subtitle">{t('catalog.kicker')}</span><h1>{t('catalog.title')}</h1><p>{t('catalog.subtitle')}</p></div></section>
     <section className="products-catalog container" aria-labelledby="catalog-title">
-      <div className="products-toolbar"><div><h2 id="catalog-title">{t('catalog.featured')}</h2><p>{t('catalog.found', { count: filtered.length })}</p></div><label className="products-search"><Search size={18} /><span className="sr-only">{t('catalog.search')}</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t('catalog.search')} /></label></div>
+      <div className="products-toolbar"><div><h2 id="catalog-title">{t('catalog.featured')}</h2><p>{t('catalog.found', { count: filtered.length })}</p></div></div>
       <div className="category-filter" aria-label="Category filter"><button className={category === 'all' ? 'active' : ''} onClick={() => setCategory('all')}>{t('catalog.all')}</button>{PRODUCT_CATEGORIES.map((item) => <button key={item.id} className={category === item.id ? 'active' : ''} onClick={() => setCategory(item.id)}>{language === 'en' ? item.labelEn : item.label}</button>)}</div>
       {filtered.length ? <div className="product-grid">{filtered.map((product) => {
         const content = localize(product);

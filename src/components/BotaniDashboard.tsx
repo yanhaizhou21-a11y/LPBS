@@ -9,7 +9,7 @@ import {
   User,
   Settings,
   LogOut,
-  Search,
+  RefreshCw,
   Moon,
   Sun,
   Bell,
@@ -25,6 +25,11 @@ import {
   MoreHorizontal,
   DollarSign,
   ShoppingCart,
+  ShoppingBag,
+  MessageCircle,
+  MapPin,
+  ExternalLink,
+  Check,
   Sliders,
   AlertTriangle,
   X,
@@ -68,14 +73,19 @@ interface OrderItem {
   total: string;
   status: 'Delivered' | 'Processing' | 'Pending' | 'Shipped';
   color: string;
+  rawBackendOrder?: any;
 }
 
-const topCustomers: { name: string; avatar: string; spent: string }[] = [];
+export interface BotaniDashboardProps {
+  adminName?: string;
+  onLogout?: () => void;
+  onGoHome?: () => void;
+  onUnauthorized?: () => void;
+}
 
-export function BotaniDashboard() {
+export function BotaniDashboard({ adminName = 'Admin PT Botani Seed', onLogout, onGoHome }: BotaniDashboardProps = {}) {
   const { language, toggleLanguage, t } = useLanguage();
   const [activeNav, setActiveNav] = useState('Dashboard');
-  const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [productCatFilter, setProductCatFilter] = useState('All Categories');
   const [orderStatusFilter, setOrderStatusFilter] = useState('All');
@@ -84,87 +94,209 @@ export function BotaniDashboard() {
   const [isSidebarMinimized, setIsSidebarMinimized] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [selectedHoverBar, setSelectedHoverBar] = useState<{ month: string; amount: string } | null>(null);
+  const [revenueTimeframe, setRevenueTimeframe] = useState<'Yearly' | 'Monthly' | 'Weekly' | 'Daily'>('Monthly');
 
   const ITEMS_PER_PAGE = 15;
 
   const [customerPage, setCustomerPage] = useState(1);
   const [productPage, setProductPage] = useState(1);
   const [orderPage, setOrderPage] = useState(1);
+  const [completedOrderPage, setCompletedOrderPage] = useState(1);
 
-  // Dynamic Data States pre-seeded with multi-page sample datasets
-  const [customers, setCustomers] = useState<Customer[]>([
-    { id: 'c1', name: 'Jenny Wilson', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', joiningDate: '24/10/2025', email: 'michael.mitc@example.com', totalSpent: 'Rp 3.215.000', status: 'VIP' },
-    { id: 'c2', name: 'Cameron Williamson', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', joiningDate: '22/10/2025', email: 'bill.sanders@example.com', totalSpent: 'Rp 5.425.000', status: 'Returning' },
-    { id: 'c3', name: 'Guy Hawkins', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', joiningDate: '22/10/2025', email: 'debra.holt@example.com', totalSpent: 'Rp 5.445.000', status: 'New' },
-    { id: 'c4', name: 'Kathryn Murphy', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', joiningDate: '21/10/2025', email: 'felicia.reid@example.com', totalSpent: 'Rp 1.458.000', status: 'VIP' },
-    { id: 'c5', name: 'Leslie Alexander', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80', joiningDate: '19/10/2025', email: 'tim.jennings@example.com', totalSpent: 'Rp 1.457.000', status: 'VIP' },
-    { id: 'c6', name: 'Dianne Russell', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80', joiningDate: '18/10/2025', email: 'willie.jennings@example.com', totalSpent: 'Rp 5.445.000', status: 'Returning' },
-    { id: 'c7', name: 'Devane Courtney', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80', joiningDate: '16/10/2025', email: 'devane.c@example.com', totalSpent: 'Rp 2.890.000', status: 'VIP' },
-    { id: 'c8', name: 'Jerome Bell', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80', joiningDate: '15/10/2025', email: 'jerome.bell@example.com', totalSpent: 'Rp 3.100.000', status: 'Returning' },
-    { id: 'c9', name: 'Eleanor Pena', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80', joiningDate: '12/10/2025', email: 'eleanor.p@example.com', totalSpent: 'Rp 4.200.000', status: 'New' },
-    { id: 'c10', name: 'Wade Warren', avatar: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=150&auto=format&fit=crop&q=80', joiningDate: '10/10/2025', email: 'wade.w@example.com', totalSpent: 'Rp 2.150.000', status: 'Returning' },
-    { id: 'c11', name: 'Jane Cooper', avatar: 'https://images.unsplash.com/photo-1548142813-c348350df52b?w=150&auto=format&fit=crop&q=80', joiningDate: '08/10/2025', email: 'jane.cooper@example.com', totalSpent: 'Rp 6.800.000', status: 'VIP' },
-    { id: 'c12', name: 'Robert Fox', avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=150&auto=format&fit=crop&q=80', joiningDate: '05/10/2025', email: 'robert.fox@example.com', totalSpent: 'Rp 920.000', status: 'New' },
-    { id: 'c13', name: 'Jacob Jones', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', joiningDate: '01/10/2025', email: 'jacob.jones@example.com', totalSpent: 'Rp 3.400.000', status: 'Returning' },
-    { id: 'c14', name: 'Kristin Watson', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80', joiningDate: '28/09/2025', email: 'kristin.w@example.com', totalSpent: 'Rp 7.250.000', status: 'VIP' },
-    { id: 'c15', name: 'Cody Fisher', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', joiningDate: '25/09/2025', email: 'cody.fisher@example.com', totalSpent: 'Rp 890.000', status: 'New' },
-    { id: 'c16', name: 'Esther Howard', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', joiningDate: '20/09/2025', email: 'esther.h@example.com', totalSpent: 'Rp 4.120.000', status: 'Returning' },
-    { id: 'c17', name: 'Ronald Richards', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', joiningDate: '15/09/2025', email: 'ronald.r@example.com', totalSpent: 'Rp 5.900.000', status: 'VIP' },
-    { id: 'c18', name: 'Albert Flores', avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80', joiningDate: '10/09/2025', email: 'albert.f@example.com', totalSpent: 'Rp 1.100.000', status: 'New' },
-    { id: 'c19', name: 'Savannah Nguyen', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80', joiningDate: '05/09/2025', email: 'savannah.n@example.com', totalSpent: 'Rp 8.400.000', status: 'VIP' },
-    { id: 'c20', name: 'Floyd Miles', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150&auto=format&fit=crop&q=80', joiningDate: '01/09/2025', email: 'floyd.m@example.com', totalSpent: 'Rp 3.800.000', status: 'Returning' },
-    { id: 'c21', name: 'Courtney Henry', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80', joiningDate: '28/08/2025', email: 'courtney.h@example.com', totalSpent: 'Rp 750.000', status: 'New' },
-    { id: 'c22', name: 'Theresa Webb', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', joiningDate: '22/08/2025', email: 'theresa.w@example.com', totalSpent: 'Rp 4.950.000', status: 'VIP' },
-    { id: 'c23', name: 'Darrell Steward', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', joiningDate: '18/08/2025', email: 'darrell.s@example.com', totalSpent: 'Rp 2.300.000', status: 'Returning' },
-    { id: 'c24', name: 'Ralph Edwards', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', joiningDate: '12/08/2025', email: 'ralph.e@example.com', totalSpent: 'Rp 1.350.000', status: 'New' },
-    { id: 'c25', name: 'Arlene McCoy', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', joiningDate: '05/08/2025', email: 'arlene.m@example.com', totalSpent: 'Rp 6.100.000', status: 'VIP' },
-  ]);
+  // Notification & Order Detail Modal States
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [notifications, setNotifications] = useState<{
+    id: string;
+    title: string;
+    message: string;
+    time: string;
+    unread: boolean;
+    orderId: string;
+    rawOrder?: any;
+  }[]>([]);
+  const [knownOrderIds, setKnownOrderIds] = useState<Set<string>>(new Set());
+  const [selectedOrderDetail, setSelectedOrderDetail] = useState<any | null>(null);
+  const [newOrderToast, setNewOrderToast] = useState<{ title: string; message: string; orderId: string; rawOrder?: any } | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const [products, setProducts] = useState<Product[]>([
-    { id: 'p1', name: 'Benih Bayam Hijau Super', sku: 'SEED-001', cat: 'Seeds', price: 'Rp 12.000', stock: 150, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p2', name: 'Benih Tomat Cherry Red', sku: 'SEED-002', cat: 'Seeds', price: 'Rp 18.500', stock: 85, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p3', name: 'Pupuk Organik Cair Premium', sku: 'FERT-104', cat: 'Fertilizers', price: 'Rp 24.000', stock: 12, status: 'Low Stock', badge: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: 'p4', name: 'Sekop Taman Mini Ergonomis', sku: 'TOOL-088', cat: 'Tools', price: 'Rp 15.000', stock: 0, status: 'Out of Stock', badge: 'bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-300 border border-rose-200/50 dark:border-rose-800/60' },
-    { id: 'p5', name: 'Benih Cabai Rawit Merah', sku: 'SEED-003', cat: 'Seeds', price: 'Rp 14.000', stock: 120, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p6', name: 'Benih Terong Ungu Hibrida', sku: 'SEED-004', cat: 'Seeds', price: 'Rp 16.000', stock: 95, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p7', name: 'Sprayer Tanaman 2 Litur Pro', sku: 'TOOL-090', cat: 'Tools', price: 'Rp 22.500', stock: 8, status: 'Low Stock', badge: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: 'p8', name: 'Media Tanam Cocopeat 5kg', sku: 'SOIL-012', cat: 'Fertilizers', price: 'Rp 9.500', stock: 200, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p9', name: 'Pot Tanaman Hitam 30cm', sku: 'POT-005', cat: 'Tools', price: 'Rp 5.000', stock: 0, status: 'Out of Stock', badge: 'bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-300 border border-rose-200/50 dark:border-rose-800/60' },
-    { id: 'p10', name: 'Hydroponic Starter Kit 12 Holes', sku: 'HYD-001', cat: 'Tools', price: 'Rp 45.000', stock: 40, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p11', name: 'Benih Sawi Caisim Manis', sku: 'SEED-005', cat: 'Seeds', price: 'Rp 10.000', stock: 180, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p12', name: 'Benih Selada Keriting Hijau', sku: 'SEED-006', cat: 'Seeds', price: 'Rp 11.500', stock: 110, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p13', name: 'Pupuk NPK Mutiara 16-16-16', sku: 'FERT-105', cat: 'Fertilizers', price: 'Rp 28.000', stock: 15, status: 'Low Stock', badge: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: 'p14', name: 'Gunting Dahan Stenum Steel', sku: 'TOOL-092', cat: 'Tools', price: 'Rp 19.000', stock: 60, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p15', name: 'Benih Wortel Manis Bio', sku: 'SEED-007', cat: 'Seeds', price: 'Rp 13.000', stock: 75, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p16', name: 'Benih Semangka Tanpa Biji', sku: 'SEED-008', cat: 'Seeds', price: 'Rp 21.000', stock: 0, status: 'Out of Stock', badge: 'bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-300 border border-rose-200/50 dark:border-rose-800/60' },
-    { id: 'p17', name: 'ZPT Pengatur Tumbuh 500ml', sku: 'FERT-108', cat: 'Fertilizers', price: 'Rp 17.500', stock: 45, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p18', name: 'Mulsa Plastik Hitam Perak 100m', sku: 'TOOL-095', cat: 'Tools', price: 'Rp 35.000', stock: 18, status: 'Low Stock', badge: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: 'p19', name: 'Irigasi Tetes Drip Kit 50m', sku: 'HYD-005', cat: 'Tools', price: 'Rp 52.000', stock: 30, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: 'p20', name: 'Benih Timun Suri Segar', sku: 'SEED-009', cat: 'Seeds', price: 'Rp 14.500', stock: 80, status: 'In Stock', badge: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-  ]);
+  const handleManualRefresh = async () => {
+    setIsRefreshing(true);
+    await fetchLiveBackendData();
+    setTimeout(() => setIsRefreshing(false), 500);
+  };
 
-  const [orders, setOrders] = useState<OrderItem[]>([
-    { id: '#ORD-8825', name: 'Jenny Wilson', date: '06/08/2026', items: 3, total: 'Rp 145.000', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: '#ORD-8824', name: 'Cameron Williamson', date: '06/08/2026', items: 1, total: 'Rp 32.500', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
-    { id: '#ORD-8823', name: 'Guy Hawkins', date: '05/08/2026', items: 5, total: 'Rp 210.000', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
-    { id: '#ORD-8822', name: 'Kathryn Murphy', date: '04/08/2026', items: 2, total: 'Rp 84.000', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: '#ORD-8821', name: 'Leslie Alexander', date: '03/08/2026', items: 4, total: 'Rp 190.000', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: '#ORD-8820', name: 'Dianne Russell', date: '02/08/2026', items: 2, total: 'Rp 95.000', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
-    { id: '#ORD-8819', name: 'Devane Courtney', date: '01/08/2026', items: 6, total: 'Rp 310.000', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
-    { id: '#ORD-8818', name: 'Jerome Bell', date: '30/07/2026', items: 1, total: 'Rp 45.000', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: '#ORD-8817', name: 'Eleanor Pena', date: '29/07/2026', items: 3, total: 'Rp 128.000', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: '#ORD-8816', name: 'Wade Warren', date: '28/07/2026', items: 2, total: 'Rp 76.000', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
-    { id: '#ORD-8815', name: 'Jane Cooper', date: '26/07/2026', items: 5, total: 'Rp 240.000', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
-    { id: '#ORD-8814', name: 'Robert Fox', date: '25/07/2026', items: 1, total: 'Rp 22.000', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: '#ORD-8813', name: 'Jacob Jones', date: '24/07/2026', items: 4, total: 'Rp 165.000', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: '#ORD-8812', name: 'Kristin Watson', date: '22/07/2026', items: 7, total: 'Rp 410.000', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
-    { id: '#ORD-8811', name: 'Cody Fisher', date: '20/07/2026', items: 2, total: 'Rp 58.000', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
-    { id: '#ORD-8810', name: 'Esther Howard', date: '19/07/2026', items: 3, total: 'Rp 135.000', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-    { id: '#ORD-8809', name: 'Ronald Richards', date: '18/07/2026', items: 2, total: 'Rp 92.000', status: 'Pending', color: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-    { id: '#ORD-8808', name: 'Albert Flores', date: '15/07/2026', items: 1, total: 'Rp 34.000', status: 'Processing', color: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
-    { id: '#ORD-8807', name: 'Savannah Nguyen', date: '12/07/2026', items: 5, total: 'Rp 285.000', status: 'Shipped', color: 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60' },
-    { id: '#ORD-8806', name: 'Floyd Miles', date: '10/07/2026', items: 3, total: 'Rp 140.000', status: 'Delivered', color: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-  ]);
+  const markNotifAsRead = (notifId: string) => {
+    setNotifications((prev) => prev.map((n) => (n.id === notifId ? { ...n, unread: false } : n)));
+  };
+
+  const markAllNotifsAsRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
+  };
+
+  const unreadNotifCount = notifications.filter((n) => n.unread).length;
+
+  // Dynamic Data States initialized empty, populated from live backend API
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [orders, setOrders] = useState<OrderItem[]>([]);
+  const [summaryStats, setSummaryStats] = useState({
+    totalOrders: 0,
+    totalRevenue: 0,
+    totalPackages: 0,
+    pendingCount: 0,
+    paidCount: 0
+  });
+
+  const fetchLiveBackendData = async () => {
+    try {
+      const [ordersRes, summaryRes, productsRes] = await Promise.all([
+        fetch('/api/orders'),
+        fetch('/api/orders/analytics/summary'),
+        fetch('/api/products')
+      ]);
+
+      const ordersData = ordersRes.ok ? await ordersRes.json() : null;
+      const summaryData = summaryRes.ok ? await summaryRes.json() : null;
+      const productsData = productsRes.ok ? await productsRes.json() : null;
+
+      if (ordersData?.success && Array.isArray(ordersData.orders)) {
+        const mappedOrders: OrderItem[] = ordersData.orders.map((ord: any) => {
+          let statusLabel: OrderItem['status'] = 'Pending';
+          let badgeColor = 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60';
+
+          if (ord.status === 'PAID' || ord.status === 'PROCESSED') {
+            statusLabel = 'Processing';
+            badgeColor = 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60';
+          } else if (ord.status === 'SHIPPED') {
+            statusLabel = 'Shipped';
+            badgeColor = 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60';
+          } else if (ord.status === 'COMPLETED' || ord.status === 'DONE') {
+            statusLabel = 'Delivered';
+            badgeColor = 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60';
+          }
+
+          const createdDate = ord.createdAt ? new Date(ord.createdAt).toLocaleDateString('id-ID') : new Date().toLocaleDateString('id-ID');
+
+          return {
+            id: ord.orderNumber,
+            name: ord.buyer?.name || 'Pelanggan',
+            date: createdDate,
+            items: ord.cart?.totalQty || 1,
+            total: `Rp ${(ord.pricing?.grandTotal || 0).toLocaleString('id-ID')}`,
+            status: statusLabel,
+            color: badgeColor,
+            rawBackendOrder: ord,
+          };
+        });
+
+        setOrders(mappedOrders);
+
+        // Collect IDs of completed/done orders to remove them from notifications
+        const completedOrderNumbers = new Set(
+          ordersData.orders
+            .filter((ord: any) => ord.status === 'DONE' || ord.status === 'COMPLETED' || ord.status === 'DELIVERED')
+            .map((ord: any) => ord.orderNumber)
+        );
+
+        // Filter out finished orders from notification list
+        setNotifications((prev) =>
+          prev.filter((n) => !completedOrderNumbers.has(n.orderId))
+        );
+
+        // Process incoming active orders for live notifications
+        setKnownOrderIds((prevSet) => {
+          const isFirstRun = prevSet.size === 0;
+          const newSet = new Set(prevSet);
+          const newNotifList: any[] = [];
+          let latestToastObj: any = null;
+
+          ordersData.orders.forEach((ord: any) => {
+            const isFinished = ord.status === 'DONE' || ord.status === 'COMPLETED' || ord.status === 'DELIVERED';
+            if (!newSet.has(ord.orderNumber)) {
+              newSet.add(ord.orderNumber);
+              if (!isFinished) {
+                const title = `Pesanan Baru #${ord.orderNumber}`;
+                const message = `${ord.buyer?.name || 'Pelanggan'} (${ord.buyer?.city || 'Indramayu'}) - Rp ${(ord.pricing?.grandTotal || 0).toLocaleString('id-ID')}`;
+                const time = ord.createdAt ? new Date(ord.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : 'Baru saja';
+
+                newNotifList.unshift({
+                  id: `notif-${ord.orderNumber}-${Date.now()}`,
+                  title,
+                  message,
+                  time,
+                  unread: !isFirstRun,
+                  orderId: ord.orderNumber,
+                  rawOrder: ord,
+                });
+
+                if (!isFirstRun) {
+                  latestToastObj = { title, message, orderId: ord.orderNumber, rawOrder: ord };
+                }
+              }
+            }
+          });
+
+          if (newNotifList.length > 0) {
+            setNotifications((prev) => [...newNotifList, ...prev].slice(0, 20));
+            if (latestToastObj) {
+              setNewOrderToast(latestToastObj);
+            }
+          }
+
+          return newSet;
+        });
+
+        // Derive customers list from real orders
+        const customerMap = new Map<string, Customer>();
+        ordersData.orders.forEach((ord: any) => {
+          const name = ord.buyer?.name || 'Pelanggan';
+          const email = ord.buyer?.email || `${ord.buyer?.whatsapp || 'wa'}@botaniseed.id`;
+          const spentNum = ord.pricing?.grandTotal || 0;
+          const existing = customerMap.get(name);
+          if (existing) {
+            const prevSpent = parseInt(existing.totalSpent.replace(/\D/g, '')) || 0;
+            existing.totalSpent = `Rp ${(prevSpent + spentNum).toLocaleString('id-ID')}`;
+          } else {
+            customerMap.set(name, {
+              id: ord.orderNumber,
+              name,
+              avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+              joiningDate: ord.createdAt ? new Date(ord.createdAt).toLocaleDateString('id-ID') : new Date().toLocaleDateString('id-ID'),
+              email,
+              totalSpent: `Rp ${spentNum.toLocaleString('id-ID')}`,
+              status: 'New'
+            });
+          }
+        });
+        setCustomers(Array.from(customerMap.values()));
+      }
+
+      if (summaryData?.success && summaryData.summary) {
+        setSummaryStats(summaryData.summary);
+      }
+
+      if (productsData?.success && Array.isArray(productsData.products)) {
+        setProducts(productsData.products.map((p: any) => ({
+          id: p.slug || p.id,
+          name: p.name,
+          sku: p.slug ? p.slug.toUpperCase() : 'PROD-001',
+          cat: p.cat || 'Seeds',
+          price: `Rp ${(p.price || 0).toLocaleString('id-ID')}`,
+          stock: p.stock ?? 100,
+          status: p.stock === 0 ? 'Out of Stock' : p.stock < 20 ? 'Low Stock' : 'In Stock',
+          badge: p.stock === 0 ? 'bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-300' : 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300'
+        })));
+      }
+    } catch (err) {
+      console.error('Failed to load backend data in BotaniDashboard:', err);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchLiveBackendData();
+    const interval = setInterval(fetchLiveBackendData, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Modal States
   const [isAddCustomerOpen, setIsAddCustomerOpen] = useState(false);
@@ -394,7 +526,12 @@ export function BotaniDashboard() {
     }
   };
 
-  const handleUpdateOrderStatus = (orderId: string, newStatus: OrderItem['status']) => {
+  const handleUpdateOrderStatus = async (orderId: string, newStatus: OrderItem['status']) => {
+    let backendStatus = 'PAYMENT_REPORTED';
+    if (newStatus === 'Processing') backendStatus = 'PAID';
+    else if (newStatus === 'Shipped') backendStatus = 'SHIPPED';
+    else if (newStatus === 'Delivered') backendStatus = 'DONE';
+
     setOrders((prevOrders) =>
       prevOrders.map((ord) =>
         ord.id === orderId
@@ -406,6 +543,20 @@ export function BotaniDashboard() {
           : ord
       )
     );
+
+    if (newStatus === 'Delivered') {
+      setNotifications((prev) => prev.filter((n) => n.orderId !== orderId));
+    }
+
+    try {
+      await fetch(`/api/orders/${orderId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: backendStatus }),
+      });
+    } catch (err) {
+      console.error('Failed to update status on server:', err);
+    }
   };
 
   const handleDeleteOrder = (id: string) => {
@@ -419,36 +570,32 @@ export function BotaniDashboard() {
   };
 
   // Filtered lists
-  const filteredCustomers = customers.filter(
-    (c) =>
-      c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredCustomers = customers;
 
   const filteredProducts = products.filter((p) => {
-    const matchesCat = productCatFilter === 'All Categories' || p.cat === productCatFilter;
-    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.sku.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCat && matchesSearch;
+    return productCatFilter === 'All Categories' || p.cat === productCatFilter;
   });
 
   const filteredOrders = orders.filter((o) => {
-    const matchesStatus = orderStatusFilter === 'All' || o.status === orderStatusFilter;
-    const matchesSearch = o.name.toLowerCase().includes(searchQuery.toLowerCase()) || o.id.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesStatus && matchesSearch;
+    return orderStatusFilter === 'All' || o.status === orderStatusFilter;
   });
+
+  const completedOrdersList = orders.filter(
+    (o) => o.status === 'Delivered' || o.rawBackendOrder?.status === 'DONE' || o.rawBackendOrder?.status === 'COMPLETED'
+  );
 
   // Reset page when filters change
   React.useEffect(() => {
     setCustomerPage(1);
-  }, [searchQuery, categoryFilter, timeframeFilter]);
+  }, [categoryFilter, timeframeFilter]);
 
   React.useEffect(() => {
     setProductPage(1);
-  }, [searchQuery, productCatFilter]);
+  }, [productCatFilter]);
 
   React.useEffect(() => {
     setOrderPage(1);
-  }, [searchQuery, orderStatusFilter]);
+  }, [orderStatusFilter]);
 
   // Paginated lists (Max 15 items per page)
   const paginatedCustomers = filteredCustomers.slice(
@@ -464,6 +611,11 @@ export function BotaniDashboard() {
   const paginatedOrders = filteredOrders.slice(
     (orderPage - 1) * ITEMS_PER_PAGE,
     orderPage * ITEMS_PER_PAGE
+  );
+
+  const paginatedCompletedOrders = completedOrdersList.slice(
+    (completedOrderPage - 1) * ITEMS_PER_PAGE,
+    completedOrderPage * ITEMS_PER_PAGE
   );
 
   const renderPagination = (currentPage: number, totalItems: number, onPageChange: (p: number) => void) => {
@@ -516,15 +668,99 @@ export function BotaniDashboard() {
     );
   };
 
-  const barData = [
-    { month: 'Jan', h: '60%', amount: 'Rp 27.160.000' },
-    { month: 'Feb', h: '45%', amount: 'Rp 20.370.000' },
-    { month: 'Mar', h: '75%', amount: 'Rp 33.960.000' },
-    { month: 'Apr', h: '50%', amount: 'Rp 22.640.000' },
-    { month: 'May', h: '85%', amount: 'Rp 38.480.000' },
-    { month: 'Jun', h: '95%', amount: 'Rp 43.000.000' },
-    { month: 'Jul', h: '70%', amount: 'Rp 31.690.000' },
-  ];
+  const dynamicBarData = React.useMemo(() => {
+    if (revenueTimeframe === 'Yearly') {
+      const years = ['2023', '2024', '2025', '2026'];
+      const totals: Record<string, number> = { '2023': 0, '2024': 0, '2025': 0, '2026': 0 };
+      orders.forEach((ord: any) => {
+        const raw = ord.rawBackendOrder || ord;
+        const d = raw.createdAt ? new Date(raw.createdAt) : new Date();
+        const y = isNaN(d.getTime()) ? '2026' : String(d.getFullYear());
+        const grandTotal = raw.pricing?.grandTotal || parseInt(String(ord.total).replace(/\D/g, '')) || 0;
+        if (totals[y] !== undefined) totals[y] += grandTotal;
+        else totals['2026'] += grandTotal;
+      });
+      const maxVal = Math.max(...Object.values(totals), 1);
+      return years.map((y) => {
+        const rev = totals[y];
+        const pct = rev > 0 ? Math.max(Math.round((rev / maxVal) * 100), 15) : 8;
+        return { month: y, h: `${pct}%`, amount: `Rp ${rev.toLocaleString('id-ID')}`, rawAmount: rev };
+      });
+    }
+
+    if (revenueTimeframe === 'Weekly') {
+      const weeks = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4', 'Minggu 5'];
+      const totals = [0, 0, 0, 0, 0];
+      orders.forEach((ord: any) => {
+        const raw = ord.rawBackendOrder || ord;
+        const d = raw.createdAt ? new Date(raw.createdAt) : new Date();
+        const dateNum = isNaN(d.getTime()) ? 1 : d.getDate();
+        const weekIdx = Math.min(Math.floor((dateNum - 1) / 7), 4);
+        const grandTotal = raw.pricing?.grandTotal || parseInt(String(ord.total).replace(/\D/g, '')) || 0;
+        totals[weekIdx] += grandTotal;
+      });
+      const maxVal = Math.max(...totals, 1);
+      return weeks.map((w, idx) => {
+        const rev = totals[idx];
+        const pct = rev > 0 ? Math.max(Math.round((rev / maxVal) * 100), 15) : 8;
+        return { month: w, h: `${pct}%`, amount: `Rp ${rev.toLocaleString('id-ID')}`, rawAmount: rev };
+      });
+    }
+
+    if (revenueTimeframe === 'Daily') {
+      const days: { month: string; dateStr: string; total: number }[] = [];
+      const now = new Date();
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(now);
+        d.setDate(d.getDate() - i);
+        const label = d.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric' });
+        const dateStr = d.toISOString().split('T')[0];
+        days.push({ month: label, dateStr, total: 0 });
+      }
+
+      orders.forEach((ord: any) => {
+        const raw = ord.rawBackendOrder || ord;
+        const d = raw.createdAt ? new Date(raw.createdAt) : new Date();
+        const dateStr = d.toISOString().split('T')[0];
+        const foundDay = days.find((item) => item.dateStr === dateStr);
+        const grandTotal = raw.pricing?.grandTotal || parseInt(String(ord.total).replace(/\D/g, '')) || 0;
+        if (foundDay) foundDay.total += grandTotal;
+      });
+
+      const maxVal = Math.max(...days.map((d) => d.total), 1);
+      return days.map((d) => {
+        const pct = d.total > 0 ? Math.max(Math.round((d.total / maxVal) * 100), 15) : 8;
+        return { month: d.month, h: `${pct}%`, amount: `Rp ${d.total.toLocaleString('id-ID')}`, rawAmount: d.total };
+      });
+    }
+
+    // Default: Monthly
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+    const monthlyTotals = new Array(12).fill(0);
+
+    orders.forEach((ord: any) => {
+      const raw = ord.rawBackendOrder || ord;
+      const d = raw.createdAt ? new Date(raw.createdAt) : new Date();
+      const monthIdx = isNaN(d.getTime()) ? new Date().getMonth() : d.getMonth();
+      const grandTotal = raw.pricing?.grandTotal || parseInt(String(ord.total).replace(/\D/g, '')) || 0;
+      monthlyTotals[monthIdx] += grandTotal;
+    });
+
+    const maxVal = Math.max(...monthlyTotals, 1);
+    const currentMonthIdx = new Date().getMonth();
+    const activeMonthsCount = Math.max(currentMonthIdx + 1, 6);
+
+    return monthNames.slice(0, activeMonthsCount).map((month, idx) => {
+      const rev = monthlyTotals[idx];
+      const pct = rev > 0 ? Math.max(Math.round((rev / maxVal) * 100), 15) : 8;
+      return {
+        month,
+        h: `${pct}%`,
+        amount: `Rp ${rev.toLocaleString('id-ID')}`,
+        rawAmount: rev,
+      };
+    });
+  }, [revenueTimeframe, orders]);
 
   return (
     <div className={`min-h-screen font-sans antialiased flex transition-colors duration-200 bg-[#f4f5f8] dark:bg-[#0f172a] text-gray-800 dark:text-slate-100 ${isDarkMode ? 'dark' : ''}`}>
@@ -559,6 +795,7 @@ export function BotaniDashboard() {
             {[
               { label: t('dashboard'), key: 'Dashboard', icon: LayoutDashboard },
               { label: t('order'), key: 'Order', icon: FileText },
+              { label: language === 'en' ? 'Completed Orders' : 'Pesanan Selesai', key: 'CompletedOrders', icon: CheckCircle2 },
             ].map((item) => {
               const Icon = item.icon;
               const isActive = activeNav === item.key;
@@ -601,6 +838,7 @@ export function BotaniDashboard() {
             {!isSidebarMinimized && <span>{t('settings')}</span>}
           </button>
           <button
+            onClick={onLogout || onGoHome}
             title={isSidebarMinimized ? t('logout') : undefined}
             className={`w-full flex items-center py-3 rounded-2xl text-sm font-medium text-gray-500 dark:text-slate-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:text-rose-600 dark:hover:text-rose-400 transition-colors ${
               isSidebarMinimized ? 'justify-center px-0' : 'gap-3 px-4'
@@ -630,13 +868,17 @@ export function BotaniDashboard() {
                 <span>{language === 'id' ? 'ID' : 'EN'}</span>
               </button>
 
-              {/* Search Icon */}
-              <div className="relative">
-                <button className="w-10 h-10 rounded-full bg-gray-100/80 dark:bg-slate-800 hover:bg-gray-200/80 dark:hover:bg-slate-700 flex items-center justify-center text-gray-600 dark:text-slate-300 transition-colors">
-                  <Search className="w-4 h-4" />
-                </button>
-              </div>
-              
+
+              {/* Refresh Data Button */}
+              <button
+                onClick={handleManualRefresh}
+                disabled={isRefreshing}
+                title="Refresh / Muat Ulang Pesanan Terbaru"
+                className="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-950/70 border border-indigo-100 dark:border-indigo-800/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 flex items-center justify-center text-indigo-600 dark:text-indigo-300 transition-all active:scale-95 shadow-xs cursor-pointer disabled:opacity-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-emerald-500' : ''}`} />
+              </button>
+
               {/* Dark Mode Toggle Button */}
               <button
                 onClick={toggleDarkMode}
@@ -646,11 +888,85 @@ export function BotaniDashboard() {
                 {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </button>
 
-              {/* Notification Button */}
-              <button className="w-10 h-10 rounded-full bg-gray-100/80 dark:bg-slate-800 hover:bg-gray-200/80 dark:hover:bg-slate-700 flex items-center justify-center text-gray-600 dark:text-slate-300 transition-colors relative">
-                <Bell className="w-4 h-4" />
-                <span className="w-2 h-2 rounded-full bg-indigo-600 absolute top-2 right-2 ring-2 ring-white dark:ring-slate-900 animate-pulse"></span>
-              </button>
+              {/* Notification Button & Dropdown Popover */}
+              <div className="relative">
+                <button
+                  onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                  title="Notifikasi Pesanan Masuk"
+                  className="w-10 h-10 rounded-full bg-gray-100/80 dark:bg-slate-800 hover:bg-gray-200/80 dark:hover:bg-slate-700 flex items-center justify-center text-gray-600 dark:text-slate-300 transition-colors relative cursor-pointer"
+                >
+                  <Bell className="w-4 h-4" />
+                  {unreadNotifCount > 0 && (
+                    <span className="w-5 h-5 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center absolute -top-1 -right-1 ring-2 ring-white dark:ring-slate-900 animate-bounce">
+                      {unreadNotifCount}
+                    </span>
+                  )}
+                </button>
+
+                {isNotificationOpen && (
+                  <div className="absolute right-0 mt-3 w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-slate-700 py-3 z-50 animate-in fade-in zoom-in-95">
+                    <div className="px-4 pb-3 border-b border-gray-100 dark:border-slate-700 flex items-center justify-between">
+                      <div>
+                        <h4 className="font-bold text-sm text-gray-900 dark:text-white">Notifikasi Pesanan</h4>
+                        <p className="text-[11px] text-gray-400 dark:text-slate-400">{unreadNotifCount > 0 ? `${unreadNotifCount} belum dibaca` : 'Semua sudah dibaca'}</p>
+                      </div>
+                      {unreadNotifCount > 0 && (
+                        <button
+                          onClick={markAllNotifsAsRead}
+                          className="text-[11px] text-indigo-600 dark:text-indigo-400 hover:underline font-semibold cursor-pointer"
+                        >
+                          Tandai Dibaca
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="max-h-80 overflow-y-auto divide-y divide-gray-100 dark:divide-slate-700/60">
+                      {notifications.length === 0 ? (
+                        <div className="p-6 text-center text-gray-400 dark:text-slate-500 text-xs">
+                          Belum ada notifikasi pesanan baru.
+                        </div>
+                      ) : (
+                        notifications.map((n) => (
+                          <div
+                            key={n.id}
+                            onClick={() => {
+                              markNotifAsRead(n.id);
+                              if (n.rawOrder) setSelectedOrderDetail(n.rawOrder);
+                              else setActiveNav('Orders');
+                              setIsNotificationOpen(false);
+                            }}
+                            className={`p-3.5 hover:bg-indigo-50/50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer flex items-start gap-3 ${n.unread ? 'bg-indigo-50/30 dark:bg-indigo-950/20' : ''}`}
+                          >
+                            <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+                              <ShoppingBag className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between gap-1">
+                                <p className="text-xs font-bold text-gray-900 dark:text-slate-100 truncate">{n.title}</p>
+                                <span className="text-[10px] text-gray-400 dark:text-slate-400 shrink-0">{n.time}</span>
+                              </div>
+                              <p className="text-xs text-gray-600 dark:text-slate-300 mt-0.5 line-clamp-2">{n.message}</p>
+                              <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold mt-1 inline-flex items-center gap-1">
+                                Lihat Selengkapnya →
+                              </span>
+                            </div>
+                            {n.unread && <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0 mt-1.5"></span>}
+                          </div>
+                        ))
+                      )}
+                    </div>
+
+                    <div className="px-4 pt-3 border-t border-gray-100 dark:border-slate-700 text-center">
+                      <button
+                        onClick={() => { setActiveNav('Orders'); setIsNotificationOpen(false); }}
+                        className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 cursor-pointer"
+                      >
+                        Lihat Semua Daftar Pesanan →
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* User Profile */}
@@ -663,8 +979,8 @@ export function BotaniDashboard() {
                   <User className="w-5 h-5" />
                 </div>
                 <div className="text-left hidden sm:block">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">Jenny Wilson</p>
-                  <p className="text-xs text-gray-400 dark:text-slate-400 leading-tight">Manager</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white leading-tight">{adminName}</p>
+                  <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium leading-tight">Admin Operasional</p>
                 </div>
                 <ChevronDown className="w-4 h-4 text-gray-400 dark:text-slate-500 ml-1" />
               </div>
@@ -757,9 +1073,9 @@ export function BotaniDashboard() {
                       <DollarSign className="w-5 h-5" />
                     </div>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Rp 45.280.000</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Rp {(summaryStats.totalRevenue || 0).toLocaleString('id-ID')}</h3>
                   <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium inline-flex items-center gap-1 mt-2">
-                    <TrendingUp className="w-3.5 h-3.5" /> +12.5% {t('thisMonth')}
+                    <TrendingUp className="w-3.5 h-3.5" /> Live Backend Data
                   </span>
                 </div>
 
@@ -770,35 +1086,35 @@ export function BotaniDashboard() {
                       <ShoppingCart className="w-5 h-5" />
                     </div>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">1,240</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{(summaryStats.totalOrders || 0).toLocaleString('id-ID')}</h3>
                   <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium inline-flex items-center gap-1 mt-2">
-                    <TrendingUp className="w-3.5 h-3.5" /> +8.2% {t('thisMonth')}
+                    <TrendingUp className="w-3.5 h-3.5" /> Live Backend Data
                   </span>
                 </div>
 
                 <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-200">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs text-gray-500 dark:text-slate-300 font-medium">{t('avgOrderValue')}</span>
+                    <span className="text-xs text-gray-500 dark:text-slate-300 font-medium">Total Paket Terjual</span>
                     <div className="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-900/40 flex items-center justify-center text-amber-600 dark:text-amber-300">
                       <Sliders className="w-5 h-5" />
                     </div>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Rp 36.500</h3>
-                  <span className="text-xs text-rose-500 dark:text-rose-400 font-medium inline-flex items-center gap-1 mt-2">
-                    <TrendingDown className="w-3.5 h-3.5" /> -1.4% {t('vsLastWeek')}
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{(summaryStats.totalPackages || 0).toLocaleString('id-ID')} paket</h3>
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium inline-flex items-center gap-1 mt-2">
+                    <TrendingUp className="w-3.5 h-3.5" /> Terhitung Otomatis
                   </span>
                 </div>
 
                 <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-200">
                   <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs text-gray-500 dark:text-slate-300 font-medium">{t('conversionRate')}</span>
+                    <span className="text-xs text-gray-500 dark:text-slate-300 font-medium">Pesanan Terverifikasi</span>
                     <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 dark:text-emerald-300">
                       <TrendingUp className="w-5 h-5" />
                     </div>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">3.4%</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{(summaryStats.paidCount || 0).toLocaleString('id-ID')} lunas</h3>
                   <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium inline-flex items-center gap-1 mt-2">
-                    <TrendingUp className="w-3.5 h-3.5" /> +0.6% {t('improvement')}
+                    <TrendingUp className="w-3.5 h-3.5" /> Terkonfirmasi Server
                   </span>
                 </div>
               </div>
@@ -808,60 +1124,106 @@ export function BotaniDashboard() {
                 <div className="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-xs flex flex-col justify-between">
                   <div className="flex items-center justify-between mb-6">
                     <div>
-                      <h3 className="font-bold text-gray-900 dark:text-white text-lg">Sales Revenue Overview</h3>
-                      <p className="text-xs text-gray-400 dark:text-slate-400">Monthly revenue trends</p>
+                      <h3 className="font-bold text-gray-900 dark:text-white text-lg">Ringkasan Pendapatan Penjualan</h3>
+                      <p className="text-xs text-gray-400 dark:text-slate-400">Grafik tren omset aktual dari transaksi masuk</p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap justify-end">
                       {selectedHoverBar && (
                         <span className="text-xs px-3 py-1 bg-indigo-50 dark:bg-indigo-950/70 text-[#5b46e8] dark:text-indigo-300 font-semibold rounded-full animate-fade-in">
                           {selectedHoverBar.month}: {selectedHoverBar.amount}
                         </span>
                       )}
-                      <button className="text-xs text-gray-500 dark:text-slate-300 border border-gray-200 dark:border-slate-700 rounded-full px-3 py-1 bg-white dark:bg-slate-700">
-                        2026 Year
-                      </button>
+                      <div className="flex items-center gap-1 bg-gray-100 dark:bg-slate-700/70 p-1 rounded-full text-xs border border-gray-200/60 dark:border-slate-600/60">
+                        {[
+                          { key: 'Yearly', label: 'Tahun' },
+                          { key: 'Monthly', label: 'Bulan' },
+                          { key: 'Weekly', label: 'Minggu' },
+                          { key: 'Daily', label: 'Hari' },
+                        ].map((item) => (
+                          <button
+                            key={item.key}
+                            onClick={() => setRevenueTimeframe(item.key as any)}
+                            className={`px-3 py-1 font-semibold rounded-full transition-all cursor-pointer ${
+                              revenueTimeframe === item.key
+                                ? 'bg-[#5b46e8] text-white shadow-xs'
+                                : 'text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white'
+                            }`}
+                          >
+                            {item.label}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
 
                   <div className="h-64 flex items-end justify-between gap-3 pt-6 pb-2 px-4 border-b border-gray-100 dark:border-slate-700">
-                    {barData.map((b, i) => (
+                    {dynamicBarData.map((b, i) => (
                       <div
                         key={i}
                         onMouseEnter={() => setSelectedHoverBar(b)}
                         onMouseLeave={() => setSelectedHoverBar(null)}
                         className="flex-1 flex flex-col items-center gap-2 h-full justify-end group cursor-pointer"
                       >
-                        <div
-                          className="w-full bg-indigo-100 dark:bg-indigo-500/30 group-hover:bg-[#5b46e8] dark:group-hover:bg-indigo-400 transition-all duration-200 rounded-t-xl"
-                          style={{ height: b.h }}
-                        ></div>
-                        <span className="text-xs text-gray-400 dark:text-slate-400 font-medium group-hover:text-[#5b46e8] dark:group-hover:text-indigo-400 transition-colors">{b.month}</span>
+                        <div className="w-full relative flex items-end justify-center h-full">
+                          <div
+                            className={`w-full transition-all duration-300 rounded-t-xl ${
+                              b.rawAmount > 0
+                                ? 'bg-[#5b46e8] dark:bg-indigo-500 group-hover:bg-[#4338ca] dark:group-hover:bg-indigo-400 shadow-sm'
+                                : 'bg-indigo-100/60 dark:bg-slate-700/60 group-hover:bg-indigo-200 dark:group-hover:bg-slate-600'
+                            }`}
+                            style={{ height: b.h }}
+                          ></div>
+                        </div>
+                        <span className="text-xs text-gray-400 dark:text-slate-400 font-medium group-hover:text-[#5b46e8] dark:group-hover:text-indigo-400 transition-colors">
+                          {b.month}
+                        </span>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-xs">
-                  <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-4">Recent Activity</h3>
-                  <div className="space-y-4">
-                    {[
-                      { title: 'New order #ORD-9481', time: '5 mins ago', badge: 'New Order', bg: 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60' },
-                      { title: 'Stock low on Organic Tomato', time: '1 hour ago', badge: 'Inventory', bg: 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60' },
-                      { title: 'Payment verified from customer', time: '3 hours ago', badge: 'Finance', bg: 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60' },
-                      { title: 'Weekly report generated', time: '1 day ago', badge: 'System', bg: 'bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300' },
-                    ].map((act, i) => (
-                      <div key={i} className="flex items-start gap-3 pb-3 border-b border-gray-100 dark:border-slate-700 last:border-0 last:pb-0 group">
-                        <div className="w-2 h-2 rounded-full bg-indigo-500 dark:bg-indigo-400 mt-2 group-hover:scale-125 transition-transform"></div>
-                        <div className="flex-1">
-                          <p className="text-xs font-semibold text-gray-900 dark:text-slate-100">{act.title}</p>
-                          <span className="text-[10px] text-gray-400 dark:text-slate-400">{act.time}</span>
-                        </div>
-                        <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-semibold ${act.bg}`}>
-                          {act.badge}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+                  <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-4">Aktivitas Terbaru</h3>
+                  {orders.length === 0 ? (
+                    <div className="py-8 text-center text-gray-400 dark:text-slate-500 text-xs">
+                      Belum ada aktivitas transaksi atau pesanan masuk.
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {orders.slice(0, 6).map((order) => {
+                        let badgeText = 'Pesanan Baru';
+                        let bgStyle = 'bg-amber-50 dark:bg-amber-950/70 text-amber-600 dark:text-amber-300 border border-amber-200/50 dark:border-amber-800/60';
+                        if (order.status === 'Processing') {
+                          badgeText = 'Terverifikasi';
+                          bgStyle = 'bg-blue-50 dark:bg-blue-950/70 text-blue-600 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/60';
+                        } else if (order.status === 'Shipped') {
+                          badgeText = 'Pengiriman';
+                          bgStyle = 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60';
+                        } else if (order.status === 'Delivered') {
+                          badgeText = 'Selesai';
+                          bgStyle = 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60';
+                        }
+
+                        return (
+                          <div key={order.id} className="flex items-start gap-3 pb-3 border-b border-gray-100 dark:border-slate-700 last:border-0 last:pb-0 group">
+                            <div className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 mt-2 group-hover:scale-125 transition-transform"></div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-semibold text-gray-900 dark:text-slate-100 truncate">
+                                Pesanan {order.id} - {order.name}
+                              </p>
+                              <div className="flex items-center gap-2 mt-0.5">
+                                <span className="text-[10px] text-gray-400 dark:text-slate-400">{order.date}</span>
+                                <span className="text-[10px] font-bold text-gray-700 dark:text-slate-300">{order.total}</span>
+                              </div>
+                            </div>
+                            <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-semibold shrink-0 ${bgStyle}`}>
+                              {badgeText}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -887,16 +1249,6 @@ export function BotaniDashboard() {
 
               <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-xs space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="relative w-72">
-                    <Search className="w-4 h-4 text-gray-400 dark:text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="text"
-                      placeholder="Search products..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 pr-4 py-2 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-full text-sm w-full text-gray-900 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#5b46e8]/30 focus:border-[#5b46e8] transition-all"
-                    />
-                  </div>
                   <div className="flex items-center gap-2">
                     {['All Categories', 'Seeds', 'Fertilizers', 'Tools'].map((cat) => (
                       <button
@@ -983,8 +1335,17 @@ export function BotaniDashboard() {
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('orderManagement')}</h2>
                   <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">{t('orderSubtitle')}</p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-3 flex-wrap">
+                  <button
+                    onClick={handleManualRefresh}
+                    disabled={isRefreshing}
+                    className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-sm transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+                    <span>{isRefreshing ? 'Memuat Data...' : 'Refresh Pesanan'}</span>
+                  </button>
+
+                  <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
                     {['All', 'Pending', 'Processing', 'Shipped', 'Delivered'].map((status) => (
                       <button
                         key={status}
@@ -1046,7 +1407,7 @@ export function BotaniDashboard() {
                             <td className="py-4 px-4 text-center">
                               <div className="flex items-center justify-center gap-2">
                                 <button
-                                  onClick={() => alert(`Order Details:\nID: ${ord.id}\nCustomer: ${ord.name}\nTotal: ${ord.total}\nStatus: ${ord.status}`)}
+                                  onClick={() => setSelectedOrderDetail(ord.rawBackendOrder || ord)}
                                   title="View Details"
                                   className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 inline-flex items-center justify-center text-gray-400 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 transition-colors"
                                 >
@@ -1069,6 +1430,92 @@ export function BotaniDashboard() {
                 </div>
 
                 {renderPagination(orderPage, filteredOrders.length, setOrderPage)}
+              </div>
+            </div>
+          )}
+          {/* ============================================================ */}
+          {/* VIEW: COMPLETED ORDERS */}
+          {/* ============================================================ */}
+          {activeNav === 'CompletedOrders' && (
+            <div className="space-y-8">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    <CheckCircle2 className="w-6 h-6 text-emerald-500" />
+                    <span>{language === 'en' ? 'Completed Orders Archive' : 'Arsip Pesanan Selesai'}</span>
+                  </h2>
+                  <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">
+                    {language === 'en' ? 'All orders successfully delivered & verified.' : 'Riwayat seluruh pemesanan yang telah berhasil terkirim & lunas.'}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/80 px-4 py-2 rounded-full border border-emerald-200 dark:border-emerald-800">
+                    {completedOrdersList.length} {language === 'en' ? 'Completed Orders' : 'Pesanan Selesai'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-xs">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="border-b border-gray-100 dark:border-slate-700 text-xs font-semibold text-gray-500 dark:text-slate-300 bg-gray-50/50 dark:bg-slate-700/50">
+                        <th className="py-3 px-4">{t('orderId')}</th>
+                        <th className="py-3 px-4">{t('customer')}</th>
+                        <th className="py-3 px-4">{t('date')}</th>
+                        <th className="py-3 px-4">{t('items')}</th>
+                        <th className="py-3 px-4">{t('totalAmount')}</th>
+                        <th className="py-3 px-4">Status</th>
+                        <th className="py-3 px-4 text-center">{t('action')}</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-slate-700 text-sm">
+                      {paginatedCompletedOrders.length === 0 ? (
+                        <tr>
+                          <td colSpan={7} className="py-12 text-center text-gray-400 dark:text-slate-400 text-sm italic">
+                            Belum ada data pesanan yang diselesaikan.
+                          </td>
+                        </tr>
+                      ) : (
+                        paginatedCompletedOrders.map((ord) => (
+                          <tr key={ord.id} className="hover:bg-gray-50/60 dark:hover:bg-slate-700/50 transition-colors">
+                            <td className="py-4 px-4 font-mono text-xs font-bold text-gray-900 dark:text-slate-100">{ord.id}</td>
+                            <td className="py-4 px-4 font-semibold text-gray-900 dark:text-slate-100">{ord.name}</td>
+                            <td className="py-4 px-4 text-xs text-gray-500 dark:text-slate-400">{ord.date}</td>
+                            <td className="py-4 px-4 text-xs text-gray-600 dark:text-slate-300">{ord.items} items</td>
+                            <td className="py-4 px-4 font-semibold text-gray-900 dark:text-white">{ord.total}</td>
+                            <td className="py-4 px-4">
+                              <span className="text-xs px-3 py-1 rounded-full font-bold bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60 inline-flex items-center gap-1">
+                                <Check className="w-3.5 h-3.5" /> Selesai
+                              </span>
+                            </td>
+                            <td className="py-4 px-4 text-center">
+                              <div className="flex items-center justify-center gap-2">
+                                <button
+                                  onClick={() => setSelectedOrderDetail(ord.rawBackendOrder || ord)}
+                                  title="Lihat Detail Pesanan Selesai"
+                                  className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 inline-flex items-center justify-center text-gray-400 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteOrder(ord.id)}
+                                  title="Delete Order"
+                                  className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-700 hover:bg-rose-100 dark:hover:bg-rose-950/50 inline-flex items-center justify-center text-gray-400 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition-colors cursor-pointer"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                {renderPagination(completedOrderPage, completedOrdersList.length, setCompletedOrderPage)}
               </div>
             </div>
           )}
@@ -1157,17 +1604,6 @@ export function BotaniDashboard() {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Customers Overview</h2>
 
                 <div className="flex items-center gap-4">
-                  {/* Search Bar */}
-                  <div className="relative">
-                    <Search className="w-4 h-4 text-gray-400 dark:text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="text"
-                      placeholder="Search customer name or email..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pl-10 pr-4 py-2.5 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-full text-sm text-gray-700 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#5b46e8]/30 focus:border-[#5b46e8] w-72 shadow-xs transition-all"
-                    />
-                  </div>
 
                   {/* Add Customer Button */}
                   <button
@@ -1640,6 +2076,196 @@ export function BotaniDashboard() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* ============================================================ */}
+      {/* FLOATING TOAST: NEW ORDER NOTIFICATION */}
+      {/* ============================================================ */}
+      {newOrderToast && (
+        <div className="fixed top-6 right-6 z-50 bg-slate-900/95 backdrop-blur-md text-white p-4 rounded-2xl shadow-2xl border border-emerald-500/40 max-w-sm animate-in fade-in slide-in-from-top-4 flex items-start gap-3">
+          <div className="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+            <ShoppingBag className="w-5 h-5" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h4 className="font-bold text-sm text-emerald-400">{newOrderToast.title}</h4>
+            <p className="text-xs text-slate-300 mt-0.5">{newOrderToast.message}</p>
+            <button
+              onClick={() => {
+                if (newOrderToast.rawOrder) setSelectedOrderDetail(newOrderToast.rawOrder);
+                else setActiveNav('Order');
+                setNewOrderToast(null);
+              }}
+              className="mt-2 text-xs font-semibold text-emerald-400 hover:text-emerald-300 underline cursor-pointer"
+            >
+              Lihat Detail Pesanan →
+            </button>
+          </div>
+          <button onClick={() => setNewOrderToast(null)} className="text-slate-400 hover:text-white cursor-pointer">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
+      {/* ============================================================ */}
+      {/* MODAL: ORDER DETAIL */}
+      {/* ============================================================ */}
+      {selectedOrderDetail && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-xl shadow-2xl border border-gray-100 dark:border-slate-700 animate-in fade-in zoom-in-95 my-8 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-slate-700 pb-4 mb-4">
+              <div>
+                <h3 className="font-bold text-gray-900 dark:text-white text-lg flex items-center gap-2">
+                  <span>Detail Pesanan #{selectedOrderDetail.orderNumber || selectedOrderDetail.id}</span>
+                </h3>
+                <p className="text-xs text-gray-400 dark:text-slate-400 mt-0.5">
+                  Dibuat pada: {selectedOrderDetail.createdAt ? new Date(selectedOrderDetail.createdAt).toLocaleString('id-ID') : selectedOrderDetail.date || 'Hari ini'}
+                </p>
+              </div>
+              <button
+                onClick={() => setSelectedOrderDetail(null)}
+                className="w-8 h-8 rounded-full bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-slate-200 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-6 text-xs text-gray-700 dark:text-slate-200">
+              {/* INFORMASI PEMBELI */}
+              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-700 space-y-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
+                    <User className="w-4 h-4 text-emerald-500" /> Data Pemesan
+                  </h4>
+                  {selectedOrderDetail.buyer?.whatsapp && (
+                    <a
+                      href={`https://wa.me/${selectedOrderDetail.buyer.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Halo ${selectedOrderDetail.buyer?.name || ''}, kami dari PT Botani Seed Indonesia mengenai pesanan #${selectedOrderDetail.orderNumber || ''}.`)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-full text-[11px] flex items-center gap-1 transition-colors"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5" /> Chat WhatsApp
+                    </a>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+                  <div>
+                    <span className="text-gray-400 dark:text-slate-400">Nama Lengkap:</span>
+                    <p className="font-bold text-gray-900 dark:text-white">{selectedOrderDetail.buyer?.name || selectedOrderDetail.name || '-'}</p>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 dark:text-slate-400">No. WhatsApp / HP:</span>
+                    <p className="font-bold font-mono text-gray-900 dark:text-white">{selectedOrderDetail.buyer?.whatsapp || '-'}</p>
+                  </div>
+                </div>
+
+                <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800">
+                  <span className="text-gray-400 dark:text-slate-400 flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-rose-500" /> Alamat Pengiriman Lengkap:
+                  </span>
+                  <p className="font-semibold text-gray-800 dark:text-slate-200 mt-1 leading-relaxed">
+                    {selectedOrderDetail.buyer?.address ? (
+                      <>
+                        {selectedOrderDetail.buyer.address}, Desa/Kel. {selectedOrderDetail.buyer.village || '-'}, Kec. {selectedOrderDetail.buyer.district || '-'}, {selectedOrderDetail.buyer.city || '-'}, {selectedOrderDetail.buyer.province || '-'} ({selectedOrderDetail.buyer.postal || '-'})
+                      </>
+                    ) : (
+                      'Alamat tidak ditentukan'
+                    )}
+                  </p>
+                  {selectedOrderDetail.buyer?.note && (
+                    <p className="mt-2 text-[11px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 p-2 rounded-lg border border-amber-200/60 dark:border-amber-800/60">
+                      <strong>Catatan Tambahan:</strong> "{selectedOrderDetail.buyer.note}"
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* RINCIAN PRODUK */}
+              <div>
+                <h4 className="font-bold text-gray-900 dark:text-white text-sm mb-2">Item Produk Dipesan</h4>
+                <div className="border border-gray-200 dark:border-slate-700 rounded-xl overflow-hidden">
+                  <table className="w-full text-left">
+                    <thead className="bg-gray-50 dark:bg-slate-700 text-gray-500 dark:text-slate-300 font-semibold border-b border-gray-200 dark:border-slate-700">
+                      <tr>
+                        <th className="py-2.5 px-3">Produk</th>
+                        <th className="py-2.5 px-3 text-center">Jumlah</th>
+                        <th className="py-2.5 px-3 text-right">Harga</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-slate-700/60">
+                      {selectedOrderDetail.cart?.items ? (
+                        selectedOrderDetail.cart.items.map((item: any, idx: number) => (
+                          <tr key={idx}>
+                            <td className="py-2.5 px-3 font-semibold text-gray-900 dark:text-slate-100">{item.name}</td>
+                            <td className="py-2.5 px-3 text-center font-mono">{item.qty} pcs</td>
+                            <td className="py-2.5 px-3 text-right font-mono font-bold">Rp {(item.price * item.qty).toLocaleString('id-ID')}</td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td className="py-2.5 px-3 font-semibold">Paket Benih Utama</td>
+                          <td className="py-2.5 px-3 text-center font-mono">{selectedOrderDetail.items || 1} pcs</td>
+                          <td className="py-2.5 px-3 text-right font-mono font-bold">{selectedOrderDetail.total}</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* RINCIAN BIAYA & TOTAL */}
+              <div className="p-4 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/60 space-y-1.5 text-xs">
+                <div className="flex justify-between text-gray-600 dark:text-slate-300">
+                  <span>Subtotal Produk:</span>
+                  <span className="font-mono">Rp {(selectedOrderDetail.pricing?.productTotal || 0).toLocaleString('id-ID')}</span>
+                </div>
+                <div className="flex justify-between text-gray-600 dark:text-slate-300">
+                  <span>Ongkos Kirim ({selectedOrderDetail.shippingService?.code?.toUpperCase() || 'JNE'}):</span>
+                  <span className="font-mono">Rp {(selectedOrderDetail.pricing?.shippingTotal || 0).toLocaleString('id-ID')}</span>
+                </div>
+                <div className="flex justify-between items-center text-sm font-bold text-emerald-700 dark:text-emerald-300 pt-2 border-t border-emerald-200 dark:border-emerald-800">
+                  <span>Total Pembayaran:</span>
+                  <span className="text-base font-mono">
+                    {selectedOrderDetail.pricing?.grandTotal ? `Rp ${selectedOrderDetail.pricing.grandTotal.toLocaleString('id-ID')}` : selectedOrderDetail.total}
+                  </span>
+                </div>
+              </div>
+
+              {/* UBAH STATUS CEPEAT */}
+              <div className="pt-2 flex items-center justify-between border-t border-gray-100 dark:border-slate-700">
+                <span className="text-xs font-semibold text-gray-500">Update Status:</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => {
+                      handleUpdateOrderStatus(selectedOrderDetail.orderNumber || selectedOrderDetail.id, 'Processing');
+                      setSelectedOrderDetail((prev: any) => ({ ...prev, status: 'PAID' }));
+                    }}
+                    className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold text-xs transition-colors cursor-pointer"
+                  >
+                    Verifikasi Lunas
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleUpdateOrderStatus(selectedOrderDetail.orderNumber || selectedOrderDetail.id, 'Shipped');
+                      setSelectedOrderDetail((prev: any) => ({ ...prev, status: 'SHIPPED' }));
+                    }}
+                    className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-semibold text-xs transition-colors cursor-pointer"
+                  >
+                    Tandai Dikirim
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleUpdateOrderStatus(selectedOrderDetail.orderNumber || selectedOrderDetail.id, 'Delivered');
+                      setSelectedOrderDetail((prev: any) => ({ ...prev, status: 'DONE' }));
+                    }}
+                    className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-semibold text-xs transition-colors cursor-pointer"
+                  >
+                    Selesai
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
