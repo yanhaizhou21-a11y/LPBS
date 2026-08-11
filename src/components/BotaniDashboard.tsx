@@ -170,7 +170,7 @@ export function BotaniDashboard({ adminName = 'Admin PT Botani Seed', onLogout, 
           } else if (ord.status === 'SHIPPED') {
             statusLabel = 'Shipped';
             badgeColor = 'bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/60';
-          } else if (ord.status === 'COMPLETED' || ord.status === 'DONE') {
+          } else if (ord.status === 'COMPLETED' || ord.status === 'DONE' || ord.status === 'DELIVERED' || ord.status === 'Delivered') {
             statusLabel = 'Delivered';
             badgeColor = 'bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-300 border border-emerald-200/50 dark:border-emerald-800/60';
           }
@@ -539,6 +539,9 @@ export function BotaniDashboard({ adminName = 'Admin PT Botani Seed', onLogout, 
               ...ord,
               status: newStatus,
               color: getOrderStatusBadge(newStatus),
+              rawBackendOrder: ord.rawBackendOrder
+                ? { ...ord.rawBackendOrder, status: backendStatus }
+                : { status: backendStatus },
             }
           : ord
       )
@@ -576,13 +579,23 @@ export function BotaniDashboard({ adminName = 'Admin PT Botani Seed', onLogout, 
     return productCatFilter === 'All Categories' || p.cat === productCatFilter;
   });
 
-  const filteredOrders = orders.filter((o) => {
+  const isOrderCompleted = (o: OrderItem) => {
+    const rawStatus = String(o.rawBackendOrder?.status || '').toUpperCase();
+    return (
+      o.status === 'Delivered' ||
+      rawStatus === 'DONE' ||
+      rawStatus === 'COMPLETED' ||
+      rawStatus === 'DELIVERED'
+    );
+  };
+
+  const activeOrdersList = orders.filter((o) => !isOrderCompleted(o));
+
+  const filteredOrders = activeOrdersList.filter((o) => {
     return orderStatusFilter === 'All' || o.status === orderStatusFilter;
   });
 
-  const completedOrdersList = orders.filter(
-    (o) => o.status === 'Delivered' || o.rawBackendOrder?.status === 'DONE' || o.rawBackendOrder?.status === 'COMPLETED'
-  );
+  const completedOrdersList = orders.filter((o) => isOrderCompleted(o));
 
   // Reset page when filters change
   React.useEffect(() => {
@@ -1346,7 +1359,7 @@ export function BotaniDashboard({ adminName = 'Admin PT Botani Seed', onLogout, 
                   </button>
 
                   <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-                    {['All', 'Pending', 'Processing', 'Shipped', 'Delivered'].map((status) => (
+                    {['All', 'Pending', 'Processing', 'Shipped'].map((status) => (
                       <button
                         key={status}
                         onClick={() => setOrderStatusFilter(status)}
