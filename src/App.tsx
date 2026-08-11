@@ -193,7 +193,7 @@ export function App() {
         <Navbar currentPath={currentPath} cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => handleOpenCheckout(1)} />
         {view === 'landing2' ? (
           <main>
-            <FadeContent blur={false} duration={700}>
+            <FadeContent blur={false} duration={700} direction="none">
               <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => handleOpenCheckout(1)} />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
@@ -225,7 +225,7 @@ export function App() {
           <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCheckout={() => handleOpenCheckout(1)} />
         ) : (
           <main>
-            <FadeContent blur={false} duration={700}>
+            <FadeContent blur={false} duration={700} direction="none">
               <HeroSection variant={1} onAddToCart={cart.addToCart} onOpenCheckout={() => handleOpenCheckout(1)} />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
