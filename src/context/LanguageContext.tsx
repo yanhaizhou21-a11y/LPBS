@@ -155,7 +155,7 @@ const translations: Record<Language, Record<string, string>> = {
     settings: 'Settings',
     logout: 'Log Out',
     searchPlaceholder: 'Search products or orders...',
-    
+
     // Executive Summary / Dashboard
     executiveSummary: 'Executive Summary',
     executiveSubtitle: 'Overview of sales performance and store metrics',
@@ -173,7 +173,7 @@ const translations: Record<Language, Record<string, string>> = {
     selectFormat: 'Select Report Format:',
     formatPdf: '1. PDF Document (.pdf)',
     formatExcel: '2. Excel Spreadsheet (.excel / .csv)',
-    
+
     // Products
     productsCatalog: 'Products Catalog',
     productsSubtitle: 'Manage product inventory, pricing, and categories',
@@ -193,7 +193,7 @@ const translations: Record<Language, Record<string, string>> = {
     lowStock: 'Low Stock',
     outOfStock: 'Out of Stock',
     units: 'units',
-    
+
     // Order
     orderManagement: 'Order Management',
     orderSubtitle: 'Track, process, and fulfill customer orders',
@@ -207,14 +207,14 @@ const translations: Record<Language, Record<string, string>> = {
     date: 'Date',
     items: 'Items',
     totalAmount: 'Total Amount',
-    
+
     // Inventory
     inventoryStatus: 'Inventory Status',
     inventorySubtitle: 'Real-time stock monitoring & reorder thresholds',
     totalSkus: 'Total SKUs',
     lowStockAlert: 'Low Stock Alert',
     stockLevelBreakdown: 'Stock Level Breakdown',
-    
+
     // Settings
     storeSettings: 'Store Settings',
     settingsSubtitle: 'Configure business preferences and account security',
@@ -227,7 +227,7 @@ const translations: Record<Language, Record<string, string>> = {
     currency: 'Currency',
     saveChanges: 'Save Changes',
     settingsUpdated: 'Settings updated successfully!',
-    
+
     // Form Labels & Placeholders
     fullName: 'Full Name',
     fullNamePlaceholder: 'Your full name',

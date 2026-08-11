@@ -362,7 +362,7 @@ export function BotaniDashboard({ adminName = 'Admin PT Botani Seed', onLogout, 
         </div>
 
         <div class="title">Ringkasan Laporan Eksekutif</div>
-        
+
         <div class="kpi-grid">
           <div class="kpi-card"><div class="kpi-label">Total Pendapatan</div><div class="kpi-value">Rp 45.280.000</div></div>
           <div class="kpi-card"><div class="kpi-label">Total Pesanan</div><div class="kpi-value">1.240</div></div>
@@ -1030,7 +1030,7 @@ export function BotaniDashboard({ adminName = 'Admin PT Botani Seed', onLogout, 
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('executiveSummary')}</h2>
                   <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">{t('executiveSubtitle')}</p>
                 </div>
-                
+
                 <div className="relative">
                   <button
                     onClick={() => setIsReportMenuOpen(!isReportMenuOpen)}
