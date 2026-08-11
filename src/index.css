@@ -3733,32 +3733,19 @@
     height: 88px;
   }
 
-  @media (max-width: 1120px) {
-    .site-header-shell {
-      gap: 12px;
-    }
-
-    .site-cart-label {
-      display: none;
-    }
-
-    .site-nav-link {
-      padding-inline: 10px;
-    }
-  }
-
-  @media (max-width: 900px) {
+  @media (max-width: 1024px) {
     .site-header {
       padding: 0;
     }
 
     .site-header-shell {
       min-height: 64px;
-      padding: 8px 12px 8px 16px;
+      padding: 8px 14px;
       grid-template-columns: minmax(0, 1fr) auto;
       border-width: 0 0 1px;
       border-radius: 0;
       box-shadow: var(--shadow-sm);
+      background: color-mix(in srgb, var(--color-bg-card) 98%, transparent);
     }
 
     .site-nav,
@@ -3768,7 +3755,8 @@
 
     .mobile-header-actions {
       display: flex;
-      gap: 2px;
+      align-items: center;
+      gap: 6px;
     }
 
     .site-header-spacer {
