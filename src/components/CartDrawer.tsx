@@ -44,8 +44,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   };
 
   return (
-    <div className="cart-drawer-backdrop" onClick={onClose}>
-      <aside className="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title" onClick={e => e.stopPropagation()}>
+    <div className="cart-drawer-backdrop" onClick={onClose} data-lenis-prevent="true">
+      <aside className="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title" onClick={e => e.stopPropagation()} data-lenis-prevent="true">
         <header className="cart-drawer-header">
           <div className="header-title">
             <ShoppingCart className="drawer-icon" size={22} aria-hidden="true" />
