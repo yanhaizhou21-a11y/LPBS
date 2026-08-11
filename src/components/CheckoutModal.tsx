@@ -820,4 +820,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       </section>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 };
