@@ -232,10 +232,10 @@ export function App() {
               <PeluangSection />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <StorySection />
+              <CompanyProfile />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <CompanyProfile />
+              <StorySection />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
               <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => handleOpenCheckout(5)} />

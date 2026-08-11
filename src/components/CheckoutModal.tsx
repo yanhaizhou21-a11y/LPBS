@@ -32,9 +32,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
 
   useEffect(() => {
     if (!isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     const closeOnEscape = (event: KeyboardEvent) => event.key === 'Escape' && onClose();
     window.addEventListener('keydown', closeOnEscape);
-    return () => window.removeEventListener('keydown', closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', closeOnEscape);
+    };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
@@ -54,8 +59,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   };
 
   return (
-    <div className="checkout-modal-backdrop">
-      <section className="checkout-page" id="checkoutPage" role="dialog" aria-modal="true" aria-labelledby="checkout-title">
+    <div className="checkout-modal-backdrop" data-lenis-prevent="true">
+      <section className="checkout-page" id="checkoutPage" role="dialog" aria-modal="true" aria-labelledby="checkout-title" data-lenis-prevent="true">
         <div className="checkout-shell">
           <header className="checkout-header">
             <div className="checkout-brand">
