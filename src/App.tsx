@@ -47,7 +47,7 @@ export function App() {
   const [view, setView] = useState<View>(viewFromPath);
   const [currentPath, setCurrentPath] = useState(() => `${window.location.pathname}${window.location.hash}`);
   const [adminName, setAdminName] = useState('Admin PT Botani Seed');
-  const [authChecked, setAuthChecked] = useState(isPublicPage(viewFromPath()) || viewFromPath() === 'dashboard');
+  const [authChecked, setAuthChecked] = useState(isPublicPage(viewFromPath()) && viewFromPath() !== 'dashboard');
   const [accessDenied, setAccessDenied] = useState(window.location.pathname === '/admin/dashboard');
 
   const navigate = (nextView: View, path: string, replace = false) => {
@@ -104,9 +104,18 @@ export function App() {
   }, []);
 
   useEffect(() => {
-    if (view === 'landing' || view === 'landing2' || view === 'products' || view === 'dashboard') return;
+    const isDashboard = view === 'dashboard' || window.location.pathname === '/dashboard' || window.location.pathname === '/admin/dashboard';
+    const isLogin = view === 'admin-login' || window.location.pathname === '/login' || window.location.pathname === '/admin/login' || window.location.pathname === '/secret-admin-login';
+
+    if (!isDashboard && !isLogin) {
+      setAuthChecked(true);
+      return;
+    }
+
     let active = true;
-    const requestedDashboard = window.location.pathname === '/admin/dashboard';
+    setAuthChecked(false);
+    const requestedDashboard = window.location.pathname === '/admin/dashboard' || isDashboard;
+
     fetch('/api/auth/session')
       .then(async (response) => ({ response, data: await readJsonResponse(response, 'Respons sesi admin tidak valid.') }))
       .then(({ response, data }) => {
@@ -114,7 +123,9 @@ export function App() {
         if (response.ok && data.success) {
           setAdminName(data.admin.name);
           setAccessDenied(false);
-          navigate('dashboard', '/dashboard', true);
+          if (view !== 'dashboard') {
+            navigate('dashboard', '/dashboard', true);
+          }
         } else {
           setAccessDenied(requestedDashboard);
           navigate('admin-login', '/secret-admin-login', true);
@@ -125,9 +136,14 @@ export function App() {
         setAccessDenied(requestedDashboard);
         navigate('admin-login', '/secret-admin-login', true);
       })
-      .finally(() => active && setAuthChecked(true));
-    return () => { active = false; };
-  }, []);
+      .finally(() => {
+        if (active) setAuthChecked(true);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [view]);
 
   const handleAdminLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' }).catch(() => undefined);

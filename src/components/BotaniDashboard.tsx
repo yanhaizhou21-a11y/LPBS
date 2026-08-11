@@ -83,7 +83,7 @@ export interface BotaniDashboardProps {
   onUnauthorized?: () => void;
 }
 
-export function BotaniDashboard({ adminName = 'Admin PT Botani Seed', onLogout, onGoHome }: BotaniDashboardProps = {}) {
+export function BotaniDashboard({ adminName = 'Admin PT Botani Seed', onLogout, onGoHome, onUnauthorized }: BotaniDashboardProps = {}) {
   const { language, toggleLanguage, t } = useLanguage();
   const [activeNav, setActiveNav] = useState('Dashboard');
   const [categoryFilter, setCategoryFilter] = useState('All');
