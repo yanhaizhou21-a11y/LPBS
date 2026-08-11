@@ -1,9 +1,10 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'motion/react';
 import { Salad, Store, TrendingUp } from 'lucide-react';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 export const PeluangSection: React.FC = () => {
-  const reduceMotion = useReducedMotion();
+  const containerRef = useScrollReveal<HTMLElement>({ stagger: 0.12, y: 35 });
+
   const opportunities = [
     {
       icon: Salad,
@@ -29,55 +30,32 @@ export const PeluangSection: React.FC = () => {
   ];
 
   return (
-    <section id="peluang" className="peluang-section">
+    <section id="peluang" ref={containerRef} className="peluang-section">
       <div className="container">
-        <motion.div
-          className="section-header text-center"
-          initial={reduceMotion ? false : { opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        >
+        <div data-reveal className="section-header text-center">
           <h2 className="section-title peluang-main-title">
             Kenapa jualan sayur punya peluang?
           </h2>
           <p className="section-desc peluang-main-subtitle">
             Sayuran dibutuhkan setiap hari dan dapat dipasarkan melalui lingkungan sekitar maupun kanal digital.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="opportunities-grid"
-          initial={reduceMotion ? false : 'hidden'}
-          whileInView="show"
-          viewport={{ once: true, margin: '-60px' }}
-          variants={{
-            hidden: { opacity: 0 },
-            show: {
-              opacity: 1,
-              transition: { staggerChildren: 0.12 }
-            }
-          }}
-        >
+        <div className="opportunities-grid">
           {opportunities.map(({ icon: Icon, iconBg, iconColor, title, desc }) => (
-            <motion.div
-              className="opportunity-card"
-              key={title}
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }
-              }}
-            >
+            <div data-reveal className="opportunity-card" key={title}>
               <div className="card-corner-shape" aria-hidden="true" />
               <div className="card-icon-badge" style={{ backgroundColor: iconBg, color: iconColor }}>
                 <Icon size={24} aria-hidden="true" />
               </div>
               <h3 className="card-title">{title}</h3>
               <p className="card-desc">{desc}</p>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 };
+
+export default PeluangSection;

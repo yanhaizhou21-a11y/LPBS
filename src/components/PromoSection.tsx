@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
-import { AlertTriangle, Play, ShoppingCart, Video, Zap } from 'lucide-react';
+import { AlertTriangle, Play, ShoppingCart, Zap } from 'lucide-react';
 import { ASSETS } from '../data/assets';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 interface PromoSectionProps {
   onAddToCart: (qty: number) => void;
@@ -10,19 +10,13 @@ interface PromoSectionProps {
 
 export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenCheckout }) => {
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
-  const reduceMotion = useReducedMotion();
+  const containerRef = useScrollReveal<HTMLElement>({ stagger: 0.15, y: 35 });
 
   return (
-    <section id="promo" className="promo-section">
+    <section id="promo" ref={containerRef} className="promo-section">
       <div className="container">
         {/* VALUE HIGHLIGHT ROW (Section 5) */}
-        <motion.div
-          className="value-highlight-wrapper"
-          initial={reduceMotion ? false : { opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        >
+        <div data-reveal className="value-highlight-wrapper">
           <div className="video-card-dark">
             {!isPlayingVideo ? (
               <div className="video-thumb-overlay" onClick={() => setIsPlayingVideo(true)} role="button" tabIndex={0}>
@@ -56,16 +50,10 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
               Pesan Paket Benih
             </button>
           </div>
-        </motion.div>
+        </div>
 
         {/* PROMO 5 PAKET SECTION (Section 6) */}
-        <motion.div
-          className="promo-5-wrapper"
-          initial={reduceMotion ? false : { opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        >
+        <div data-reveal className="promo-5-wrapper">
           <div className="promo-poster-col">
             <div className="promo-poster-card" onClick={onOpenCheckout} role="button" tabIndex={0}>
               <img src={ASSETS.productBanner} alt="Beli 5 Paket Hemat 20% Botani Seed" className="promo-poster-img" />
@@ -106,8 +94,10 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
               </button>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 };
+
+export default PromoSection;

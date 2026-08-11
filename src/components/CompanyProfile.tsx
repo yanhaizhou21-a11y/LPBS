@@ -1,22 +1,16 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'motion/react';
-import { Award, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { Award, CheckCircle2 } from 'lucide-react';
 import { ASSETS } from '../data/assets';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 export const CompanyProfile: React.FC = () => {
-  const reduceMotion = useReducedMotion();
+  const containerRef = useScrollReveal<HTMLElement>({ stagger: 0.15, y: 30 });
 
   return (
-    <section id="profil" className="section company-profile-section">
+    <section id="profil" ref={containerRef} className="section company-profile-section">
       <div className="container">
         <div className="company-layout-grid">
-          <motion.div
-            className="company-text-content"
-            initial={reduceMotion ? false : { opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <div data-reveal className="company-text-content">
             <span className="eyebrow eyebrow-badge-orange">TENTANG KAMI</span>
             <h2 className="company-main-title">PT Botani Seed Indonesia</h2>
             <p className="company-lead-desc">
@@ -31,15 +25,9 @@ export const CompanyProfile: React.FC = () => {
                 Pelajari Selengkapnya tentang Botani Seed
               </a>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="company-brand-card"
-            initial={reduceMotion ? false : { opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <div data-reveal className="company-brand-card">
             <div className="brand-card-inner">
               <div className="brand-logo-header">
                 <img src={ASSETS.logo} alt="Botani Seed Logo" className="brand-card-logo" />
@@ -67,9 +55,11 @@ export const CompanyProfile: React.FC = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
   );
 };
+
+export default CompanyProfile;

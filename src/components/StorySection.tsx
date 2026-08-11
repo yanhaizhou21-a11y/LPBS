@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useReducedMotion, AnimatePresence } from 'motion/react';
-import { Sparkles, Award, ArrowRight, Quote, CheckCircle2, TrendingUp, MapPin } from 'lucide-react';
-import { ExpandableProfileCard, type ProfileDetailInfo } from './ui/expandable-profile-card';
-import { CarouselNavigator, DEFAULT_BOTANI_THEMES } from './ui/carousel-navigator';
+import { Sparkles, Award, Quote, TrendingUp, MapPin } from 'lucide-react';
+import type { ProfileDetailInfo } from './ui/expandable-profile-card';
 
 interface StoryProfile {
   id: string;
@@ -17,7 +16,7 @@ export const StorySection: React.FC = () => {
   const reduceMotion = useReducedMotion();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const autoDelay = 6000;
+  const autoDelay = 7000;
 
   const profileStories: StoryProfile[] = [
     {
@@ -57,46 +56,6 @@ export const StorySection: React.FC = () => {
           'Pengolahan tanah yang matang dengan pupuk kompos dasar sebelum pindah tanam.',
           'Pemilihan benih tahan iklim tropis ekstrim (tahan hujan dan panas terik).',
           'Rotasi tanam terencana antara sayur daun dan buah untuk memutus siklus hama.',
-        ],
-      },
-    },
-    {
-      id: 'syukur',
-      title: 'Prof. Dr. Ir. Muhamad Syukur',
-      subtitle: 'Guru Besar & Pemulia Benih IPB University',
-      badge: 'Riset Pemuliaan IPB',
-      imageSrc: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=1000',
-      details: {
-        omzet: 'Riset 30+ Varietas Nasional',
-        lokasi: 'Laboratorium Pemuliaan IPB, Baranangsiang',
-        komoditas: 'Formulasi Cabai Unggul, Tomat, Terong, Sayur Tropis',
-        dayaKecambah: '>88% Standard SNI / IPB',
-        quote: 'Benih adalah fondasi kedaulatan pangan. Kami merancang benih yang tidak hanya subur, tapi juga mudah ditumbuhkan oleh masyarakat awam di pekarangan rumah.',
-        fullBio: 'Pakar genetika dan pemuliaan tanaman hortikultura ternama Indonesia dari Departemen Agronomi dan Hortikultura IPB University. Berdedikasi menghasilkan benih unggul adaptif lokal yang kini diproduksi dan didistribusikan oleh PT Botani Seed Indonesia.',
-        tipsSukses: [
-          'Simpan kemasan benih yang belum dibuka di tempat sejuk dan kedap udara.',
-          'Pastikan media semai gembur dan tidak tergenang air berlebih saat persemaian 7 hari pertama.',
-          'Berikan pencahayaan matahari minimal 5-6 jam per hari untuk fotosintesis maksimal.',
-        ],
-      },
-    },
-    {
-      id: 'maryam',
-      title: 'Siti Maryam',
-      subtitle: 'Praktisi Urban Farming & Pegiat Hidroponik',
-      badge: 'Panen Mandiri Rumah',
-      imageSrc: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80&w=1000',
-      details: {
-        omzet: 'Hemat Belanja Rp1,8 Juta/Bln',
-        lokasi: 'Pekarangan Rumah, Tangerang Selatan',
-        komoditas: 'Kangkung, Bayam Merah & Hijau, Pakcoy, Selada',
-        dayaKecambah: '92% Tumbuh Subur di Polybag',
-        quote: 'Awalnya cuma coba-coba menanam di polybag dan talang air depan rumah. Ternyata hasilnya melimpah, sayuran lebih manis dan renyah karena tanpa pestisida kimia!',
-        fullBio: 'Ibu rumah tangga dan penggerak komunitas ketahanan pangan RT/RW. Memanfaatkan balkon lantai dua dan sudut pekarangan 10m² untuk menghasilkan panen sayur segar setiap akhir pekan.',
-        tipsSukses: [
-          'Mulai dari benih sayur daun yang cepat panen (kangkung 21 hari, bayam 25 hari).',
-          'Gunakan botol bekas atau polybag ramah lingkungan untuk menekan modal awal.',
-          'Ajak keluarga menyiram dan merawat tanaman sebagai sarana edukasi sehat.',
         ],
       },
     },
@@ -161,12 +120,29 @@ export const StorySection: React.FC = () => {
             <span>INSPIRASI NYATA & TOKOH BUDIDAYA</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Kisah Sukses Mitra & Riset Benih Botani Seed
+            Kisah Sukses Petani & Mitra Botani Seed
           </h2>
           <p className="mt-3 text-base sm:text-lg text-zinc-600 dark:text-zinc-300">
-            Pilih atau klik kartu profil di bawah untuk membaca rahasia panen melimpah, omzet bisnis, dan tips langsung dari para petani & pakar IPB University.
+            Simak pengalaman langsung petani dan alumni mitra kami yang membuktikan potensi omzet puluhan hingga ratusan juta rupiah per bulan dengan benih berkualitas.
           </p>
         </motion.div>
+
+        {/* STORY SELECTOR TABS */}
+        <div className="flex flex-wrap justify-center items-center gap-3 mb-8">
+          {profileStories.map((story, idx) => (
+            <button
+              key={story.id}
+              onClick={() => setCurrentSlide(idx)}
+              className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${
+                idx === currentSlide
+                  ? 'bg-emerald-700 text-white shadow-md shadow-emerald-700/25 scale-102'
+                  : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-emerald-50 dark:hover:bg-zinc-700'
+              }`}
+            >
+              {story.title} · <span className="text-emerald-400 dark:text-emerald-300">{story.badge}</span>
+            </button>
+          ))}
+        </div>
 
         {/* SPOTLIGHT FEATURED STORY (ACTIVE SLIDE FOCUS) */}
         <div
@@ -252,39 +228,6 @@ export const StorySection: React.FC = () => {
               </div>
             </motion.div>
           </AnimatePresence>
-        </div>
-
-        {/* 4 EXPANDABLE CARDS GRID */}
-        <div
-          className="mb-14"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {profileStories.map((story, idx) => (
-              <ExpandableProfileCard
-                key={story.id}
-                title={story.title}
-                subtitle={story.subtitle}
-                badge={story.badge}
-                imageSrc={story.imageSrc}
-                details={story.details}
-                isActive={idx === currentSlide}
-                onSelect={() => setCurrentSlide(idx)}
-              />
-            ))}
-          </div>
-
-          {/* CAROUSEL CONTROLLER */}
-          <div className="mt-8 flex justify-center">
-            <CarouselNavigator
-              totalSlides={profileStories.length}
-              autoDelay={autoDelay}
-              themes={DEFAULT_BOTANI_THEMES}
-              currentIndex={currentSlide}
-              onIndexChange={setCurrentSlide}
-            />
-          </div>
         </div>
 
         {/* 5-STEP BUDIDAYA GUIDE */}

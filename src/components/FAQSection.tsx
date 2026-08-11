@@ -1,14 +1,14 @@
 import React from 'react';
-import { motion, useReducedMotion } from 'motion/react';
 import { HelpCircle, MessageCircle, ShoppingBag } from 'lucide-react';
 import { MotionAccordion, type MotionAccordionItem } from './ui/motion-faqs-accordion';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 interface FAQSectionProps {
   onOpenCheckout?: () => void;
 }
 
 export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenCheckout }) => {
-  const reduceMotion = useReducedMotion();
+  const containerRef = useScrollReveal<HTMLElement>({ stagger: 0.15, y: 30 });
 
   const faqItems: MotionAccordionItem[] = [
     {
@@ -62,16 +62,10 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenCheckout }) => {
   ];
 
   return (
-    <section id="faq" className="faq-section py-16 sm:py-24">
+    <section id="faq" ref={containerRef} className="faq-section py-16 sm:py-24">
       <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
         {/* HEADER */}
-        <motion.div
-          className="section-header text-center mb-12"
-          initial={reduceMotion ? false : { opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        >
+        <div data-reveal className="section-header text-center mb-12">
           <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 px-3.5 py-1 text-xs font-bold text-emerald-800 dark:text-emerald-300 mb-3 shadow-xs">
             <HelpCircle className="size-3.5" />
             <span>TANYA JAWAB SEPUTAR BENIH</span>
@@ -82,25 +76,17 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenCheckout }) => {
           <p className="mt-3 text-base sm:text-lg text-zinc-600 dark:text-zinc-300 max-w-2xl mx-auto">
             Semua yang perlu Anda ketahui tentang kualitas benih bersertifikat IPB, panduan penanaman, dan kemudahan pengiriman.
           </p>
-        </motion.div>
+        </div>
 
         {/* MOTION ACCORDION COMPONENT */}
-        <motion.div
-          initial={reduceMotion ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        >
+        <div data-reveal>
           <MotionAccordion items={faqItems} gap={14} />
-        </motion.div>
+        </div>
 
         {/* BOTTOM QUICK ACTIONS BANNER */}
-        <motion.div
+        <div
+          data-reveal
           className="mt-14 overflow-hidden rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent p-6 sm:p-8 text-center dark:border-emerald-900/60 dark:from-emerald-950/40"
-          initial={reduceMotion ? false : { opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
           <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
             Masih ada pertanyaan seputar budidaya?
@@ -130,7 +116,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenCheckout }) => {
               <span>Konsultasi WhatsApp Gratis</span>
             </a>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

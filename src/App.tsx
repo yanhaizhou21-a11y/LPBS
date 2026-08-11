@@ -25,6 +25,7 @@ import { BottomCTASection } from './components/BottomCTASection';
 import { isPublicPage, publicPageFromPath, type PublicPageId } from './config/public-pages';
 import { readJsonResponse } from './lib/http';
 import { SmoothScroll } from './components/SmoothScroll';
+import { FadeContent } from './components/ui/fade-content';
 
 const CheckoutModal = lazy(() => import('./components/CheckoutModal').then((module) => ({ default: module.CheckoutModal })));
 type View = PublicPageId | 'admin-login' | 'admin-dashboard' | 'dashboard';
@@ -163,68 +164,59 @@ export function App() {
         <Navbar currentPath={currentPath} cartQty={cart.totalQty} onOpenCart={cart.openCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
         {view === 'landing2' ? (
           <main>
-            <article className="stack-scroll-article">
-              <section className="relative z-10 w-full">
-                <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-              </section>
-              <section className="stack-card-layer is-sticky z-20 bg-white dark:bg-zinc-900">
-                <div className="stack-grid-bg" aria-hidden="true" />
-                <KendalaSection />
-              </section>
-              <section className="stack-card-layer is-sticky z-30 bg-emerald-950/95 text-white">
-                <div className="stack-grid-bg" aria-hidden="true" />
-                <SolusiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-              </section>
-              <section className="stack-card-layer is-sticky z-40 bg-zinc-950 text-white">
-                <div className="stack-grid-bg" aria-hidden="true" />
-                <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-              </section>
-              <section className="stack-card-layer is-sticky z-50 bg-white dark:bg-zinc-900">
-                <div className="stack-grid-bg" aria-hidden="true" />
-                <PaketIsiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-                <CompanyProfile />
-              </section>
-              <section className="stack-card-layer is-sticky z-60 bg-emerald-900/95 text-white">
-                <div className="stack-grid-bg" aria-hidden="true" />
-                <TestimonialSection />
-              </section>
-              <section className="stack-card-layer is-sticky z-70 bg-white dark:bg-zinc-950">
-                <div className="stack-grid-bg" aria-hidden="true" />
-                <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-                <BottomCTASection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-              </section>
-            </article>
+            <FadeContent blur={false} duration={700}>
+              <HeroSection variant={2} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            </FadeContent>
+            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
+              <KendalaSection />
+            </FadeContent>
+            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
+              <SolusiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            </FadeContent>
+            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
+              <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            </FadeContent>
+            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
+              <PaketIsiSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            </FadeContent>
+            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
+              <CompanyProfile />
+            </FadeContent>
+            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
+              <TestimonialSection />
+            </FadeContent>
+            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
+              <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            </FadeContent>
+            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
+              <BottomCTASection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            </FadeContent>
           </main>
         ) : view === 'products' ? (
           <ProductsPage onGoHome={() => navigate('landing', '/')} onAddToCart={cart.addProductToCart} onOpenCheckout={() => { cart.closeCart(); setIsCheckoutOpen(true); }} />
         ) : (
           <main>
-            <article className="stack-scroll-article">
-              <section className="relative z-10 w-full">
-                <HeroSection variant={1} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-              </section>
-              <section className="stack-card-layer is-sticky z-20 bg-white dark:bg-zinc-900">
-                <div className="stack-grid-bg" aria-hidden="true" />
-                <PeluangSection />
-              </section>
-              <section className="stack-card-layer is-sticky z-30 bg-emerald-950/95 text-white">
-                <div className="stack-grid-bg" aria-hidden="true" />
-                <StorySection />
-                <CompanyProfile />
-              </section>
-              <section className="stack-card-layer is-sticky z-40 bg-zinc-950 text-white">
-                <div className="stack-grid-bg" aria-hidden="true" />
-                <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-              </section>
-              <section className="stack-card-layer is-sticky z-50 bg-white dark:bg-zinc-900">
-                <div className="stack-grid-bg" aria-hidden="true" />
-                <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => setIsCheckoutOpen(true)} />
-              </section>
-              <section className="stack-card-layer is-sticky z-60 bg-emerald-50/70 dark:bg-zinc-950">
-                <div className="stack-grid-bg" aria-hidden="true" />
-                <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
-              </section>
-            </article>
+            <FadeContent blur={false} duration={700}>
+              <HeroSection variant={1} onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            </FadeContent>
+            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
+              <PeluangSection />
+            </FadeContent>
+            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
+              <StorySection />
+            </FadeContent>
+            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
+              <CompanyProfile />
+            </FadeContent>
+            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
+              <PromoSection onAddToCart={cart.addToCart} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            </FadeContent>
+            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
+              <QuickOrderSection onSetQtyDirectly={cart.setQtyDirectly} onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            </FadeContent>
+            <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
+              <FAQSection onOpenCheckout={() => setIsCheckoutOpen(true)} />
+            </FadeContent>
           </main>
         )}
         <Footer onOpenPrivacyPolicy={openPrivacy} />

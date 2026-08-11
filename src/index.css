@@ -5504,47 +5504,6 @@
   box-shadow: 0 1px 0 0 var(--btn-3d-shadow) !important;
 }
 
-/* ═══════════════════════════════════════════════════════
-   STACKING CARDS SCROLL TRANSITION (.stack-scroll-section)
-   Sticky layered cards with backdrop grid overlay
-   ═══════════════════════════════════════════════════════ */
-
-.stack-scroll-article {
-  position: relative;
-  width: 100%;
-}
-
-.stack-card-layer {
-  position: relative;
-  width: 100%;
-  border-top-left-radius: 1.75rem;
-  border-top-right-radius: 1.75rem;
-  box-shadow: 0 -12px 36px -8px rgba(0, 0, 0, 0.14);
-  overflow: hidden;
-  transition: box-shadow 0.3s ease;
-}
-
-@media (min-width: 768px) {
-  .stack-card-layer.is-sticky {
-    position: sticky;
-    top: 0;
-  }
-}
-
-.dark .stack-card-layer {
-  box-shadow: 0 -12px 40px -8px rgba(0, 0, 0, 0.6);
-}
-
-.stack-grid-bg {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: linear-gradient(to right, rgba(120, 120, 120, 0.08) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(120, 120, 120, 0.08) 1px, transparent 1px);
-  background-size: 54px 54px;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 70%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 70%, transparent 100%);
-}
 
 
 

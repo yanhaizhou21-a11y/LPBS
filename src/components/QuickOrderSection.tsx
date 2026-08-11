@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
 import { Lightbulb, MessageCircle, PartyPopper, ShoppingBag } from 'lucide-react';
 import { ASSETS } from '../data/assets';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 interface QuickOrderSectionProps {
   onSetQtyDirectly: (qty: number) => void;
@@ -13,7 +13,7 @@ export const QuickOrderSection: React.FC<QuickOrderSectionProps> = ({
   onOpenCheckout
 }) => {
   const [selectedQty, setSelectedQty] = useState<number>(5);
-  const reduceMotion = useReducedMotion();
+  const containerRef = useScrollReveal<HTMLElement>({ stagger: 0.15, y: 30 });
 
   const unitPrice = 20000;
   const isPromo = selectedQty >= 5;
@@ -36,17 +36,11 @@ export const QuickOrderSection: React.FC<QuickOrderSectionProps> = ({
   );
 
   return (
-    <section id="pesan-sekarang" className="quick-order-section">
+    <section id="pesan-sekarang" ref={containerRef} className="quick-order-section">
       <div className="container">
-        <motion.div
-          className="quick-order-grid"
-          initial={reduceMotion ? false : { opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        >
+        <div className="quick-order-grid">
           {/* LEFT PRODUCT DISPLAY CARD */}
-          <div className="quick-product-card">
+          <div data-reveal className="quick-product-card">
             <div className="product-card-top-panel">
               <img src={ASSETS.productBanner} alt="Paket Benih Sayur Botani Seed" className="quick-product-img" />
               <div className="product-card-bottom-bar">
@@ -57,7 +51,7 @@ export const QuickOrderSection: React.FC<QuickOrderSectionProps> = ({
           </div>
 
           {/* RIGHT ORDER CALCULATOR FORM */}
-          <div className="quick-order-form-panel">
+          <div data-reveal className="quick-order-form-panel">
             <span className="card-tag">PEMESANAN LANGSUNG</span>
             <h2 className="quick-title">Paket Benih Sayur Botani Seed</h2>
             <p className="quick-subtitle">
@@ -126,8 +120,10 @@ export const QuickOrderSection: React.FC<QuickOrderSectionProps> = ({
               </a>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 };
+
+export default QuickOrderSection;

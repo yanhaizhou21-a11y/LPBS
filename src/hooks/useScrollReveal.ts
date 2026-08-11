@@ -11,6 +11,7 @@ interface ScrollRevealOptions {
   delay?: number;
   ease?: string;
   triggerHook?: string;
+  fadeAway?: boolean;
 }
 
 export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
@@ -32,7 +33,14 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
       },
       (context) => {
         const { reduceMotion } = context.conditions as { reduceMotion: boolean };
-        if (reduceMotion) return;
+        if (reduceMotion) {
+          gsap.set(el.querySelectorAll('[data-reveal]').length > 0 ? el.querySelectorAll('[data-reveal]') : [el], {
+            autoAlpha: 1,
+            y: 0,
+            scale: 1,
+          });
+          return;
+        }
 
         const targets = el.querySelectorAll('[data-reveal]');
         const elementsToAnimate = targets.length > 0 ? targets : [el];
@@ -40,23 +48,23 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
         gsap.fromTo(
           elementsToAnimate,
           {
-            opacity: 0,
-            y: options.y ?? 28,
+            autoAlpha: 0,
+            y: options.y ?? 30,
             scale: 0.98,
           },
           {
-            opacity: 1,
+            autoAlpha: 1,
             y: 0,
             scale: 1,
-            duration: options.duration ?? 0.65,
+            duration: options.duration ?? 0.7,
             delay: options.delay ?? 0,
             stagger: options.stagger ?? 0.08,
             ease: options.ease ?? 'power2.out',
             scrollTrigger: {
               trigger: el,
-              start: options.triggerHook ?? 'top 85%',
-              toggleActions: 'play none none none',
-              once: true,
+              start: options.triggerHook ?? 'top 86%',
+              end: 'bottom 10%',
+              toggleActions: options.fadeAway !== false ? 'play reverse play reverse' : 'play none none reverse',
             },
           }
         );
@@ -66,7 +74,7 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
     return () => {
       mm.revert();
     };
-  }, [options.stagger, options.y, options.duration, options.delay, options.ease, options.triggerHook]);
+  }, [options.stagger, options.y, options.duration, options.delay, options.ease, options.triggerHook, options.fadeAway]);
 
   return containerRef;
 }
