@@ -105,11 +105,11 @@ export const StorySection: React.FC = () => {
   ];
 
   return (
-    <section id="kisah" className="story-section py-16 sm:py-24">
-      <div className="container mx-auto px-4 sm:px-6">
+    <section id="kisah" className="story-section premium-story-section">
+      <div className="container premium-section-shell">
         {/* SECTION HEADER */}
         <motion.div
-          className="section-header text-center max-w-3xl mx-auto mb-12"
+          className="section-header premium-section-header"
           initial={reduceMotion ? false : { opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
@@ -128,16 +128,13 @@ export const StorySection: React.FC = () => {
         </motion.div>
 
         {/* STORY SELECTOR TABS */}
-        <div className="flex flex-wrap justify-center items-center gap-3 mb-8">
+        <div className="premium-story-tabs" aria-label="Pilih kisah mitra">
           {profileStories.map((story, idx) => (
             <button
               key={story.id}
               onClick={() => setCurrentSlide(idx)}
-              className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${
-                idx === currentSlide
-                  ? 'bg-emerald-700 text-white shadow-md shadow-emerald-700/25 scale-102'
-                  : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-emerald-50 dark:hover:bg-zinc-700'
-              }`}
+              className={`premium-story-tab${idx === currentSlide ? ' is-active' : ''}`}
+              aria-pressed={idx === currentSlide}
             >
               {story.title} · <span className="text-emerald-400 dark:text-emerald-300">{story.badge}</span>
             </button>
@@ -157,11 +154,11 @@ export const StorySection: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
-              className="rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent p-6 sm:p-8 dark:border-emerald-900/60 dark:from-emerald-950/40 shadow-sm"
+              className="premium-story-card"
             >
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:items-center">
                 <div className="lg:col-span-4">
-                  <div className="relative h-64 sm:h-72 w-full overflow-hidden rounded-2xl shadow-md">
+                  <div className="premium-story-media">
                     <img
                       src={currentProfile.imageSrc}
                       alt={currentProfile.title}
@@ -175,7 +172,7 @@ export const StorySection: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="lg:col-span-8 flex flex-col justify-between space-y-4">
+                <div className="premium-story-copy lg:col-span-8">
                   <div>
                     <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
                       {currentProfile.subtitle}
@@ -185,40 +182,40 @@ export const StorySection: React.FC = () => {
                     </h3>
                   </div>
 
-                  <div className="flex items-start gap-3 rounded-2xl bg-white/80 dark:bg-zinc-900/80 p-4 border border-emerald-100 dark:border-emerald-900/40">
+                  <div className="premium-story-quote">
                     <Quote className="size-5 shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />
                     <p className="text-xs sm:text-sm italic text-zinc-700 dark:text-zinc-300 leading-relaxed">
                       "{currentProfile.details.quote}"
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  <div className="premium-story-metrics">
                     {currentProfile.details.omzet && (
-                      <div className="rounded-xl bg-white/90 dark:bg-zinc-900/90 p-3 border border-zinc-200/80 dark:border-zinc-800">
+                      <div className="premium-story-metric">
                         <span className="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
                           <TrendingUp className="size-3" /> Hasil
                         </span>
-                        <p className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate">
+                        <p className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100">
                           {currentProfile.details.omzet}
                         </p>
                       </div>
                     )}
                     {currentProfile.details.dayaKecambah && (
-                      <div className="rounded-xl bg-white/90 dark:bg-zinc-900/90 p-3 border border-zinc-200/80 dark:border-zinc-800">
+                      <div className="premium-story-metric">
                         <span className="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
                           <Award className="size-3" /> Daya Tumbuh
                         </span>
-                        <p className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate">
+                        <p className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100">
                           {currentProfile.details.dayaKecambah}
                         </p>
                       </div>
                     )}
                     {currentProfile.details.lokasi && (
-                      <div className="col-span-2 sm:col-span-1 rounded-xl bg-white/90 dark:bg-zinc-900/90 p-3 border border-zinc-200/80 dark:border-zinc-800">
+                      <div className="premium-story-metric premium-story-location">
                         <span className="text-[10px] font-bold uppercase text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
                           <MapPin className="size-3" /> Lokasi
                         </span>
-                        <p className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 truncate">
+                        <p className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100">
                           {currentProfile.details.lokasi}
                         </p>
                       </div>
@@ -231,9 +228,9 @@ export const StorySection: React.FC = () => {
         </div>
 
         {/* 5-STEP BUDIDAYA GUIDE */}
-        <div className="steps-section-wrapper pt-12 border-t border-zinc-200/80 dark:border-zinc-800" id="cara-mulai">
+        <div className="steps-section-wrapper premium-process" id="cara-mulai">
           <motion.div
-            className="section-header text-center max-w-2xl mx-auto mb-10"
+            className="section-header premium-section-header"
             initial={reduceMotion ? false : { opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
@@ -252,7 +249,7 @@ export const StorySection: React.FC = () => {
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5"
+            className="premium-process-grid"
             initial={reduceMotion ? false : 'hidden'}
             whileInView="show"
             viewport={{ once: true, margin: '-60px' }}
@@ -266,7 +263,7 @@ export const StorySection: React.FC = () => {
           >
             {steps.map((step, idx) => (
               <motion.div
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-zinc-200/90 bg-white p-4 shadow-xs transition hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+                className="premium-process-card"
                 key={idx}
                 variants={{
                   hidden: { opacity: 0, y: 25, scale: 0.96 },
@@ -281,7 +278,7 @@ export const StorySection: React.FC = () => {
                 <div className="absolute top-3 right-3 z-10 flex size-7 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white shadow-sm">
                   {step.num}
                 </div>
-                <div className="mb-3 h-36 w-full overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800">
+                <div className="premium-process-image">
                   <img
                     src={step.img}
                     alt={step.title}

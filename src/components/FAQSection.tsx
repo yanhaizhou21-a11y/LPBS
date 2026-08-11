@@ -65,7 +65,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenCheckout }) => {
     <section id="faq" ref={containerRef} className="faq-section py-16 sm:py-24">
       <div className="container faq-container mx-auto px-4 sm:px-6 max-w-4xl">
         {/* HEADER */}
-        <div data-reveal className="section-header text-center mb-12">
+        <div data-reveal className="section-header premium-section-header premium-faq-header">
           <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 px-3.5 py-1 text-xs font-bold text-emerald-800 dark:text-emerald-300 mb-3 shadow-xs">
             <HelpCircle className="size-3.5" />
             <span>TANYA JAWAB SEPUTAR BENIH</span>
@@ -86,13 +86,13 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenCheckout }) => {
         {/* BOTTOM QUICK ACTIONS BANNER */}
         <div
           data-reveal
-          className="faq-contact-card mt-14 overflow-hidden rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent p-6 sm:p-8 text-center dark:border-emerald-900/60 dark:from-emerald-950/40"
+          className="faq-contact-card premium-faq-cta"
         >
           <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Masih ada pertanyaan seputar budidaya?
+            Masih butuh bantuan memilih paket?
           </h3>
           <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400 max-w-xl mx-auto">
-            Tim ahli agronomi dan customer care PT Botani Seed Indonesia siap membantu konsultasi penanaman Anda secara gratis.
+            Tim Botani Seed siap membantu memilih varietas dan menjelaskan proses pemesanan melalui WhatsApp.
           </p>
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
@@ -100,7 +100,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenCheckout }) => {
               <button
                 type="button"
                 onClick={onOpenCheckout}
-                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition-all hover:bg-emerald-700 hover:shadow-md"
+                className="premium-button premium-button-light"
               >
                 <ShoppingBag className="size-4" />
                 <span>Pesan Paket Sekarang</span>
@@ -110,7 +110,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenCheckout }) => {
               href="https://wa.me/6281299450708?text=Halo%20Admin%20Botani%20Seed%2C%20saya%20ingin%20konsultasi%20paket%20benih%20sayuran"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border border-emerald-300 bg-white px-5 py-3 text-sm font-bold text-emerald-800 shadow-xs transition-all hover:bg-emerald-50 dark:border-emerald-800 dark:bg-zinc-900 dark:text-emerald-300 dark:hover:bg-zinc-800"
+              className="premium-button premium-button-ghost-light"
             >
               <MessageCircle className="size-4 text-emerald-600 dark:text-emerald-400" />
               <span>Konsultasi WhatsApp Gratis</span>

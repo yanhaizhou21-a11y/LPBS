@@ -13,9 +13,9 @@ export function Footer({ onOpenPrivacyPolicy }: FooterProps) {
           <div className="footer-brand-col sm:col-span-2 lg:col-span-4 flex flex-col items-start gap-4">
             <div className="flex items-center gap-3">
               <img
-                src={ASSETS.logo}
+                src={ASSETS.logoFooter}
                 alt="Botani Seed"
-                className="footer-brand-img h-12 w-auto object-contain brightness-0 invert"
+                className="footer-brand-img h-12 w-auto object-contain"
                 loading="lazy"
               />
               <span className="font-extrabold text-xl tracking-tight text-white">Botani Seed</span>
