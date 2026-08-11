@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, useReducedMotion, AnimatePresence } from 'motion/react';
 import { Sparkles, Award, Quote, TrendingUp, MapPin } from 'lucide-react';
 import type { ProfileDetailInfo } from './ui/expandable-profile-card';
@@ -15,8 +15,6 @@ interface StoryProfile {
 export const StorySection: React.FC = () => {
   const reduceMotion = useReducedMotion();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const autoDelay = 7000;
 
   const profileStories: StoryProfile[] = [
     {
@@ -60,14 +58,6 @@ export const StorySection: React.FC = () => {
       },
     },
   ];
-
-  useEffect(() => {
-    if (isPaused) return;
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % profileStories.length);
-    }, autoDelay);
-    return () => clearInterval(timer);
-  }, [currentSlide, isPaused, profileStories.length]);
 
   const currentProfile = profileStories[currentSlide];
 
@@ -142,11 +132,7 @@ export const StorySection: React.FC = () => {
         </div>
 
         {/* SPOTLIGHT FEATURED STORY (ACTIVE SLIDE FOCUS) */}
-        <div
-          className="mb-10"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
-        >
+        <div className="mb-10">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentProfile.id}
