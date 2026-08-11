@@ -2623,9 +2623,12 @@
     backdrop-filter: blur(6px);
     z-index: 1050;
     overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     padding: 2rem 1rem;
     display: flex;
     justify-content: center;
+    align-items: flex-start;
   }
 
   .checkout-page {
@@ -2635,7 +2638,7 @@
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-xl);
     overflow: hidden;
-    margin: auto;
+    margin: 0 auto;
   }
 
   .checkout-shell {
