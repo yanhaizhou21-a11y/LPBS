@@ -37,6 +37,14 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
         orientation: 'vertical',
         gestureOrientation: 'vertical',
         smoothWheel: true,
+        prevent: (node: HTMLElement) => {
+          return Boolean(
+            node.closest?.('.checkout-modal-backdrop') ||
+            node.closest?.('.cart-drawer-backdrop') ||
+            node.closest?.('[data-lenis-prevent]') ||
+            node.closest?.('[role="dialog"]')
+          );
+        },
       }}
     >
       {children}

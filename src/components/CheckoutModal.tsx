@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useLenis } from 'lenis/react';
 import { ArrowLeft, ArrowRight, Check, FileText, MessageCircle, Search, Sprout, X } from 'lucide-react';
 import { ASSETS } from '../data/assets';
 import { useCheckout } from '../hooks/useCheckout';
@@ -27,20 +29,23 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   onCartOpen
 }) => {
   const checkout = useCheckout(items, totalQty, subtotalProduct);
+  const lenis = useLenis();
 
   const [copySuccess, setCopySuccess] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
+    lenis?.stop();
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const closeOnEscape = (event: KeyboardEvent) => event.key === 'Escape' && onClose();
     window.addEventListener('keydown', closeOnEscape);
     return () => {
+      lenis?.start();
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', closeOnEscape);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, lenis]);
 
   if (!isOpen) return null;
 
@@ -58,9 +63,25 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     }, 2000);
   };
 
-  return (
-    <div className="checkout-modal-backdrop" data-lenis-prevent="true">
-      <section className="checkout-page" id="checkoutPage" role="dialog" aria-modal="true" aria-labelledby="checkout-title" data-lenis-prevent="true">
+  const modalContent = (
+    <div
+      className="checkout-modal-backdrop"
+      data-lenis-prevent="true"
+      data-lenis-prevent-wheel="true"
+      data-lenis-prevent-touch="true"
+      onWheel={(e) => e.stopPropagation()}
+      onTouchMove={(e) => e.stopPropagation()}
+    >
+      <section
+        className="checkout-page"
+        id="checkoutPage"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="checkout-title"
+        data-lenis-prevent="true"
+        data-lenis-prevent-wheel="true"
+        data-lenis-prevent-touch="true"
+      >
         <div className="checkout-shell">
           <header className="checkout-header">
             <div className="checkout-brand">
