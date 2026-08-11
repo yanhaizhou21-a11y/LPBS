@@ -128,13 +128,13 @@ export function App() {
             navigate('dashboard', '/dashboard', true);
           }
         } else {
-          setAccessDenied(requestedDashboard);
+          setAccessDenied((current) => requestedDashboard || current);
           navigate('admin-login', '/secret-admin-login', true);
         }
       })
       .catch(() => {
         if (!active) return;
-        setAccessDenied(requestedDashboard);
+        setAccessDenied((current) => requestedDashboard || current);
         navigate('admin-login', '/secret-admin-login', true);
       })
       .finally(() => {
