@@ -63,7 +63,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenCheckout }) => {
 
   return (
     <section id="faq" ref={containerRef} className="faq-section py-16 sm:py-24">
-      <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
+      <div className="container faq-container mx-auto px-4 sm:px-6 max-w-4xl">
         {/* HEADER */}
         <div data-reveal className="section-header text-center mb-12">
           <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 px-3.5 py-1 text-xs font-bold text-emerald-800 dark:text-emerald-300 mb-3 shadow-xs">
@@ -80,13 +80,13 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenCheckout }) => {
 
         {/* MOTION ACCORDION COMPONENT */}
         <div data-reveal>
-          <MotionAccordion items={faqItems} gap={14} />
+          <MotionAccordion items={faqItems} gap={10} className="faq-accordion" />
         </div>
 
         {/* BOTTOM QUICK ACTIONS BANNER */}
         <div
           data-reveal
-          className="mt-14 overflow-hidden rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent p-6 sm:p-8 text-center dark:border-emerald-900/60 dark:from-emerald-950/40"
+          className="faq-contact-card mt-14 overflow-hidden rounded-3xl border border-emerald-200/80 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent p-6 sm:p-8 text-center dark:border-emerald-900/60 dark:from-emerald-950/40"
         >
           <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
             Masih ada pertanyaan seputar budidaya?
