@@ -4,7 +4,7 @@ interface YouTubePromoVideoProps {
   className?: string;
 }
 
-const YOUTUBE_PROMO_URL = 'https://www.youtube-nocookie.com/embed/S-7hO2WZT3U?rel=0';
+const YOUTUBE_PROMO_URL = 'https://www.youtube-nocookie.com/embed/JZyZLdcEIvI?rel=0';
 
 export const YouTubePromoVideo: React.FC<YouTubePromoVideoProps> = ({ className = '' }) => (
   <div className={`w-full max-w-sm mx-auto bg-slate-900 p-3 sm:p-4 rounded-3xl shadow-2xl border border-slate-700/50 ${className}`}>

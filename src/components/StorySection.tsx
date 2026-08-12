@@ -65,31 +65,31 @@ export const StorySection: React.FC = () => {
       num: '1',
       title: 'Pilih Benih Bersertifikat',
       desc: 'Dapatkan paket 10 varietas benih sayuran unggul siap tanam bersertifikat resmi IPB University.',
-      img: '/images/product-display.jpg',
+      img: '/images/step1-paket.jpg',
     },
     {
       num: '2',
       title: 'Semaikan Sesuai SOP',
       desc: 'Semaikan benih pada media tanah gembur atau rockwool hidroponik selama 7-10 hari hingga berkecambah seragam.',
-      img: '/images/qc-warehouse.jpg',
+      img: '/images/step2-tanam.jpg',
     },
     {
       num: '3',
       title: 'Pindah Tanam & Rawat',
       desc: 'Pindahkan bibit ke polybag atau bedengan, siram pagi-sore dan berikan nutrisi organik secara teratur.',
-      img: '/images/warehouse.jpg',
+      img: '/images/step3-rawat.jpg',
     },
     {
       num: '4',
       title: 'Panen Sayur Segar',
       desc: 'Panen sayuran segar mulai hari ke-21 hingga 30 dengan daun hijau tebal, renyah, dan bernutrisi tinggi.',
-      img: '/images/booth.jpg',
+      img: '/images/step4-panen.jpg',
     },
     {
       num: '5',
       title: 'Konsumsi & Pasarkan',
       desc: 'Nikmati sayuran sehat untuk keluarga atau pasarkan ke tetangga, warung makan, dan pasar lokal.',
-      img: '/images/shipping.jpg',
+      img: '/images/step5-jual.jpg',
     },
   ];
 

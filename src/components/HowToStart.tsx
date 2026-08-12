@@ -5,33 +5,33 @@ export const HowToStart: React.FC = () => {
   const steps = [
     {
       number: 1,
-      title: 'Gunakan Benih Bersertifikat',
-      description: 'Gunakan benih bersertifikat dengan standar mutu tinggi untuk hasil panen yang optimal.',
-      image: ASSETS.company1,
+      title: 'Pilih Benih Bersertifikat',
+      description: 'Gunakan paket benih bersertifikat resmi dengan standar mutu tinggi untuk hasil panen optimal.',
+      image: '/images/step1-paket.jpg',
     },
     {
       number: 2,
-      title: 'Tanam',
-      description: 'Gunakan pekarangan, pot, polybag, atau lahan tersedia.',
-      image: ASSETS.company2,
+      title: 'Semaikan & Tanam',
+      description: 'Semaikan benih pada tanah gembur, polybag, pot, atau lahan pekarangan rumah Anda.',
+      image: '/images/step2-tanam.jpg',
     },
     {
       number: 3,
-      title: 'Rawat',
-      description: 'Pelajari kebutuhan air, cahaya, dan media tanam.',
-      image: ASSETS.company3,
+      title: 'Rawat Secara Teratur',
+      description: 'Siram pagi dan sore hari secara berkala serta jaga pencahayaan dan nutrisi tanah.',
+      image: '/images/step3-rawat.jpg',
     },
     {
       number: 4,
-      title: 'Panen',
-      description: 'Pilah hasil berdasarkan kondisi dan kualitas.',
-      image: '/images/promo-event.jpg',
+      title: 'Panen Hasil Segar',
+      description: 'Petik hasil sayuran segar yang melimpah, renyah, dan bernutrisi tinggi saat matang.',
+      image: '/images/step4-panen.jpg',
     },
     {
       number: 5,
-      title: 'Jual',
-      description: 'Tawarkan ke lingkungan sekitar dan kanal digital.',
-      image: '/images/booth.jpg',
+      title: 'Nikmati & Pasarkan',
+      description: 'Konsumsi sehat bersama keluarga atau tawarkan ke tetangga dan pasar lokal.',
+      image: '/images/step5-jual.jpg',
     },
   ];
 

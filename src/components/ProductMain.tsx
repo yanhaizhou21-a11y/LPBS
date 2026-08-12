@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ShoppingCart, Zap } from 'lucide-react';
-import { ProductPackVisual } from './ProductArtwork';
 
 interface ProductMainProps {
   onAddToCart: (qty: number) => void;
@@ -16,8 +15,14 @@ export const ProductMain: React.FC<ProductMainProps> = ({ onAddToCart, onOpenChe
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* IMAGE CARD */}
           <div className="lg:col-span-5 w-full flex justify-center">
-            <div className="w-full max-w-md bg-white dark:bg-slate-800 p-4 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-700">
-              <ProductPackVisual />
+            <div className="w-full max-w-md bg-white dark:bg-slate-800 p-3 sm:p-4 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+              <div className="w-full aspect-[4/5] rounded-2xl overflow-hidden bg-amber-500/10">
+                <img
+                  src="/images/step1-paket.jpg"
+                  alt="Paket Benih Sayur Botani Seed"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
             </div>
           </div>
 
