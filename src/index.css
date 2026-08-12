@@ -6754,10 +6754,6 @@
   object-fit: contain;
 }
 
-.botani-navbar-inner.is-landing {
-  grid-template-columns: 1fr auto;
-}
-
 .botani-brand-copy {
   display: flex;
   flex-direction: column;

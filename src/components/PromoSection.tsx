@@ -1,7 +1,7 @@
 import React from 'react';
 import { AlertTriangle, ShoppingCart, Sparkles } from 'lucide-react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
-import { PromoBundleVisual } from './ProductArtwork';
+import { YouTubePromoVideo } from './YouTubePromoVideo';
 
 interface PromoSectionProps {
   onAddToCart: (qty: number) => void;
@@ -18,16 +18,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
         <div data-reveal className="promo-5-wrapper grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* POSTER CARD */}
           <div className="promo-poster-col lg:col-span-5 w-full flex justify-center">
-            <div
-              className="promo-poster-card w-full max-w-sm bg-white p-3.5 sm:p-4 rounded-3xl shadow-2xl border border-slate-100 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-orange-500/10"
-              onClick={onOpenCheckout}
-              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onOpenCheckout()}
-              role="button"
-              tabIndex={0}
-              aria-label="Buka formulir pemesanan promo 5 paket"
-            >
-              <PromoBundleVisual />
-            </div>
+            <YouTubePromoVideo />
           </div>
 
           {/* PROMO DETAILS */}

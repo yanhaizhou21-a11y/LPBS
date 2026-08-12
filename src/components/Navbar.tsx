@@ -127,7 +127,7 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
   return (
     <>
       <motion.header className="botani-navbar" animate={{ y: visible ? 0 : -100 }} transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 40 }}>
-        <div className={`botani-navbar-inner${isLandingPage ? ' is-landing' : ''}`}>
+        <div className="botani-navbar-inner">
           <a href="/" className="botani-brand" aria-label="Botani Seed">
             <img src={ASSETS.logo} alt="" width="42" height="42" />
             <span className="botani-brand-copy">
@@ -136,7 +136,7 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
             </span>
           </a>
 
-          {!isLandingPage && <nav className="botani-desktop-nav" aria-label={t('nav.primary')}>
+          <nav className="botani-desktop-nav" aria-label={t('nav.primary')}>
             <div className="botani-home-menu" ref={homeMenuRef}>
               <button ref={homeButtonRef} type="button" className={`botani-nav-link${homeGroupActive ? ' is-active' : ''}`} aria-expanded={homeMenuOpen} aria-controls="homepage-popover" onClick={() => setHomeMenuOpen((open) => !open)}>
                 {t('nav.homepages')}
@@ -153,11 +153,11 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
             </div>
             {productPage && <a href={productPage.path} className={`botani-nav-link${pathname === productPage.path ? ' is-active' : ''}`} aria-current={pathname === productPage.path ? 'page' : undefined}>{t(productPage.labelKey)}</a>}
             <a href="/about" className={`botani-nav-link${pathname === '/about' || currentPath === '/about' ? ' is-active' : ''}`}>{t('nav.about')}</a>
-          </nav>}
+          </nav>
 
           <div className="botani-desktop-actions">
-            {!isLandingPage && <LanguageToggle className="botani-language" />}
-            {!isLandingPage && <ThemeToggleButton className="botani-theme-toggle" />}
+            <LanguageToggle className="botani-language" />
+            <ThemeToggleButton className="botani-theme-toggle" />
             <button type="button" className="botani-cart-button" onClick={openCart} aria-label={`${t('nav.cart')}: ${cartQty}`}>
               <ShoppingBag size={19} aria-hidden="true" />
               <span>{t('nav.cart')}</span>

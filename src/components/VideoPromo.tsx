@@ -1,4 +1,5 @@
 import React from 'react';
+import { YouTubePromoVideo } from './YouTubePromoVideo';
 
 interface VideoPromoProps {
   onOpenCheckout: () => void;
@@ -10,20 +11,8 @@ export const VideoPromo: React.FC<VideoPromoProps> = ({ onOpenCheckout }) => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* VIDEO CONTAINER */}
-          <div className="lg:col-span-6 w-full">
-            <div className="bg-slate-900 p-3 sm:p-4 rounded-3xl shadow-2xl border border-slate-700/50">
-              <div className="w-full aspect-video rounded-2xl overflow-hidden bg-slate-950">
-                <iframe
-                  src="https://www.youtube-nocookie.com/embed/GKwGJthfKco?rel=0"
-                  title="Tips menanam kangkung, cabai, dan bayam di rumah"
-                  loading="lazy"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                  className="w-full h-full border-0"
-                />
-              </div>
-            </div>
+          <div className="lg:col-span-6 w-full flex justify-center">
+            <YouTubePromoVideo />
           </div>
 
           {/* CONTENT */}

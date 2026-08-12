@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLanguage } from '../context/LanguageContext';
+import { LanguageProvider, useLanguage } from '../context/LanguageContext';
 import {
   LayoutDashboard,
   Package,
@@ -83,7 +83,7 @@ export interface BotaniDashboardProps {
   onUnauthorized?: () => void;
 }
 
-export function BotaniDashboard({ adminName = 'Admin PT Botani Seed', onLogout, onGoHome, onUnauthorized }: BotaniDashboardProps = {}) {
+function BotaniDashboardContent({ adminName = 'Admin PT Botani Seed', onLogout, onGoHome, onUnauthorized }: BotaniDashboardProps = {}) {
   const { language, toggleLanguage, t } = useLanguage();
   const [activeNav, setActiveNav] = useState('Dashboard');
   const [categoryFilter, setCategoryFilter] = useState('All');
@@ -2286,4 +2286,13 @@ export function BotaniDashboard({ adminName = 'Admin PT Botani Seed', onLogout, 
   );
 }
 
+export function BotaniDashboard(props: BotaniDashboardProps = {}) {
+  return (
+    <LanguageProvider>
+      <BotaniDashboardContent {...props} />
+    </LanguageProvider>
+  );
+}
+
 export default BotaniDashboard;
+

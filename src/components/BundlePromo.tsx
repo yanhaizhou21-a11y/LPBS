@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertTriangle, ShoppingCart, Sparkles, Zap } from 'lucide-react';
-import { PromoBundleVisual } from './ProductArtwork';
+import { YouTubePromoVideo } from './YouTubePromoVideo';
 
 interface BundlePromoProps {
   onAddToCart: (qty: number) => void;
@@ -14,16 +14,7 @@ export const BundlePromo: React.FC<BundlePromoProps> = ({ onAddToCart, onOpenChe
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* POSTER CARD */}
           <div className="lg:col-span-5 w-full flex justify-center">
-            <div
-              className="w-full max-w-md bg-white dark:bg-slate-800 p-3.5 sm:p-4 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-700 cursor-pointer transition-all duration-300 hover:-translate-y-1"
-              onClick={() => onOpenCheckout(5)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onOpenCheckout(5)}
-              aria-label="Pesan paket promo 5"
-            >
-              <PromoBundleVisual />
-            </div>
+            <YouTubePromoVideo />
           </div>
 
           {/* DETAILS */}

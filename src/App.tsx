@@ -12,7 +12,7 @@ import { Footer } from './components/Footer';
 import { CartDrawer } from './components/CartDrawer';
 import { CartToast } from './components/CartToast';
 import { SecretAdminLogin } from './components/SecretAdminLogin';
-import { AdminDashboard } from './components/AdminDashboard';
+import { BotaniDashboard } from './components/BotaniDashboard';
 import { PrivacyPolicyModal } from './components/PrivacyPolicyModal';
 import { CookieConsentBanner } from './components/CookieConsentBanner';
 import { ProductsPage } from './components/ProductsPage';
@@ -20,7 +20,6 @@ import { AboutPage } from './components/AboutPage';
 import { KendalaSection } from './components/KendalaSection';
 import { SolusiSection } from './components/SolusiSection';
 import { PaketIsiSection } from './components/PaketIsiSection';
-import { TestimonialSection } from './components/TestimonialSection';
 import { BottomCTASection } from './components/BottomCTASection';
 
 // Home Page (landing - 12 sections)
@@ -182,7 +181,7 @@ export function App() {
 
   if (view === 'dashboard') {
     return (
-      <AdminDashboard
+      <BotaniDashboard
         adminName={adminName}
         onLogout={handleAdminLogout}
         onGoHome={() => navigate('landing', '/')}
@@ -228,7 +227,7 @@ export function App() {
               <CompanyProfile />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
-              <TestimonialSection />
+              <Gallery />
             </FadeContent>
             <FadeContent blur={true} duration={800} threshold={0.12} ease="power2.out">
               <FAQSection onOpenCheckout={() => handleOpenCheckout(1)} />
