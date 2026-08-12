@@ -21,7 +21,7 @@ export function BottomCTASection({ onOpenCheckout }: BottomCTASectionProps) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 relative z-10">
         <motion.div {...enter(0.05)}>
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-400/20 text-amber-300 border border-amber-400/30 mb-3">
-            PANEN SENDIRI DI RUMAH
+            SAATNYA MULAI
           </span>
         </motion.div>
 
@@ -36,7 +36,7 @@ export function BottomCTASection({ onOpenCheckout }: BottomCTASectionProps) {
           className="text-base sm:text-lg md:text-xl text-emerald-100 max-w-2xl mx-auto leading-relaxed"
           {...enter(0.2)}
         >
-          Mulai tanam sendiri sayuran segar favoritmu sekarang dari rumah. Nikmati panen melimpah dan hemat pengeluaran belanja harian.
+          Mulai kebun sayuran Anda sendiri dengan satu paket berisi 10 jenis benih pilihan.
         </motion.p>
 
         <motion.div
@@ -49,7 +49,7 @@ export function BottomCTASection({ onOpenCheckout }: BottomCTASectionProps) {
             className="botani-cta-pulse w-full sm:w-auto px-8 py-4 rounded-2xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] shadow-xl shadow-emerald-900/40 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
           >
             <ShoppingBag className="w-5 h-5" />
-            <span>Pesan Paket Sekarang</span>
+            <span>TAMBAH KE KERANJANG</span>
             <ArrowRight className="w-4 h-4" />
           </button>
 
@@ -60,7 +60,7 @@ export function BottomCTASection({ onOpenCheckout }: BottomCTASectionProps) {
             className="botani-cta-pulse w-full sm:w-auto px-8 py-4 rounded-2xl font-extrabold text-emerald-100 hover:text-white bg-white/10 hover:bg-white/20 border border-white/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-base"
           >
             <MessageCircle className="w-5 h-5 text-emerald-300" />
-            <span>Konsultasi via WhatsApp</span>
+            <span>KONSULTASI VIA WHATSAPP →</span>
           </a>
         </motion.div>
       </div>

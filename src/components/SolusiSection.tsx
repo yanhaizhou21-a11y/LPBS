@@ -16,13 +16,13 @@ export function SolusiSection({ onOpenCheckout }: SolusiSectionProps) {
 
   const points = [
     {
-      title: 'Produk untuk mulai',
+      title: 'Praktis untuk mulai',
       desc: 'Satu paket sudah berisi 10 jenis benih sayuran pilihan.',
       icon: Leaf,
     },
     {
       title: 'Cocok untuk pemula',
-      desc: 'Pilihan benihnya mudah ditanam dan dirawat dari rumah.',
+      desc: 'Pilihan sederhana untuk belajar berkebun dari rumah.',
       icon: ShieldCheck,
     },
     {
@@ -53,7 +53,7 @@ export function SolusiSection({ onOpenCheckout }: SolusiSectionProps) {
           {/* RIGHT CONTENT */}
           <motion.div className="lg:col-span-7 w-full text-left" {...enter(0.2)}>
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-orange-100 text-orange-800 dark:bg-orange-950/80 dark:text-orange-300 mb-3">
-              SOLUSI BERKEBUN
+              INI RAHASIANYA
             </span>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight leading-tight mb-4">
               Ternyata, Bukan Cuma Soal Pupuk
@@ -97,7 +97,7 @@ export function SolusiSection({ onOpenCheckout }: SolusiSectionProps) {
               onClick={onOpenCheckout}
               className="botani-cta-pulse w-full sm:w-auto px-8 py-4 rounded-2xl font-extrabold text-white bg-orange-600 hover:bg-orange-500 active:scale-[0.98] shadow-lg shadow-orange-600/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
             >
-              <span>Lihat Isi Paket</span>
+              <span>LIHAT ISI PAKET ↓</span>
               <ArrowRight className="w-5 h-5" />
             </button>
           </motion.div>

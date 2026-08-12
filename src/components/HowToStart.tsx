@@ -6,31 +6,31 @@ export const HowToStart: React.FC = () => {
     {
       number: 1,
       title: 'Gunakan Benih Bersertifikat',
-      description: 'Pilih benih unggul bersertifikat resmi untuk hasil pertumbuhan dan panen optimal.',
+      description: 'Gunakan benih bersertifikat dengan standar mutu tinggi untuk hasil panen yang optimal.',
       image: ASSETS.company1,
     },
     {
       number: 2,
       title: 'Tanam',
-      description: 'Tanam di media tanam subur yang cukup hara dengan sirkulasi udara dan cahaya baik.',
+      description: 'Gunakan pekarangan, pot, polybag, atau lahan tersedia.',
       image: ASSETS.company2,
     },
     {
       number: 3,
       title: 'Rawat',
-      description: 'Lakukan penyiraman secara teratur dan pemupukan bernutrisi sesuai tahapan usia.',
+      description: 'Pelajari kebutuhan air, cahaya, dan media tanam.',
       image: ASSETS.company3,
     },
     {
       number: 4,
       title: 'Panen',
-      description: 'Panen hasil sayuran segar saat usia tanaman telah matang dan siap konsumsi.',
+      description: 'Pilah hasil berdasarkan kondisi dan kualitas.',
       image: '/images/promo-event.jpg',
     },
     {
       number: 5,
       title: 'Jual',
-      description: 'Pasarkan hasil panen ke pasar tradisional, tetangga, restoran, atau platform online.',
+      description: 'Tawarkan ke lingkungan sekitar dan kanal digital.',
       image: '/images/booth.jpg',
     },
   ];
@@ -42,7 +42,7 @@ export const HowToStart: React.FC = () => {
           Bagaimana cara memulainya?
         </h2>
         <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-          5 langkah mudah memulai bisnis tanaman sayuran berkualitas tinggi dan menguntungkan.
+          Mulai kecil, pelajari prosesnya, lalu kembangkan berdasarkan hasil dan permintaan.
         </p>
 
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 text-left items-stretch">

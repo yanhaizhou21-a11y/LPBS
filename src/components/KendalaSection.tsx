@@ -24,7 +24,7 @@ export function KendalaSection() {
     {
       icon: TrendingDown,
       title: 'Hasil Panen Sedikit',
-      desc: 'Hasilnya tidak banyak meskipun sudah dirawat dan diberi pupuk.',
+      desc: 'Waktu dan tenaga sudah dikeluarkan, tetapi hasilnya belum sesuai harapan.',
     },
   ];
 
@@ -34,7 +34,7 @@ export function KendalaSection() {
         {/* EYEBROW & TITLE */}
         <motion.div className="max-w-3xl mx-auto mb-12" {...enter(0.05)}>
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-orange-100 text-orange-800 dark:bg-orange-950/80 dark:text-orange-300 mb-3">
-            MASALAH YANG SERING DIHADAPI
+            MASALAH YANG SERING TERJADI
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight leading-tight">
             Sudah Dirawat, Tapi Tanamannya Masih Begitu-Begitu Saja?

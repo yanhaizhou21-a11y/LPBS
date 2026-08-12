@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, ShoppingCart, Sparkles, Zap } from 'lucide-react';
+import { AlertTriangle, ShoppingCart, Sparkles } from 'lucide-react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { PromoBundleVisual } from './ProductArtwork';
 
@@ -42,14 +42,14 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
             </h2>
 
             <p className="promo-subtitle text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed mb-5">
-              Dapatkan 5 paket Paket Benih Sayuran dengan harga promo khusus untuk mulai berkebun atau berbagi bersama keluarga.
+              Dapatkan 5 pcs Paket Benih Sayuran dengan harga promo khusus untuk mulai berkebun atau berbagi bersama keluarga.
             </p>
 
             {/* NOTICE BOX */}
             <div className="promo-notice-box flex items-start gap-3 bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800/80 border-l-4 border-l-orange-500 p-3.5 sm:p-4 rounded-2xl text-orange-950 dark:text-orange-200 text-xs sm:text-sm leading-relaxed mb-6">
               <AlertTriangle size={20} className="text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
               <span>
-                <strong className="font-extrabold">Ambil sekarang sebelum harga naik.</strong> Mulai 24 Agustus, harga akan menjadi Rp25.000 per paket.
+                <strong className="font-extrabold">Amankan Harga Sekarang, Sebelum Harga Naik!</strong><br />Mulai 24 Agustus, Harga akan menjadi Rp35.000
               </span>
             </div>
 
@@ -60,7 +60,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
                   Harga Normal
                 </span>
                 <strong className="text-lg sm:text-xl font-bold text-slate-400 dark:text-slate-500 line-through">
-                  Rp 100.000
+                  Rp100.000
                 </strong>
               </div>
               <div
@@ -75,13 +75,17 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
                   Harga Promo
                 </span>
                 <strong className="text-xl sm:text-2xl font-black text-white" style={{ color: '#ffffff' }}>
-                  Rp 80.000
+                  Rp80.000
                 </strong>
               </div>
             </div>
 
+            <div className="rounded-2xl border border-dashed border-orange-400 p-4 mb-6 text-sm text-slate-700 dark:text-slate-300">
+              <strong>Syarat dan ketentuan:</strong> Minimal pembelian 5 pcs Paket Benih Sayuran akan mendapatkan Diskon 20%
+            </div>
+
             {/* BUTTONS */}
-            <div className="promo-card-actions grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div className="promo-card-actions">
               <button
                 className="promo-add-btn botani-cta-pulse w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] shadow-lg shadow-emerald-700/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
                 onClick={() => {
@@ -89,13 +93,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
                   onOpenCheckout();
                 }}
               >
-                <ShoppingCart size={20} aria-hidden="true" /> Tambahkan 5 Paket
-              </button>
-              <button
-                className="promo-checkout-btn botani-cta-pulse w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-orange-600 hover:bg-orange-500 active:scale-[0.98] shadow-lg shadow-orange-600/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
-                onClick={onOpenCheckout}
-              >
-                <Zap size={20} aria-hidden="true" /> Pesan Sekarang
+                <ShoppingCart size={20} aria-hidden="true" /> MASUKKAN 5 PAKET KE KERANJANG
               </button>
             </div>
           </div>

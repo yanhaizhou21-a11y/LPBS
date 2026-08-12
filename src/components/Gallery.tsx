@@ -2,22 +2,22 @@ import React from 'react';
 
 export const Gallery: React.FC = () => {
   const galleryItems = [
-    { id: 1, title: 'Pengemasan Benih Bersertifikat', caption: 'Proses pengemasan benih hibrida dalam kondisi steril', imageUrl: '/images/qc-warehouse.jpg' },
-    { id: 2, title: 'Gudang Utama Botani Seed', caption: 'Penyimpanan stok benih terlindung kontrol kelembaban', imageUrl: '/images/warehouse.jpg' },
-    { id: 3, title: 'Proses Sortir & Pengiriman', caption: 'Tim logistik menyiapkan paket pengiriman setiap hari', imageUrl: '/images/shipping.jpg' },
-    { id: 4, title: 'Display Produk Benih', caption: 'Produk benih sayur pilihan dalam kemasan higienis', imageUrl: '/images/product-display.jpg' },
-    { id: 5, title: 'Pendampingan Petani Mitra', caption: 'Edukasi dan konsultasi gratis budidaya tanaman bersama tim ahli', imageUrl: '/images/booth.jpg' },
-    { id: 6, title: 'Pameran Pertanian IPB', caption: 'Partisipasi Botani Seed pada temu agribisnis dan keanekaragaman benih', imageUrl: '/images/promo-event.jpg' },
+    { id: 1, title: 'Display produk Botani Seed Indonesia', caption: '', imageUrl: '/images/qc-warehouse.jpg' },
+    { id: 2, title: 'Gudang penyimpanan produk', caption: '', imageUrl: '/images/warehouse.jpg' },
+    { id: 3, title: 'Proses pengiriman pesanan', caption: '', imageUrl: '/images/shipping.jpg' },
+    { id: 4, title: 'Kegiatan promosi dan pameran produk', caption: '', imageUrl: '/images/product-display.jpg' },
+    { id: 5, title: 'Booth dan tim promosi Botani Seed Indonesia', caption: '', imageUrl: '/images/booth.jpg' },
+    { id: 6, title: 'Proses pengecekan dan persiapan produk di gudang sebelum pengiriman.', caption: '', imageUrl: '/images/promo-event.jpg' },
   ];
 
   return (
     <section className="py-16 md:py-24 bg-slate-50 dark:bg-slate-900/90 text-slate-900 dark:text-slate-50 border-b border-slate-200/60 dark:border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-slate-50 tracking-tight">
-          Dokumentasi Kegiatan
+          Dokumentasi Kegiatan PT Botani Seed Indonesia
         </h2>
         <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-          Kegiatan pengemasan, pergudangan, pendampingan petani, dan distribusi benih Botani Seed.
+          Berikut beberapa dokumentasi display produk, gudang, pengiriman, dan aktivitas promosi Botani Seed Indonesia.
         </p>
 
         <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
@@ -38,9 +38,7 @@ export const Gallery: React.FC = () => {
                   <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-slate-100 mb-1.5 leading-snug">
                     {item.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                    {item.caption}
-                  </p>
+                  {item.caption && <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">{item.caption}</p>}
                 </div>
               </div>
             </div>

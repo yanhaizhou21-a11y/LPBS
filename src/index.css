@@ -6754,6 +6754,25 @@
   object-fit: contain;
 }
 
+.botani-navbar-inner.is-landing {
+  grid-template-columns: 1fr auto;
+}
+
+.botani-brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.botani-brand-copy strong { font-size: 15px; }
+.botani-brand-copy small {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+.dark .botani-brand-copy small { color: #94a3b8; }
+
 .botani-desktop-nav {
   justify-self: center;
   display: flex;
@@ -6886,6 +6905,7 @@
   font-size: 14px;
   font-weight: 800;
   white-space: nowrap;
+  text-decoration: none;
 }
 
 .botani-order-button:hover { background: #166534; }

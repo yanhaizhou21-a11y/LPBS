@@ -32,7 +32,7 @@ export const VideoPromo: React.FC<VideoPromoProps> = ({ onOpenCheckout }) => {
               Rp20.000 sudah bisa dapat paket berisi 10 jenis benih.
             </h2>
             <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
-              Setiap paket berisi varietas pilihan dengan daya berkecambah di atas 85% untuk kebutuhan tanam rumah tangga maupun usaha tani.
+              Cocok untuk mencoba beberapa jenis sayuran tanpa harus membeli satu per satu.
             </p>
             <div className="pt-2">
               <button
@@ -40,7 +40,7 @@ export const VideoPromo: React.FC<VideoPromoProps> = ({ onOpenCheckout }) => {
                 onClick={onOpenCheckout}
                 className="botani-cta-pulse w-full sm:w-auto px-8 py-3.5 rounded-full font-extrabold text-white bg-amber-600 hover:bg-amber-500 active:scale-[0.98] shadow-lg shadow-amber-600/25 transition-all cursor-pointer text-base"
               >
-                Pesan Paket Benih
+                Cek Paket Rp20.000
               </button>
             </div>
           </div>

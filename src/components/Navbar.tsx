@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { Building2, Check, ChevronDown, Home, Menu, PackageSearch, ShoppingBag, X } from 'lucide-react';
+import { Building2, Check, ChevronDown, Home, Menu, MessageCircle, PackageSearch, ShoppingBag, X } from 'lucide-react';
 import { PUBLIC_PAGES } from '../config/public-pages';
 import { ASSETS } from '../data/assets';
 import { useLanguage } from '../i18n';
@@ -28,6 +28,8 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
   const mobileSheetRef = useRef<HTMLElement>(null);
   const homeMenuRef = useRef<HTMLDivElement>(null);
   const pathname = currentPath.split('#')[0] || '/';
+  const isLandingPage = pathname === '/' || pathname === '/home' || pathname === '/home2';
+  const isHome2 = pathname === '/home2';
   const homepageItems = PUBLIC_PAGES.filter((page) => page.navigationVisible && page.group === 'homepages');
   const productPage = PUBLIC_PAGES.find((page) => page.id === 'products' && page.navigationVisible);
   const homeGroupActive = homepageItems.some((page) => page.path === pathname);
@@ -125,13 +127,16 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
   return (
     <>
       <motion.header className="botani-navbar" animate={{ y: visible ? 0 : -100 }} transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 420, damping: 40 }}>
-        <div className="botani-navbar-inner">
+        <div className={`botani-navbar-inner${isLandingPage ? ' is-landing' : ''}`}>
           <a href="/" className="botani-brand" aria-label="Botani Seed">
             <img src={ASSETS.logo} alt="" width="42" height="42" />
-            <span>Botani Seed</span>
+            <span className="botani-brand-copy">
+              <strong>PT Botani Seed Indonesia</strong>
+              {isHome2 && <small>Mitra Andalan Petani Indonesia</small>}
+            </span>
           </a>
 
-          <nav className="botani-desktop-nav" aria-label={t('nav.primary')}>
+          {!isLandingPage && <nav className="botani-desktop-nav" aria-label={t('nav.primary')}>
             <div className="botani-home-menu" ref={homeMenuRef}>
               <button ref={homeButtonRef} type="button" className={`botani-nav-link${homeGroupActive ? ' is-active' : ''}`} aria-expanded={homeMenuOpen} aria-controls="homepage-popover" onClick={() => setHomeMenuOpen((open) => !open)}>
                 {t('nav.homepages')}
@@ -148,17 +153,23 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
             </div>
             {productPage && <a href={productPage.path} className={`botani-nav-link${pathname === productPage.path ? ' is-active' : ''}`} aria-current={pathname === productPage.path ? 'page' : undefined}>{t(productPage.labelKey)}</a>}
             <a href="/about" className={`botani-nav-link${pathname === '/about' || currentPath === '/about' ? ' is-active' : ''}`}>{t('nav.about')}</a>
-          </nav>
+          </nav>}
 
           <div className="botani-desktop-actions">
-            <LanguageToggle className="botani-language" />
-            <ThemeToggleButton className="botani-theme-toggle" />
+            {!isLandingPage && <LanguageToggle className="botani-language" />}
+            {!isLandingPage && <ThemeToggleButton className="botani-theme-toggle" />}
             <button type="button" className="botani-cart-button" onClick={openCart} aria-label={`${t('nav.cart')}: ${cartQty}`}>
               <ShoppingBag size={19} aria-hidden="true" />
               <span>{t('nav.cart')}</span>
               {cartQty > 0 && <b>{cartQty}</b>}
             </button>
-            <button type="button" className="botani-order-button botani-cta-pulse" onClick={openCheckout}>{t('nav.orderNow')}</button>
+            {isLandingPage ? (
+              <a href="https://wa.me/6281299450708" target="_blank" rel="noopener noreferrer" className="botani-order-button botani-cta-pulse">
+                <MessageCircle size={18} />{isHome2 ? 'Chat WhatsApp' : 'Tanya via WhatsApp'}
+              </a>
+            ) : (
+              <button type="button" className="botani-order-button botani-cta-pulse" onClick={openCheckout}>{t('nav.orderNow')}</button>
+            )}
           </div>
 
           <div className="botani-mobile-actions">

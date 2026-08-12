@@ -42,7 +42,7 @@ export function TestimonialSection() {
           >
             <Users className="w-9 h-9 text-emerald-200 mb-8" />
             <strong className="text-4xl sm:text-5xl font-black tracking-tight">10.000+</strong>
-            <span className="font-extrabold mt-1">pelanggan</span>
+            <span className="font-extrabold mt-1">pcs penjualan</span>
             <p className="text-sm leading-relaxed text-emerald-100 mt-5">
               Terima kasih kepada pelanggan yang telah memilih Paket Benih Sayuran dari Botani Seed.
             </p>

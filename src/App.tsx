@@ -306,7 +306,7 @@ export function App() {
             </FadeContent>
           </main>
         )}
-        <Footer onOpenPrivacyPolicy={openPrivacy} />
+        <Footer onOpenPrivacyPolicy={openPrivacy} variant={view === 'landing2' ? 'home2' : 'home1'} />
         <CartDrawer isOpen={cart.isCartOpen} onClose={cart.closeCart} items={cart.items} totalQty={cart.totalQty} normalTotal={cart.normalTotal} discountTotal={cart.discountTotal} subtotal={cart.subtotal} isPromoEligible={cart.isPromoEligible} onUpdateQty={cart.updateQty} onClearCart={cart.clearCart} onOpenCheckout={() => handleOpenCheckout(1)} />
         {isCheckoutOpen && (
           <Suspense fallback={<div className="checkout-loading" role="status">Menyiapkan checkout dan tarif pengiriman…</div>}>

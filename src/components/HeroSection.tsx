@@ -31,7 +31,7 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
             <motion.div {...enter(0.05)}>
               <span className="premium-eyebrow">
                 {isV2 ? <Sparkles className="size-3.5 text-amber-500" /> : <Sprout className="size-3.5 text-emerald-600" />}
-                <span>{isV2 ? 'PAKET BENIH SAYURAN BERKUALITAS' : 'PELUANG USAHA SAYURAN RUMAHAN'}</span>
+                <span>{isV2 ? 'PAKET BENIH SAYURAN BOTANI' : 'PELUANG USAHA SAYURAN RUMAHAN'}</span>
               </span>
             </motion.div>
 
@@ -63,9 +63,15 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
               className="premium-hero-lead"
             >
               {isV2
-                ? 'Padahal sama-sama ditanam di rumah dan sama-sama rajin disiram. Ternyata, hasil kebun bukan cuma ditentukan oleh pupuk. Kuncinya ada di pemilihan benih yang tepat sejak awal.'
+                ? 'Padahal sama-sama ditanam di rumah dan sama-sama rajin disiram. Ternyata, hasil kebun bukan cuma ditentukan oleh pupuk.'
                 : 'Kisah nyata 2 orang yang telah menggunakan produk kami membuktikan usaha sayur daun dan buah dapat berkembang konsisten. Dipandu modul SOP tanam praktis dengan garansi daya kecambah menjadi lebih besar.'}
             </motion.p>
+
+            {isV2 && (
+              <motion.p {...enter(0.24)} className="font-extrabold text-emerald-950 dark:text-emerald-100">
+                Semua dimulai dari pemilihan benih yang tepat sejak awal.
+              </motion.p>
+            )}
 
             {/* ACTION BUTTONS */}
             <motion.div {...enter(0.3)} className="premium-hero-actions">
@@ -73,7 +79,7 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
                 <>
                   <button type="button" onClick={onOpenCheckout} className="premium-button premium-button-primary botani-cta-pulse">
                     <ShoppingBag size={18} />
-                    <span>Tambah ke Keranjang</span>
+                    <span>TAMBAH KE KERANJANG</span>
                     <ArrowRight size={18} />
                   </button>
                   <a
@@ -83,7 +89,7 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
                     className="premium-button premium-button-secondary botani-cta-pulse"
                   >
                     <MessageCircle className="size-4.5 text-emerald-600 dark:text-emerald-400" />
-                    <span>Tanya via WhatsApp</span>
+                    <span>TANYA VIA WHATSAPP</span>
                   </a>
                 </>
               ) : (
@@ -104,6 +110,12 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
               )}
             </motion.div>
 
+            {isV2 && (
+              <motion.a {...enter(0.36)} href="#solusi" className="premium-hero-note font-bold text-emerald-800 dark:text-emerald-300">
+                Lihat rahasia kebunnya ↓
+              </motion.a>
+            )}
+
             {/* TRUST BADGES & VALUE METRICS */}
             <motion.div
               {...enter(0.4)}
@@ -123,11 +135,7 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
               </div>
             </motion.div>
 
-            <motion.p {...enter(0.45)} className="premium-hero-note">
-              {isV2
-                ? '*Hasil terbaik dimulai dari benih yang sehat dan cara tanam yang tepat.'
-                : '*Hasil panen dan omzet dipengaruhi luas lahan, ketekunan perawatan, dan manajemen pasar.'}
-            </motion.p>
+            {!isV2 && <motion.p {...enter(0.45)} className="premium-hero-note">*Hasil panen dan omzet dipengaruhi luas lahan, ketekunan perawatan, dan manajemen pasar.</motion.p>}
           </div>
 
           {/* HERO VISUAL POSTER CARD */}
@@ -149,22 +157,6 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
                   width="600"
                   height="720"
                 />
-                <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-600/95 backdrop-blur-sm px-3 py-1 text-[11px] font-black text-white shadow-md">
-                    <Sparkles className="size-3 text-amber-300" />
-                    <span>BEST SELLER 10 BENIH</span>
-                  </span>
-                </div>
-              </div>
-
-              <div className="premium-product-meta">
-                <div>
-                  <p className="text-xs font-bold text-zinc-900 dark:text-zinc-100">Paket 10 Varietas Lengkap</p>
-                  <p className="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold">Free Modul SOP &amp; Nutrisi Semai</p>
-                </div>
-                <span className="premium-product-link">
-                  Pesan <ArrowRight size={14} />
-                </span>
               </div>
             </div>
           </motion.div>

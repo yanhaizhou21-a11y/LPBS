@@ -7,19 +7,19 @@ export const WhyOpportunity: React.FC = () => {
       id: 'kebutuhan-harian',
       icon: Utensils,
       title: 'Kebutuhan harian',
-      description: 'Sayuran merupakan kebutuhan pokok segar sehari-hari yang selalu dicari oleh setiap rumah tangga.',
+      description: 'Rumah tangga, warung makan, dan usaha kuliner membutuhkan pasokan sayuran secara rutin.',
     },
     {
       id: 'pasar-beragam',
       icon: Store,
       title: 'Pasar beragam',
-      description: 'Dapat dipasarkan ke pasar tradisional, minimarket, warung tetangga, secara online, hingga ke restoran.',
+      description: 'Penjualan dapat dilakukan ke tetangga, pasar, warung, komunitas, dan kanal pemesanan online.',
     },
     {
       id: 'berkembang-bertahap',
       icon: TrendingUp,
       title: 'Bisa berkembang bertahap',
-      description: 'Dapat dimulai dari skala usaha pekarangan rumahan hingga tumbuh menjadi usaha distributor besar.',
+      description: 'Mulai dari skala komoditas, lalu tambah pilihan produk ketika permintaan dan kemampuan meningkat.',
     },
   ];
 
@@ -30,7 +30,7 @@ export const WhyOpportunity: React.FC = () => {
           Kenapa jualan sayur punya peluang?
         </h2>
         <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-          Ternyata jualan sayuran memberikan keuntungan yang terbilang lumayan besar dan terus dibutuhkan setiap hari.
+          Sayuran dibutuhkan setiap hari dan dapat dipasarkan melalui lingkungan sekitar maupun kanal digital.
         </p>
 
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch text-left">

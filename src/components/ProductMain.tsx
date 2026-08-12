@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingCart, Zap, Check } from 'lucide-react';
+import { ShoppingCart, Zap } from 'lucide-react';
 import { ProductPackVisual } from './ProductArtwork';
 
 interface ProductMainProps {
@@ -24,7 +24,7 @@ export const ProductMain: React.FC<ProductMainProps> = ({ onAddToCart, onOpenChe
           {/* DETAILS */}
           <div className="lg:col-span-7 w-full text-left space-y-4">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 w-fit">
-              PRODUK UTAMA
+              PESAN LANGSUNG
             </span>
 
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-slate-50 leading-tight">
@@ -32,35 +32,15 @@ export const ProductMain: React.FC<ProductMainProps> = ({ onAddToCart, onOpenChe
             </h2>
 
             <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
-              Solusi praktis berkebun di rumah dengan 10 jenis benih unggulan yang cepat panen dan berdaya kecambah tinggi.
+              Tambahkan produk ke keranjang, isi data penerima, pilih metode pengiriman, lalu lanjutkan ke tahap pembayaran.
             </p>
 
             <div className="flex items-baseline gap-3 pt-2">
               <span className="text-3xl sm:text-4xl font-black text-emerald-700 dark:text-emerald-400">
-                Rp 20.000
-              </span>
-              <span className="text-sm text-slate-400 line-through font-semibold">
-                Rp 25.000
-              </span>
-              <span className="bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 text-xs font-extrabold px-2.5 py-1 rounded-full">
-                Hemat 20%
+                Rp 20.000/pcs
               </span>
             </div>
 
-            <ul className="space-y-2 pt-2 text-sm sm:text-base text-slate-700 dark:text-slate-300 font-medium">
-              <li className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-emerald-600 shrink-0" />
-                <span>Berisi 10 jenis benih sayur favorit keluarga</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-emerald-600 shrink-0" />
-                <span>Bersertifikat resmi BPSB IPB University</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-emerald-600 shrink-0" />
-                <span>Bonus modul SOP tanam & nutrisi gratis</span>
-              </li>
-            </ul>
 
             {/* QTY & ACTION BUTTONS */}
             <div className="pt-4 space-y-4">
@@ -94,17 +74,20 @@ export const ProductMain: React.FC<ProductMainProps> = ({ onAddToCart, onOpenChe
                     onOpenCheckout(qty);
                   }}
                 >
-                  <ShoppingCart className="w-5 h-5" /> Beli Sekarang
+                  <ShoppingCart className="w-5 h-5" /> Tambahkan ke Keranjang
                 </button>
                 <button
                   type="button"
                   className="botani-cta-pulse w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-amber-600 hover:bg-amber-500 active:scale-[0.98] shadow-lg shadow-amber-600/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
                   onClick={() => onOpenCheckout(qty)}
                 >
-                  <Zap className="w-5 h-5" /> Pesan Langsung
+                  <Zap className="w-5 h-5" /> Pesan Sekarang
                 </button>
               </div>
             </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Pembelian minimal 5 pcs sebelum 24 Agustus 2026 memperoleh diskon 20%.
+            </p>
           </div>
         </div>
       </div>
