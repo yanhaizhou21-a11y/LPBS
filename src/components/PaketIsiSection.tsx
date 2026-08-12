@@ -77,7 +77,7 @@ export function PaketIsiSection({ onOpenCheckout }: PaketIsiSectionProps) {
           <button
             type="button"
             onClick={onOpenCheckout}
-            className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 text-sm sm:text-base transition-all cursor-pointer"
+            className="botani-cta-pulse w-full sm:w-auto px-6 py-3.5 rounded-xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 text-sm sm:text-base transition-all cursor-pointer"
           >
             <ShoppingBag className="w-5 h-5" />
             <span>Beli Paket Sekarang</span>

@@ -7815,6 +7815,41 @@ h6 {
   }
 }
 
+/* Shared emphasis for ordering and promotional CTAs across both landing pages. */
+@keyframes botani-cta-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.045);
+  }
+}
+
+.botani-cta-pulse {
+  animation: botani-cta-breathe 1.8s ease-in-out infinite;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.botani-cta-pulse:hover,
+.botani-cta-pulse:focus-visible {
+  animation-play-state: paused;
+  transform: scale(1.045);
+}
+
+.botani-cta-pulse:active {
+  animation-play-state: paused;
+  transform: scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .botani-cta-pulse {
+    animation: none;
+    will-change: auto;
+  }
+}
+
 
   /* ABOUT PAGE / COMPANY PROFILE STYLES */
   .about-page {

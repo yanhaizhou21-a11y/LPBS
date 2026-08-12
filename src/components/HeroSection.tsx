@@ -71,7 +71,7 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
             <motion.div {...enter(0.3)} className="premium-hero-actions">
               {isV2 ? (
                 <>
-                  <button type="button" onClick={onOpenCheckout} className="premium-button premium-button-primary">
+                  <button type="button" onClick={onOpenCheckout} className="premium-button premium-button-primary botani-cta-pulse">
                     <ShoppingBag size={18} />
                     <span>Tambah ke Keranjang</span>
                     <ArrowRight size={18} />
@@ -80,7 +80,7 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
                     href={waLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="premium-button premium-button-secondary"
+                    className="premium-button premium-button-secondary botani-cta-pulse"
                   >
                     <MessageCircle className="size-4.5 text-emerald-600 dark:text-emerald-400" />
                     <span>Tanya via WhatsApp</span>
@@ -91,7 +91,7 @@ export function HeroSection({ onOpenCheckout, variant = 1 }: HeroSectionProps) {
                   <button
                     type="button"
                     onClick={onOpenCheckout}
-                    className="premium-button premium-button-primary"
+                    className="premium-button premium-button-primary botani-cta-pulse"
                   >
                     <ShoppingBag size={18} />
                     <span>Pesan Paket 10 Benih</span>

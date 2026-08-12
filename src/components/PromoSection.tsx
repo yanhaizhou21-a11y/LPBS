@@ -83,7 +83,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
             {/* BUTTONS */}
             <div className="promo-card-actions grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <button
-                className="promo-add-btn w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] shadow-lg shadow-emerald-700/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
+                className="promo-add-btn botani-cta-pulse w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] shadow-lg shadow-emerald-700/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
                 onClick={() => {
                   onAddToCart(5);
                   onOpenCheckout();
@@ -92,7 +92,7 @@ export const PromoSection: React.FC<PromoSectionProps> = ({ onAddToCart, onOpenC
                 <ShoppingCart size={20} aria-hidden="true" /> Tambahkan 5 Paket
               </button>
               <button
-                className="promo-checkout-btn w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-orange-600 hover:bg-orange-500 active:scale-[0.98] shadow-lg shadow-orange-600/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
+                className="promo-checkout-btn botani-cta-pulse w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-orange-600 hover:bg-orange-500 active:scale-[0.98] shadow-lg shadow-orange-600/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
                 onClick={onOpenCheckout}
               >
                 <Zap size={20} aria-hidden="true" /> Pesan Sekarang

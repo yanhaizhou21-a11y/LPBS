@@ -151,7 +151,7 @@ export const QuickOrderSection: React.FC<QuickOrderSectionProps> = ({
             <div className="calculator-actions grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <button
                 type="button"
-                className="btn-buy-now-green w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] shadow-lg shadow-emerald-700/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
+                className="btn-buy-now-green botani-cta-pulse w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] shadow-lg shadow-emerald-700/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
                 onClick={handleCheckoutClick}
               >
                 <ShoppingBag size={20} />
@@ -161,7 +161,7 @@ export const QuickOrderSection: React.FC<QuickOrderSectionProps> = ({
                 href={`https://wa.me/6281299450708?text=${whatsappMessage}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-order-wa-orange w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-orange-600 hover:bg-orange-500 active:scale-[0.98] shadow-lg shadow-orange-600/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
+                className="btn-order-wa-orange botani-cta-pulse w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-orange-600 hover:bg-orange-500 active:scale-[0.98] shadow-lg shadow-orange-600/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
               >
                 <MessageCircle size={20} />
                 <span>Pesan via WhatsApp</span>

@@ -40,7 +40,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCheckout }) => {
               <button
                 type="button"
                 onClick={scrollToStory}
-                className="px-6 py-3.5 rounded-2xl font-extrabold text-white bg-amber-600 hover:bg-amber-500 active:scale-[0.98] shadow-lg shadow-amber-600/25 flex items-center gap-2 text-base transition-all cursor-pointer"
+                className="botani-cta-pulse px-6 py-3.5 rounded-2xl font-extrabold text-white bg-amber-600 hover:bg-amber-500 active:scale-[0.98] shadow-lg shadow-amber-600/25 flex items-center gap-2 text-base transition-all cursor-pointer"
               >
                 <span>Klik Kisahnya</span>
                 <ArrowRight className="w-5 h-5" />
@@ -50,7 +50,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCheckout }) => {
                 <button
                   type="button"
                   onClick={onOpenCheckout}
-                  className="px-6 py-3.5 rounded-2xl font-extrabold text-emerald-800 dark:text-emerald-300 bg-emerald-100/80 hover:bg-emerald-200 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/60 border border-emerald-300/60 dark:border-emerald-800 transition-all cursor-pointer text-base"
+                  className="botani-cta-pulse px-6 py-3.5 rounded-2xl font-extrabold text-emerald-800 dark:text-emerald-300 bg-emerald-100/80 hover:bg-emerald-200 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/60 border border-emerald-300/60 dark:border-emerald-800 transition-all cursor-pointer text-base"
                 >
                   Pesan Benih Sekarang
                 </button>

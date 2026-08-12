@@ -46,7 +46,7 @@ export function BottomCTASection({ onOpenCheckout }: BottomCTASectionProps) {
           <button
             type="button"
             onClick={onOpenCheckout}
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] shadow-xl shadow-emerald-900/40 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
+            className="botani-cta-pulse w-full sm:w-auto px-8 py-4 rounded-2xl font-extrabold text-white bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] shadow-xl shadow-emerald-900/40 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
           >
             <ShoppingBag className="w-5 h-5" />
             <span>Pesan Paket Sekarang</span>
@@ -57,7 +57,7 @@ export function BottomCTASection({ onOpenCheckout }: BottomCTASectionProps) {
             href={waLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl font-extrabold text-emerald-100 hover:text-white bg-white/10 hover:bg-white/20 border border-white/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-base"
+            className="botani-cta-pulse w-full sm:w-auto px-8 py-4 rounded-2xl font-extrabold text-emerald-100 hover:text-white bg-white/10 hover:bg-white/20 border border-white/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-base"
           >
             <MessageCircle className="w-5 h-5 text-emerald-300" />
             <span>Konsultasi via WhatsApp</span>

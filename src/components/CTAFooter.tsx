@@ -29,7 +29,7 @@ export const CTAFooter: React.FC<CTAFooterProps> = ({ onOpenCheckout }) => {
             <button
               type="button"
               onClick={onOpenCheckout}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl font-extrabold text-white bg-amber-600 hover:bg-amber-500 active:scale-[0.98] shadow-xl shadow-amber-900/40 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
+              className="botani-cta-pulse w-full sm:w-auto px-8 py-4 rounded-2xl font-extrabold text-white bg-amber-600 hover:bg-amber-500 active:scale-[0.98] shadow-xl shadow-amber-900/40 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
             >
               <ShoppingBag className="w-5 h-5" />
               <span>Pesan Sekarang</span>
@@ -40,7 +40,7 @@ export const CTAFooter: React.FC<CTAFooterProps> = ({ onOpenCheckout }) => {
           <button
             type="button"
             onClick={handleWhatsAppClick}
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl font-extrabold text-white bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] shadow-xl shadow-emerald-900/40 flex items-center justify-center gap-2 text-base transition-all cursor-pointer border border-emerald-500/30"
+            className="botani-cta-pulse w-full sm:w-auto px-8 py-4 rounded-2xl font-extrabold text-white bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] shadow-xl shadow-emerald-900/40 flex items-center justify-center gap-2 text-base transition-all cursor-pointer border border-emerald-500/30"
           >
             <MessageSquare className="w-5 h-5 text-[#25D366]" />
             <span>Tanya & Pesan via WhatsApp</span>

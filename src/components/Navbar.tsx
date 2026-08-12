@@ -158,7 +158,7 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
               <span>{t('nav.cart')}</span>
               {cartQty > 0 && <b>{cartQty}</b>}
             </button>
-            <button type="button" className="botani-order-button" onClick={openCheckout}>{t('nav.orderNow')}</button>
+            <button type="button" className="botani-order-button botani-cta-pulse" onClick={openCheckout}>{t('nav.orderNow')}</button>
           </div>
 
           <div className="botani-mobile-actions">
@@ -192,7 +192,7 @@ export function Navbar({ cartQty = 0, currentPath, onOpenCart, onOpenCheckout }:
               </nav>
               <div className="botani-mobile-footer">
                 <div><LanguageToggle className="botani-language" /><ThemeToggleButton className="botani-theme-toggle" /></div>
-                <button type="button" className="botani-order-button" onClick={openCheckout}><ShoppingBag size={19} />{t('nav.orderNow')}</button>
+                <button type="button" className="botani-order-button botani-cta-pulse" onClick={openCheckout}><ShoppingBag size={19} />{t('nav.orderNow')}</button>
               </div>
             </motion.aside>
           </motion.div>

@@ -72,7 +72,7 @@ export const BundlePromo: React.FC<BundlePromoProps> = ({ onAddToCart, onOpenChe
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
               <button
                 type="button"
-                className="w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] shadow-lg shadow-emerald-700/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
+                className="botani-cta-pulse w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-emerald-700 hover:bg-emerald-600 active:scale-[0.98] shadow-lg shadow-emerald-700/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
                 onClick={() => {
                   onAddToCart(5);
                   onOpenCheckout(5);
@@ -82,7 +82,7 @@ export const BundlePromo: React.FC<BundlePromoProps> = ({ onAddToCart, onOpenChe
               </button>
               <button
                 type="button"
-                className="w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-amber-600 hover:bg-amber-500 active:scale-[0.98] shadow-lg shadow-amber-600/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
+                className="botani-cta-pulse w-full py-3.5 px-6 rounded-2xl font-extrabold text-white bg-amber-600 hover:bg-amber-500 active:scale-[0.98] shadow-lg shadow-amber-600/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
                 onClick={() => onOpenCheckout(5)}
               >
                 <Zap className="w-5 h-5" /> Pesan Langsung Sekarang

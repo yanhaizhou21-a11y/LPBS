@@ -64,7 +64,7 @@ export function useScrollReveal<T extends HTMLElement = HTMLDivElement>(
               trigger: el,
               start: options.triggerHook ?? 'top 86%',
               end: 'bottom 10%',
-              toggleActions: options.fadeAway !== false ? 'play reverse play reverse' : 'play none none reverse',
+              toggleActions: options.fadeAway === true ? 'play reverse play reverse' : 'play none none reverse',
             },
           }
         );

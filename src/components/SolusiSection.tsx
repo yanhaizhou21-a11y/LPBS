@@ -95,7 +95,7 @@ export function SolusiSection({ onOpenCheckout }: SolusiSectionProps) {
             <button
               type="button"
               onClick={onOpenCheckout}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl font-extrabold text-white bg-orange-600 hover:bg-orange-500 active:scale-[0.98] shadow-lg shadow-orange-600/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
+              className="botani-cta-pulse w-full sm:w-auto px-8 py-4 rounded-2xl font-extrabold text-white bg-orange-600 hover:bg-orange-500 active:scale-[0.98] shadow-lg shadow-orange-600/25 flex items-center justify-center gap-2 text-base transition-all cursor-pointer"
             >
               <span>Lihat Isi Paket</span>
               <ArrowRight className="w-5 h-5" />

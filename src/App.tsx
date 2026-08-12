@@ -245,43 +245,65 @@ export function App() {
           /* HOME 1 (12 Sections: "Hanya dari jualan sayuran bisa menghasilkan 2 digit?") */
           <main className="w-full overflow-x-hidden min-h-screen">
             {/* 1. HERO */}
-            <Hero onOpenCheckout={() => handleOpenCheckout(1)} />
+            <FadeContent blur={false} duration={700} direction="none">
+              <Hero onOpenCheckout={() => handleOpenCheckout(1)} />
+            </FadeContent>
 
             {/* 2. "Kenapa jualan sayur punya peluang?" */}
-            <WhyOpportunity />
+            <FadeContent blur duration={800} direction="down" threshold={0.12}>
+              <WhyOpportunity />
+            </FadeContent>
 
             {/* 3. "Dua kisah nyata petani sayuran yang berkembang" */}
-            <SuccessStories />
+            <FadeContent blur duration={800} direction="down" threshold={0.12}>
+              <SuccessStories />
+            </FadeContent>
 
             {/* 4. "Bagaimana cara memulainya?" */}
-            <HowToStart />
+            <FadeContent blur duration={800} direction="down" threshold={0.12}>
+              <HowToStart />
+            </FadeContent>
 
             {/* 5. Video Promo */}
-            <VideoPromo onOpenCheckout={() => handleOpenCheckout(1)} />
+            <FadeContent blur duration={800} direction="down" threshold={0.12}>
+              <VideoPromo onOpenCheckout={() => handleOpenCheckout(1)} />
+            </FadeContent>
 
             {/* 6. Promo Bundling */}
-            <BundlePromo
-              onAddToCart={(qty) => cart.addToCart(qty)}
-              onOpenCheckout={(qty) => handleOpenCheckout(qty)}
-            />
+            <FadeContent blur duration={800} direction="down" threshold={0.12}>
+              <BundlePromo
+                onAddToCart={(qty) => cart.addToCart(qty)}
+                onOpenCheckout={(qty) => handleOpenCheckout(qty)}
+              />
+            </FadeContent>
 
             {/* 7. Produk Utama "Paket Benih Sayur Botani Seed" */}
-            <ProductMain
-              onAddToCart={(qty) => cart.addToCart(qty)}
-              onOpenCheckout={(qty) => handleOpenCheckout(qty)}
-            />
+            <FadeContent blur duration={800} direction="down" threshold={0.12}>
+              <ProductMain
+                onAddToCart={(qty) => cart.addToCart(qty)}
+                onOpenCheckout={(qty) => handleOpenCheckout(qty)}
+              />
+            </FadeContent>
 
             {/* 8. "Kenapa harus memilih Paket Benih Sayur Botani Seed" */}
-            <WhyChooseUs />
+            <FadeContent blur duration={800} direction="down" threshold={0.12}>
+              <WhyChooseUs />
+            </FadeContent>
 
             {/* 9. "Dokumentasi Kegiatan" */}
-            <Gallery />
+            <FadeContent blur duration={800} direction="down" threshold={0.12}>
+              <Gallery />
+            </FadeContent>
 
             {/* 10. FAQ accordion */}
-            <FAQ />
+            <FadeContent blur duration={800} direction="down" threshold={0.12}>
+              <FAQ />
+            </FadeContent>
 
             {/* 11. CTA penutup */}
-            <CTAFooter onOpenCheckout={() => handleOpenCheckout(1)} />
+            <FadeContent blur duration={800} direction="down" threshold={0.12}>
+              <CTAFooter onOpenCheckout={() => handleOpenCheckout(1)} />
+            </FadeContent>
           </main>
         )}
         <Footer onOpenPrivacyPolicy={openPrivacy} />

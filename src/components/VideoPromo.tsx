@@ -38,7 +38,7 @@ export const VideoPromo: React.FC<VideoPromoProps> = ({ onOpenCheckout }) => {
               <button
                 type="button"
                 onClick={onOpenCheckout}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-full font-extrabold text-white bg-amber-600 hover:bg-amber-500 active:scale-[0.98] shadow-lg shadow-amber-600/25 transition-all cursor-pointer text-base"
+                className="botani-cta-pulse w-full sm:w-auto px-8 py-3.5 rounded-full font-extrabold text-white bg-amber-600 hover:bg-amber-500 active:scale-[0.98] shadow-lg shadow-amber-600/25 transition-all cursor-pointer text-base"
               >
                 Pesan Paket Benih
               </button>
