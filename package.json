@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "server": "node backend/index.js",
+    "server": "node --watch backend/index.js",
     "dev:all": "concurrently \"npm run dev\" \"npm run server\"",
     "build": "tsc && vite build",
     "test:auth": "node --test backend/auth.test.js",

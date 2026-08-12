@@ -316,15 +316,6 @@ function BotaniDashboardContent({ adminName = 'Admin PT Botani Seed', onLogout, 
     stock: '',
   });
 
-  // Settings State
-  const [settingsTab, setSettingsTab] = useState('General');
-  const [settingsForm, setSettingsForm] = useState({
-    storeName: 'Botani Store',
-    contactEmail: 'admin@botani.com',
-    currency: 'IDR (Rp)',
-  });
-  const [settingsSaved, setSettingsSaved] = useState(false);
-
   const [isReportMenuOpen, setIsReportMenuOpen] = useState(false);
 
   const handleDownloadPDF = () => {
@@ -564,12 +555,6 @@ function BotaniDashboardContent({ adminName = 'Admin PT Botani Seed', onLogout, 
 
   const handleDeleteOrder = (id: string) => {
     setOrders(orders.filter((o) => o.id !== id));
-  };
-
-  const handleSaveSettings = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSettingsSaved(true);
-    setTimeout(() => setSettingsSaved(false), 3000);
   };
 
   // Filtered lists
@@ -836,20 +821,7 @@ function BotaniDashboardContent({ adminName = 'Admin PT Botani Seed', onLogout, 
         {/* Bottom Links */}
         <div className="space-y-1.5 pt-4">
           <div className="my-2 border-t border-gray-200 dark:border-slate-700/80" />
-          <button
-            onClick={() => setActiveNav('Settings')}
-            title={isSidebarMinimized ? t('settings') : undefined}
-            className={`w-full flex items-center py-3 rounded-2xl text-sm font-medium transition-all duration-200 ${
-              isSidebarMinimized ? 'justify-center px-0' : 'gap-3 px-4'
-            } ${
-              activeNav === 'Settings'
-                ? 'bg-[#f0edff] dark:bg-indigo-950/80 text-[#5b46e8] dark:text-indigo-400 font-semibold'
-                : 'text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'
-            }`}
-          >
-            <Settings className={`w-5 h-5 flex-shrink-0 ${activeNav === 'Settings' ? 'text-[#5b46e8] dark:text-indigo-400' : 'text-gray-400 dark:text-slate-500'}`} />
-            {!isSidebarMinimized && <span>{t('settings')}</span>}
-          </button>
+
           <button
             onClick={onLogout || onGoHome}
             title={isSidebarMinimized ? t('logout') : undefined}
@@ -1000,15 +972,14 @@ function BotaniDashboardContent({ adminName = 'Admin PT Botani Seed', onLogout, 
 
               {isProfileMenuOpen && (
                 <div className="absolute right-0 mt-3 w-48 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-gray-100 dark:border-slate-700 py-2 z-50 animate-in fade-in zoom-in-95">
+
                   <button
-                    onClick={() => { setActiveNav('Settings'); setIsProfileMenuOpen(false); }}
-                    className="w-full px-4 py-2 text-left text-xs font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-700 flex items-center gap-2"
-                  >
-                    <Settings className="w-4 h-4 text-gray-400" /> Store Settings
-                  </button>
-                  <button
-                    onClick={() => setIsProfileMenuOpen(false)}
-                    className="w-full px-4 py-2 text-left text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-2 border-t border-gray-100 dark:border-slate-700 mt-1 pt-2"
+                    onClick={() => {
+                      setIsProfileMenuOpen(false);
+                      if (onLogout) onLogout();
+                      else if (onGoHome) onGoHome();
+                    }}
+                    className="w-full px-4 py-2 text-left text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-2 border-t border-gray-100 dark:border-slate-700 mt-1 pt-2 cursor-pointer"
                   >
                     <LogOut className="w-4 h-4" /> Log Out
                   </button>
@@ -1822,100 +1793,7 @@ function BotaniDashboardContent({ adminName = 'Admin PT Botani Seed', onLogout, 
             </div>
           )}
 
-          {/* ============================================================ */}
-          {/* VIEW: SETTINGS */}
-          {/* ============================================================ */}
-          {activeNav === 'Settings' && (
-            <div className="space-y-8 max-w-4xl">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('storeSettings')}</h2>
-                <p className="text-xs text-gray-400 dark:text-slate-400 mt-1">{t('settingsSubtitle')}</p>
-              </div>
 
-              {settingsSaved && (
-                <div className="bg-emerald-50 dark:bg-emerald-950/70 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 px-4 py-3 rounded-2xl flex items-center gap-2 text-xs font-medium animate-fade-in">
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>{t('settingsUpdated')}</span>
-                </div>
-              )}
-
-              <form onSubmit={handleSaveSettings} className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-xs space-y-6">
-                <div className="border-b border-gray-100 dark:border-slate-700 pb-4 flex gap-6">
-                  {[
-                    { key: 'General', label: t('general') },
-                    { key: 'Store Profile', label: t('storeProfile') },
-                    { key: 'Notifications', label: t('notifications') },
-                    { key: 'Security', label: t('security') },
-                  ].map((tab) => (
-                    <button
-                      key={tab.key}
-                      type="button"
-                      onClick={() => setSettingsTab(tab.key)}
-                      className={`text-xs font-semibold pb-2 border-b-2 transition-colors ${
-                        settingsTab === tab.key
-                          ? 'border-[#5b46e8] text-[#5b46e8] dark:text-indigo-400'
-                          : 'border-transparent text-gray-400 dark:text-slate-400 hover:text-gray-700 dark:hover:text-slate-200'
-                      }`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
-
-                {settingsTab === 'General' && (
-                  <div className="space-y-4 max-w-md">
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1.5">{t('storeName')}</label>
-                      <input
-                        type="text"
-                        value={settingsForm.storeName}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, storeName: e.target.value })}
-                        className="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-xs text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#5b46e8]/30 focus:border-[#5b46e8] transition-all"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1.5">{t('contactEmail')}</label>
-                      <input
-                        type="email"
-                        value={settingsForm.contactEmail}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, contactEmail: e.target.value })}
-                        className="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-xs text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#5b46e8]/30 focus:border-[#5b46e8] transition-all"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-gray-700 dark:text-slate-300 mb-1.5">{t('currency')}</label>
-                      <select
-                        value={settingsForm.currency}
-                        onChange={(e) => setSettingsForm({ ...settingsForm, currency: e.target.value })}
-                        className="w-full px-4 py-2.5 bg-gray-50 dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-xs text-gray-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#5b46e8]/30 focus:border-[#5b46e8] transition-all"
-                      >
-                        <option>IDR (Rp)</option>
-                        <option>USD ($)</option>
-                        <option>EUR (€)</option>
-                      </select>
-                    </div>
-
-                    <div className="pt-4">
-                      <button
-                        type="submit"
-                        className="bg-[#4f46e5] text-white px-6 py-2.5 rounded-full text-xs font-medium hover:bg-[#4338ca] shadow-sm transition-all active:scale-95"
-                      >
-                        {t('saveChanges')}
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {settingsTab !== 'General' && (
-                  <div className="py-6 text-center text-xs text-gray-400 dark:text-slate-400 italic">
-                    {settingsTab} configuration tab preview.
-                  </div>
-                )}
-              </form>
-            </div>
-          )}
         </main>
       </div>
 

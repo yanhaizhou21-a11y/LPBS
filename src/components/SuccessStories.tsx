@@ -11,7 +11,7 @@ const stories = [
       'Artikel Tribun Makassar menyebut omzetnya dapat mencapai Rp500 juta per bulan',
     ],
     source: 'Tribun Makassar',
-    url: 'https://makassar.tribunnews.com/',
+    url: 'https://makassar.tribunnews.com/2021/09/20/kisah-diyah-rahmawati-petani-sayuran-organik-yang-sukses-raup-omzet-hingga-rp-500-juta-sebulan',
   },
   {
     nominalTitle: 'Hingga Rp100 juta/bulan',
@@ -23,7 +23,7 @@ const stories = [
       'Merintis pemasaran online bersama kelompok pemuda tani Agri Muda',
     ],
     source: 'Medcom.id',
-    url: 'https://www.medcom.id/',
+    url: 'https://www.medcom.id/ekonomi/entrepreneurship/4KZRqmpK-petani-sayur-binaan-kementan-raih-omzet-ratusan-juta',
   },
 ];
 
@@ -48,8 +48,8 @@ export const SuccessStories: React.FC = () => (
             <ul className="mt-5 list-disc pl-5 space-y-2 text-sm sm:text-base text-slate-700 dark:text-slate-300">
               {story.highlights.map((point) => <li key={point}>{point}</li>)}
             </ul>
-            <a href={story.url} target="_blank" rel="noopener noreferrer" className="mt-auto pt-6 text-sm font-bold text-emerald-700 dark:text-emerald-400 underline">
-              Baca sumber {story.source} →
+            <a href={story.url} target="_blank" rel="noopener noreferrer" className="mt-auto pt-6 text-sm font-bold text-emerald-700 dark:text-emerald-400 underline hover:text-emerald-800">
+              Info selengkapnya →
             </a>
           </article>
         ))}

@@ -1,6 +1,8 @@
-import 'dotenv/config';
+import { config } from 'dotenv';
 import { Router } from 'express';
 import { createHmac, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
+
+config();
 
 const router = Router();
 const COOKIE_NAME = 'botani_admin_session';
@@ -23,6 +25,7 @@ export function verifyPassword(password, storedHash) {
 }
 
 function createSessionToken(admin) {
+  config({ override: true });
   const secret = process.env.ADMIN_SESSION_SECRET || '';
   const payload = encode({
     sub: admin.username,
@@ -34,6 +37,7 @@ function createSessionToken(admin) {
 }
 
 export function verifySessionToken(token) {
+  config({ override: true });
   const secret = process.env.ADMIN_SESSION_SECRET || '';
   if (!token || secret.length < 32) return null;
   const [payload, signature] = token.split('.');
@@ -73,6 +77,7 @@ function isRateLimited(ip) {
 }
 
 router.post('/login', (req, res) => {
+  config({ override: true });
   if (isRateLimited(req.ip)) {
     return res.status(429).json({ success: false, message: 'Terlalu banyak percobaan. Coba lagi dalam 15 menit.' });
   }
@@ -100,8 +105,9 @@ router.post('/login', (req, res) => {
 router.get('/session', requireAdmin, (req, res) => res.json({ success: true, admin: req.admin }));
 
 router.post('/logout', (_req, res) => {
-  res.setHeader('Set-Cookie', `${COOKIE_NAME}=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0`);
-  res.json({ success: true });
+  const secure = process.env.NODE_ENV === 'production' ? '; Secure' : '';
+  res.setHeader('Set-Cookie', `${COOKIE_NAME}=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT${secure}`);
+  res.json({ success: true, message: 'Logout berhasil.' });
 });
 
 export default router;

@@ -15,16 +15,16 @@ export function PaketIsiSection({ onOpenCheckout }: PaketIsiSectionProps) {
   });
 
   const vegItems = [
-    'Cabai Rawit Tegak',
-    'Sawi Hijau',
-    'Kangkung',
-    'Kacang Panjang',
-    'Tomat',
-    'Bayam Hijau',
-    'Jagung Manis',
-    'Cabai Keriting',
-    'Mentimun',
-    'Oyong',
+    { name: 'Cabai Rawit Tegak', image: '/images/cabai-rawit.jpg' },
+    { name: 'Sawi Hijau', image: '/images/sawi-hijau.jpg' },
+    { name: 'Kangkung', image: '/images/kangkung.jpg' },
+    { name: 'Kacang Panjang', image: '/images/kacang-panjang.jpg' },
+    { name: 'Tomat', image: '/images/tomat.jpg' },
+    { name: 'Bayam Hijau', image: '/images/bayam-hijau.jpg' },
+    { name: 'Jagung Manis', image: '/images/jagung-manis.jpg' },
+    { name: 'Cabai Keriting', image: '/images/cabai-keriting.jpg' },
+    { name: 'Mentimun', image: '/images/mentimun.jpg' },
+    { name: 'Oyong / Gambas', image: '/images/oyong.jpg' },
   ];
 
   return (
@@ -47,15 +47,20 @@ export function PaketIsiSection({ onOpenCheckout }: PaketIsiSectionProps) {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-5 mb-12 text-left">
           {vegItems.map((item, idx) => (
             <motion.div
-              key={item}
-              className="bg-white text-slate-900 rounded-2xl p-2.5 sm:p-3 shadow-lg border border-slate-100 flex flex-col hover:scale-[1.02] hover:shadow-xl transition-all duration-300"
+              key={item.name}
+              className="group bg-white text-slate-900 rounded-2xl p-2.5 sm:p-3 shadow-lg border border-slate-100 flex flex-col hover:scale-[1.02] hover:shadow-xl transition-all duration-300"
               {...enter(0.1 + idx * 0.04)}
             >
-              <div className="aspect-[4/3] rounded-xl bg-gradient-to-br from-emerald-50 to-lime-100 border border-emerald-100 flex items-center justify-center px-2 text-center">
-                <span className="text-[10px] sm:text-xs font-bold text-emerald-800">Foto {item}</span>
+              <div className="aspect-[4/3] rounded-xl overflow-hidden bg-slate-100 border border-slate-200/80">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  loading="lazy"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
               </div>
               <h3 className="font-extrabold text-sm sm:text-base text-slate-900 leading-tight mt-3 px-1 pb-1">
-                {item}
+                {item.name}
               </h3>
             </motion.div>
           ))}

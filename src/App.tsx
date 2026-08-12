@@ -162,7 +162,8 @@ export function App() {
   const handleAdminLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' }).catch(() => undefined);
     setAdminName('Admin PT Botani Seed');
-    navigate('landing', '/');
+    setAccessDenied(false);
+    navigate('admin-login', '/secret-admin-login');
   };
 
   const openPrivacy = () => {
